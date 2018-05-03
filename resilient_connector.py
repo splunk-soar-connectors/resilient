@@ -467,7 +467,8 @@ class ResilientConnector(BaseConnector):
         if 'description' not in payload:
             description = getsv(param, 'description')
             if len(description) > 0:
-                addifkey(param, 'incident_description', payload, 'description')
+                payload['description'] = description
+                #addifkey(param, 'incident_description', payload, 'description')
                 #payload['description'] = dict()
                 #payload['description']['format'] = "text"
                 #payload['description']['content'] = getsv(param, 'description')
@@ -881,7 +882,7 @@ class ResilientConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
 
-    def _handle_update_table_row_by_key(self, param):
+    def _handle_update_table_row_with_key(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -1060,8 +1061,6 @@ class ResilientConnector(BaseConnector):
 
         try:
             self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
-            if param.get('handle_format', False) == True:
-                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/tasks/{}".format(param['task_id)'])
         except Exception as e:
@@ -1159,6 +1158,8 @@ class ResilientConnector(BaseConnector):
 
         try:
             self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/attachments/{}".format(param['incident_id'], param['attachment_id'])
 
@@ -1186,6 +1187,8 @@ class ResilientConnector(BaseConnector):
 
         try:
             self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/attachments".format(param['incident_id'])
 
@@ -1275,8 +1278,8 @@ class ResilientConnector(BaseConnector):
         elif action_id == 'update_table_row':
             ret_val = self._handle_update_table_row(param)
 
-        elif action_id == "update_table_row_by_key":
-            ret_val = self._handle_update_table_row_by_key(param)
+        elif action_id == "update_table_row_with_key":
+            ret_val = self._handle_update_table_row_with_key(param)
 
         elif action_id == 'list_tasks':
             ret_val = self._handle_list_tasks(param)

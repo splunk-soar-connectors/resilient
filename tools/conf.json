@@ -53,6 +53,7 @@
             "action": "search tickets",
             "description": "Submit search query for incidents",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "QueryDTO", "description": "Query data as JSON String, format is QueryDTO data type from API" },
                 { "name": "add_condition_all_active_tickets", "data_type": "boolean", "description": "Filters for active tickets" },
                 { "name": "add_condition_closed_in_last_24_hours", "data_type": "boolean", "description": "Filters for tickets closed in last 24 hours" },
@@ -169,6 +170,7 @@
             "action": "list tables",
             "description": "list tables",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] }
             ],
             "output": "json"
@@ -302,6 +304,7 @@
             "action": "download attachment",
             "description": "download attachment from incident",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
             ],
@@ -311,6 +314,7 @@
             "action": "add attachment",
             "description": "add attachment to incident",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "vault_id", "required": true, "primary": true, "description": "vault ID of file", "contains": ["vaultid"] }
             ],

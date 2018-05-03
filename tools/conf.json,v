@@ -1,9 +1,14 @@
-head	1.6;
+head	1.7;
 access;
 symbols;
 locks; strict;
 comment	@# @;
 
+
+1.7
+date	2018.05.03.22.33.44;	author jang;	state Exp;
+branches;
+next	1.6;
 
 1.6
 date	2018.05.03.20.08.05;	author jang;	state Exp;
@@ -40,9 +45,9 @@ desc
 @@
 
 
-1.6
+1.7
 log
-@resilient-15
+@1.0.27
 @
 text
 @{
@@ -100,6 +105,7 @@ text
             "action": "search tickets",
             "description": "Submit search query for incidents",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "QueryDTO", "description": "Query data as JSON String, format is QueryDTO data type from API" },
                 { "name": "add_condition_all_active_tickets", "data_type": "boolean", "description": "Filters for active tickets" },
                 { "name": "add_condition_closed_in_last_24_hours", "data_type": "boolean", "description": "Filters for tickets closed in last 24 hours" },
@@ -216,6 +222,7 @@ text
             "action": "list tables",
             "description": "list tables",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] }
             ],
             "output": "json"
@@ -349,6 +356,7 @@ text
             "action": "download attachment",
             "description": "download attachment from incident",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
             ],
@@ -358,6 +366,7 @@ text
             "action": "add attachment",
             "description": "add attachment to incident",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "vault_id", "required": true, "primary": true, "description": "vault ID of file", "contains": ["vaultid"] }
             ],
@@ -418,6 +427,18 @@ text
         { "code": 503, "success": false, "progress": "Service unavailable - usually related to LDAP not being accessible", "response": false }
     ]
 }
+@
+
+
+1.6
+log
+@resilient-15
+@
+text
+@d56 1
+d173 1
+d307 1
+d317 1
 @
 
 

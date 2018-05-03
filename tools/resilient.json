@@ -9,8 +9,8 @@
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright Phantom 2017",
-    "app_version": "1.0.26",
-    "utctime_updated": "2017-10-30T03:18:27.096292",
+    "app_version": "1.0.27",
+    "utctime_updated": "2018-05-03T22:31:37.122043",
     "package_name": "phantom_resilient",
     "main_module": "resilient_connector.pyc",
     "min_phantom_version": "3.0.251",
@@ -507,13 +507,21 @@
             "type": "investigate",
             "read_only": true,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
                 "querydto": {
                     "description": "Query data as JSON String, format is QueryDTO data type from API",
                     "data_type": "string",
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 10
+                    "order": 20
                 },
                 "add_condition_all_active_tickets": {
                     "description": "Filters for active tickets",
@@ -521,7 +529,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 20
+                    "order": 30
                 },
                 "add_condition_closed_in_last_24_hours": {
                     "description": "Filters for tickets closed in last 24 hours",
@@ -529,7 +537,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 30
+                    "order": 40
                 },
                 "add_condition_created_in_last_24_hours": {
                     "description": "Filters for tickets created in last 24 hours",
@@ -537,7 +545,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 40
+                    "order": 50
                 },
                 "1st_condition_field_name": {
                     "description": "The field name in the condition",
@@ -545,7 +553,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 50
+                    "order": 60
                 },
                 "1st_condition_field_value": {
                     "description": "The value used for comparison",
@@ -553,7 +561,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 60
+                    "order": 70
                 },
                 "1st_condition_value_is_datetime": {
                     "description": "The value is a datetime; convert to Resilient internal representation",
@@ -561,7 +569,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 70
+                    "order": 80
                 },
                 "1st_condition_comparison_method": {
                     "description": "The method used to compare the value, [equals, gt, lte]. Look up MethodName datatype in the api",
@@ -569,7 +577,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 80
+                    "order": 90
                 },
                 "2nd_condition_field_name": {
                     "description": "The field name in the condition",
@@ -577,7 +585,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 90
+                    "order": 100
                 },
                 "2nd_condition_field_value": {
                     "description": "The value used for comparison",
@@ -585,7 +593,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 100
+                    "order": 110
                 },
                 "2nd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
@@ -593,7 +601,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 110
+                    "order": 120
                 },
                 "2nd_condition_comparison_method": {
                     "description": "The method used to compare the value",
@@ -601,7 +609,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 120
+                    "order": 130
                 },
                 "3rd_condition_field_name": {
                     "description": "The field name in the condition",
@@ -609,7 +617,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 130
+                    "order": 140
                 },
                 "3rd_condition_field_value": {
                     "description": "The value used for comparison",
@@ -617,7 +625,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 140
+                    "order": 150
                 },
                 "3rd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
@@ -625,7 +633,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 150
+                    "order": 160
                 },
                 "3rd_condition_comparison_method": {
                     "description": "The method used to compare the value",
@@ -633,7 +641,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 160
+                    "order": 170
                 },
                 "4th_condition_field_name": {
                     "description": "The field name in the condition",
@@ -641,7 +649,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 170
+                    "order": 180
                 },
                 "4th_condition_field_value": {
                     "description": "The value used for comparison",
@@ -649,7 +657,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 180
+                    "order": 190
                 },
                 "4th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
@@ -657,7 +665,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 190
+                    "order": 200
                 },
                 "4th_condition_comparison_method": {
                     "description": "The method used to compare the value",
@@ -665,7 +673,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 200
+                    "order": 210
                 },
                 "5th_condition_field_name": {
                     "description": "The field name in the condition",
@@ -673,7 +681,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 210
+                    "order": 220
                 },
                 "5th_condition_field_value": {
                     "description": "The value used for comparison",
@@ -681,7 +689,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 220
+                    "order": 230
                 },
                 "5th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
@@ -689,7 +697,7 @@
                     "required": false,
                     "primary": false,
                     "default": false,
-                    "order": 230
+                    "order": 240
                 },
                 "5th_condition_comparison_method": {
                     "description": "The method used to compare the value",
@@ -697,7 +705,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 240
+                    "order": 250
                 }
             },
             "output": [
@@ -1158,7 +1166,7 @@
                     "required": false,
                     "primary": false,
                     "default": true,
-                    "order": 5
+                    "order": 10
                 },
                 "incident_id": {
                     "description": "ID of incident",
@@ -1166,7 +1174,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 10,
+                    "order": 20,
                     "contains": [
                         "ticketid"
                     ]
@@ -1235,7 +1243,7 @@
                     "required": false,
                     "primary": false,
                     "default": true,
-                    "order": 5
+                    "order": 10
                 },
                 "incident_id": {
                     "description": "ID of incident",
@@ -1243,7 +1251,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 10,
+                    "order": 20,
                     "contains": [
                         "ticketid"
                     ]
@@ -1254,7 +1262,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 20,
+                    "order": 30,
                     "contains": [
                         "commentid"
                     ]
@@ -1323,7 +1331,7 @@
                     "required": false,
                     "primary": false,
                     "default": true,
-                    "order": 5
+                    "order": 10
                 },
                 "incident_id": {
                     "description": "ID of incident",
@@ -1331,7 +1339,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 10,
+                    "order": 20,
                     "contains": [
                         "ticketid"
                     ]
@@ -1342,7 +1350,7 @@
                     "required": false,
                     "primary": true,
                     "default": "",
-                    "order": 20,
+                    "order": 30,
                     "contains": [
                         "commentid"
                     ]
@@ -1353,7 +1361,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 30
+                    "order": 40
                 },
                 "incidentcommentdto": {
                     "description": "comment data as JSON String, format is IncidentCommentDTO data type from API",
@@ -1361,7 +1369,7 @@
                     "required": false,
                     "primary": false,
                     "default": "",
-                    "order": 40
+                    "order": 50
                 }
             },
             "output": [
@@ -1427,7 +1435,7 @@
                     "required": false,
                     "primary": false,
                     "default": true,
-                    "order": 5
+                    "order": 10
                 },
                 "incident_id": {
                     "description": "ID of incident",
@@ -1435,7 +1443,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 10,
+                    "order": 20,
                     "contains": [
                         "ticketid"
                     ]
@@ -1446,7 +1454,7 @@
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 20,
+                    "order": 30,
                     "contains": [
                         "commentid"
                     ]
@@ -1457,7 +1465,7 @@
                     "required": true,
                     "primary": false,
                     "default": "",
-                    "order": 30
+                    "order": 40
                 }
             },
             "output": [
@@ -1517,13 +1525,21 @@
             "type": "investigate",
             "read_only": true,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
                 "incident_id": {
                     "description": "ID of incident",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
                     "default": "",
-                    "order": 10,
+                    "order": 20,
                     "contains": [
                         "ticketid"
                     ]
@@ -2009,17 +2025,6 @@
                     "primary": false,
                     "default": true,
                     "order": 10
-                },
-                "task_id": {
-                    "description": "ID of incident",
-                    "data_type": "string",
-                    "required": true,
-                    "primary": true,
-                    "default": "",
-                    "order": 20,
-                    "contains": [
-                        "taskid"
-                    ]
                 }
             },
             "output": [
@@ -2289,6 +2294,64 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "download attachment",
+            "identifier": "download_attachment",
+            "description": "Download attachment from incident",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "attachment_id": {
+                    "description": "ID of attachment",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "attachmentid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "add attachment",
             "identifier": "add_attachment",
             "description": "Add attachment to incident",
@@ -2322,7 +2385,7 @@
                     "default": "",
                     "order": 30,
                     "contains": [
-                        "pe file"
+                        "vaultid"
                     ]
                 }
             },
