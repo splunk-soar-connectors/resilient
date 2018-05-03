@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <title>Resilient Systems REST API: ActionDataDTO</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!--custom css for these pages-->
+  <link rel="stylesheet" href="css/style.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body data-spy="scroll" data-target="#apinav">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">Resilient Systems REST API: ActionDataDTO</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="data.html">Data Types</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" id="apinav">
+        <ul class="nav nav-sidebar">
+          <li class="text-right"><a href="#top"><small>Back to Top</small></a></li>
+        </ul>
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <ol class="breadcrumb" id="top">
+          <li class="active dropdown"><a href="index.html">Home</a></li>
+          <li class="active dropdown"><a href="syntax_json.html">JSON</a></li>
+          <li class="dropdown"><a href="json_ActionDataDTO.html">ActionDataDTO</a></li>
+        </ol>
+
+      <h1 class="page-header">ActionDataDTO <small>Data Type</small></h1>
+
+      <p>Holds information sent to a message destination when an action fires.</p>
+
+      <dl class="dl-horizontal">
+      </dl>
+
+      <table class="table">
+        <caption>Properties</caption>
+        <thead>
+        <tr>
+          <th>name</th>
+          <th>data type</th>
+          <th>description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>  <span class="property-name" id="reslink_action_id">action_id</span>
+</td>
+          <td>  <span class="datatype-reference">number
+</span>
+</td>
+          <td>  <span class="property-description">The ID of the action that triggered. May be null if this was triggered from a workflow.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_object_type">object_type</span>
+</td>
+          <td>  <span class="datatype-reference">number
+</span>
+</td>
+          <td>  <span class="property-description">The type of the object contained in the data.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_incident">incident</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_FullIncidentDataDTO.html">FullIncidentDataDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the incident data.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_task">task</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_TaskDTO.html">TaskDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the task data.  Note that this will be null if the action does not apply to tasks.  You can
+use the 'incident' property to get information about the task's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_artifact">artifact</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_IncidentArtifactDTO.html">IncidentArtifactDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the artifact data.  Note that this will be null if the action does not apply to artifacts.  You can
+use the 'incident' property to get information about the artifact's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_note">note</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_CommentDTO.html">CommentDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the note data.  This will be null if the action does not apply to notes.  You can use the 'incident' property
+to get information about the note's incident.  If the not applies to a task, you can also use the 'task' property
+to get information about the note's task.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_milestone">milestone</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_MilestoneDTO.html">MilestoneDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the milestone data.  This will be null if the action does not apply to milestones.  You can use the 'incident'
+property to get information about the milestone's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_attachment">attachment</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_AttachmentDTO.html">AttachmentDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the attachment data.  This will be null if the action does not apply to attachments.  You can use the 'incident' property
+to get information about the incident associated with the attachment.  You can use the 'task' property to get information about
+the task that the attachment is associated with (if the attachment applied to a task).</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_row">row</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_DataTableRowDataDTO.html">DataTableRowDataDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the row data of a data table.  This will be null if the action does not apply to data table rows.  You can use the 'incident' property
+to get information about the incident associated with the data table.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_type_info">type_info</span>
+</td>
+          <td>  <span class="datatype-reference">object
+</span>
+</td>
+          <td>  <span class="property-description">Gets information about the types.  Note that type_info only includes information relevant to this
+action data.  For example, it does NOT include field data values that are not referenced.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_properties">properties</span>
+</td>
+          <td>  <span class="datatype-reference">object
+</span>
+</td>
+          <td>  <span class="property-description">Gets the custom properties (fields) associated with this action. This is only applicable for manual actions.
+This may be null if it is the result of an automatic action or a manual action without custom properties.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_user">user</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_JustUserDTO.html">JustUserDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">The user that triggered the action</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_operation_type">operation_type</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_OperationType.html">OperationType</a>
+</span>
+</td>
+          <td>  <span class="property-description">Gets the <a href="json_OperationType.html">operation</a> that was executed on the object.
+This way the action processor can determine the current status of the object.</span>
+</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="lead">Example</p>
+
+      <pre class="prettyprint lang-js example">{
+  &quot;action_id&quot; : 12345,
+  &quot;object_type&quot; : 12345,
+  &quot;incident&quot; : {
+    &quot;dtm&quot; : {
+      &quot;property1&quot; : &quot;...&quot;,
+      &quot;property2&quot; : &quot;...&quot;
+    },
+    &quot;cm&quot; : {
+      &quot;unassigneds&quot; : [ { }, { } ],
+      &quot;total&quot; : 12345,
+      &quot;geo_counts&quot; : {
+        &quot;property1&quot; : &quot;...&quot;,
+        &quot;property2&quot; : &quot;...&quot;
+      }
+    },
+    &quot;regulators&quot; : {
+      &quot;ids&quot; : [ { }, { } ]
+    },
+    &quot;hipaa&quot; : {
+      &quot;hipaa_adverse&quot; : true,
+      &quot;hipaa_misused&quot; : true,
+      &quot;hipaa_acquired&quot; : true,
+      &quot;hipaa_additional_misuse&quot; : true,
+      &quot;hipaa_breach&quot; : true,
+      &quot;hipaa_adverse_comment&quot; : &quot;...&quot;,
+      &quot;hipaa_misused_comment&quot; : &quot;...&quot;,
+      &quot;hipaa_acquired_comment&quot; : &quot;...&quot;,
+      &quot;hipaa_additional_misuse_comment&quot; : &quot;...&quot;,
+      &quot;hipaa_breach_comment&quot; : &quot;...&quot;
+    },
+    &quot;tasks&quot; : [ {
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;regs&quot; : {
+        &quot;property1&quot; : &quot;...&quot;,
+        &quot;property2&quot; : &quot;...&quot;
+      },
+      &quot;custom&quot; : true,
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_owner_id&quot; : { },
+      &quot;due_date&quot; : 12345,
+      &quot;required&quot; : true,
+      &quot;owner_id&quot; : { },
+      &quot;id&quot; : 12345,
+      &quot;status&quot; : &quot;...&quot;,
+      &quot;inc_training&quot; : true,
+      &quot;frozen&quot; : true,
+      &quot;owner_fname&quot; : &quot;...&quot;,
+      &quot;owner_lname&quot; : &quot;...&quot;,
+      &quot;cat_name&quot; : &quot;...&quot;,
+      &quot;description&quot; : &quot;...&quot;,
+      &quot;init_date&quot; : 12345,
+      &quot;instr_text&quot; : &quot;...&quot;,
+      &quot;at_id&quot; : { },
+      &quot;active&quot; : true,
+      &quot;members&quot; : [ { }, { } ],
+      &quot;perms&quot; : { },
+      &quot;creator&quot; : { },
+      &quot;notes&quot; : [ { }, { } ],
+      &quot;closed_date&quot; : 12345,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;phase_id&quot; : { },
+      &quot;category_id&quot; : { },
+      &quot;notes_count&quot; : 12345,
+      &quot;attachments_count&quot; : 12345
+    }, {
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;regs&quot; : {
+        &quot;property1&quot; : &quot;...&quot;,
+        &quot;property2&quot; : &quot;...&quot;
+      },
+      &quot;custom&quot; : true,
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_owner_id&quot; : { },
+      &quot;due_date&quot; : 12345,
+      &quot;required&quot; : true,
+      &quot;owner_id&quot; : { },
+      &quot;id&quot; : 12345,
+      &quot;status&quot; : &quot;...&quot;,
+      &quot;inc_training&quot; : true,
+      &quot;frozen&quot; : true,
+      &quot;owner_fname&quot; : &quot;...&quot;,
+      &quot;owner_lname&quot; : &quot;...&quot;,
+      &quot;cat_name&quot; : &quot;...&quot;,
+      &quot;description&quot; : &quot;...&quot;,
+      &quot;init_date&quot; : 12345,
+      &quot;instr_text&quot; : &quot;...&quot;,
+      &quot;at_id&quot; : { },
+      &quot;active&quot; : true,
+      &quot;members&quot; : [ { }, { } ],
+      &quot;perms&quot; : { },
+      &quot;creator&quot; : { },
+      &quot;notes&quot; : [ { }, { } ],
+      &quot;closed_date&quot; : 12345,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;phase_id&quot; : { },
+      &quot;category_id&quot; : { },
+      &quot;notes_count&quot; : 12345,
+      &quot;attachments_count&quot; : 12345
+    } ],
+    &quot;artifacts&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;type&quot; : { },
+      &quot;value&quot; : &quot;...&quot;,
+      &quot;description&quot; : { },
+      &quot;creator&quot; : { },
+      &quot;hits&quot; : [ { }, { } ],
+      &quot;attachment&quot; : { },
+      &quot;parent_id&quot; : 12345,
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;inc_owner&quot; : { },
+      &quot;created&quot; : 12345,
+      &quot;pending_sources&quot; : [ { }, { } ],
+      &quot;perms&quot; : { },
+      &quot;properties&quot; : [ { }, { } ],
+      &quot;location&quot; : { },
+      &quot;whois&quot; : { },
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;relating&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;type&quot; : { },
+      &quot;value&quot; : &quot;...&quot;,
+      &quot;description&quot; : { },
+      &quot;creator&quot; : { },
+      &quot;hits&quot; : [ { }, { } ],
+      &quot;attachment&quot; : { },
+      &quot;parent_id&quot; : 12345,
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;inc_owner&quot; : { },
+      &quot;created&quot; : 12345,
+      &quot;pending_sources&quot; : [ { }, { } ],
+      &quot;perms&quot; : { },
+      &quot;properties&quot; : [ { }, { } ],
+      &quot;location&quot; : { },
+      &quot;whois&quot; : { },
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;relating&quot; : true
+    } ],
+    &quot;comments&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;parent_id&quot; : 12345,
+      &quot;user_id&quot; : { },
+      &quot;user_fname&quot; : &quot;...&quot;,
+      &quot;user_lname&quot; : &quot;...&quot;,
+      &quot;create_date&quot; : 12345,
+      &quot;modify_date&quot; : 12345,
+      &quot;modify_user&quot; : { },
+      &quot;text&quot; : { },
+      &quot;children&quot; : [ { }, { } ],
+      &quot;mentioned_users&quot; : [ { }, { } ],
+      &quot;comment_perms&quot; : { },
+      &quot;is_deleted&quot; : true,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;task_id&quot; : 12345,
+      &quot;task_name&quot; : &quot;...&quot;,
+      &quot;type&quot; : &quot;incident&quot;,
+      &quot;inc_owner&quot; : { }
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;parent_id&quot; : 12345,
+      &quot;user_id&quot; : { },
+      &quot;user_fname&quot; : &quot;...&quot;,
+      &quot;user_lname&quot; : &quot;...&quot;,
+      &quot;create_date&quot; : 12345,
+      &quot;modify_date&quot; : 12345,
+      &quot;modify_user&quot; : { },
+      &quot;text&quot; : { },
+      &quot;children&quot; : [ { }, { } ],
+      &quot;mentioned_users&quot; : [ { }, { } ],
+      &quot;comment_perms&quot; : { },
+      &quot;is_deleted&quot; : true,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;task_id&quot; : 12345,
+      &quot;task_name&quot; : &quot;...&quot;,
+      &quot;type&quot; : &quot;incident&quot;,
+      &quot;inc_owner&quot; : { }
+    } ],
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ],
+    &quot;vers&quot; : 12345,
+    &quot;addr&quot; : &quot;...&quot;,
+    &quot;city&quot; : &quot;...&quot;,
+    &quot;creator_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;creator&quot; : {
+      &quot;id&quot; : 12345,
+      &quot;fname&quot; : &quot;...&quot;,
+      &quot;lname&quot; : &quot;...&quot;,
+      &quot;status&quot; : { },
+      &quot;email&quot; : &quot;...&quot;,
+      &quot;phone&quot; : &quot;...&quot;,
+      &quot;cell&quot; : &quot;...&quot;,
+      &quot;title&quot; : &quot;...&quot;,
+      &quot;notes&quot; : &quot;...&quot;,
+      &quot;last_login&quot; : 12345,
+      &quot;locked&quot; : true,
+      &quot;is_external&quot; : true
+    },
+    &quot;crimestatus_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;employee_involved&quot; : true,
+    &quot;end_date&quot; : 12345,
+    &quot;exposure_dept_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;exposure_individual_name&quot; : &quot;...&quot;,
+    &quot;exposure_vendor_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;incident_type_ids&quot; : [ { }, { } ],
+    &quot;jurisdiction_name&quot; : &quot;...&quot;,
+    &quot;reporter&quot; : &quot;...&quot;,
+    &quot;start_date&quot; : 12345,
+    &quot;state&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;country&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;zip&quot; : &quot;...&quot;,
+    &quot;exposure&quot; : 12345,
+    &quot;org_id&quot; : 12345,
+    &quot;is_scenario&quot; : true,
+    &quot;members&quot; : [ { }, { } ],
+    &quot;negative_pr_likely&quot; : true,
+    &quot;perms&quot; : {
+      &quot;create_milestones&quot; : true,
+      &quot;list_milestones&quot; : true,
+      &quot;create_artifacts&quot; : true,
+      &quot;list_artifacts&quot; : true,
+      &quot;delete&quot; : true,
+      &quot;read&quot; : true,
+      &quot;write&quot; : true,
+      &quot;comment&quot; : true,
+      &quot;assign&quot; : true,
+      &quot;close&quot; : true,
+      &quot;change_members&quot; : true,
+      &quot;attach_file&quot; : true,
+      &quot;read_attachments&quot; : true,
+      &quot;delete_attachments&quot; : true
+    },
+    &quot;confirmed&quot; : true,
+    &quot;task_changes&quot; : {
+      &quot;added&quot; : [ { }, { } ],
+      &quot;removed&quot; : [ { }, { } ]
+    },
+    &quot;exposure_type_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;assessment&quot; : &quot;...&quot;,
+    &quot;data_compromised&quot; : true,
+    &quot;nist_attack_vectors&quot; : [ { }, { } ],
+    &quot;properties&quot; : {
+      &quot;property1&quot; : &quot;...&quot;,
+      &quot;property2&quot; : &quot;...&quot;
+    },
+    &quot;resolution_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;resolution_summary&quot; : {
+      &quot;format&quot; : &quot;unknown&quot;,
+      &quot;content&quot; : &quot;...&quot;
+    },
+    &quot;pii&quot; : {
+      &quot;data_compromised&quot; : true,
+      &quot;harmstatus_id&quot; : { },
+      &quot;data_encrypted&quot; : true,
+      &quot;data_contained&quot; : true,
+      &quot;data_source_ids&quot; : [ { }, { } ],
+      &quot;data_format&quot; : { },
+      &quot;assessment&quot; : &quot;...&quot;,
+      &quot;exposure&quot; : 12345,
+      &quot;gdpr_harm_risk&quot; : { },
+      &quot;gdpr_lawful_data_processing_categories&quot; : [ { }, { } ]
+    },
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;,
+    &quot;discovered_date&quot; : 12345,
+    &quot;due_date&quot; : 12345,
+    &quot;create_date&quot; : 12345,
+    &quot;description&quot; : {
+      &quot;format&quot; : &quot;text&quot;,
+      &quot;content&quot; : &quot;...&quot;
+    },
+    &quot;owner_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;phase_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;severity_code&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;plan_status&quot; : &quot;...&quot;,
+    &quot;inc_training&quot; : true
+  },
+  &quot;task&quot; : {
+    &quot;inc_name&quot; : &quot;...&quot;,
+    &quot;name&quot; : &quot;...&quot;,
+    &quot;regs&quot; : {
+      &quot;property1&quot; : &quot;...&quot;,
+      &quot;property2&quot; : &quot;...&quot;
+    },
+    &quot;custom&quot; : true,
+    &quot;inc_id&quot; : 12345,
+    &quot;inc_owner_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;due_date&quot; : 12345,
+    &quot;required&quot; : true,
+    &quot;owner_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;id&quot; : 12345,
+    &quot;status&quot; : &quot;...&quot;,
+    &quot;inc_training&quot; : true,
+    &quot;frozen&quot; : true,
+    &quot;owner_fname&quot; : &quot;...&quot;,
+    &quot;owner_lname&quot; : &quot;...&quot;,
+    &quot;cat_name&quot; : &quot;...&quot;,
+    &quot;description&quot; : &quot;...&quot;,
+    &quot;init_date&quot; : 12345,
+    &quot;instr_text&quot; : &quot;...&quot;,
+    &quot;at_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;active&quot; : true,
+    &quot;members&quot; : [ { }, { } ],
+    &quot;perms&quot; : {
+      &quot;read&quot; : true,
+      &quot;write&quot; : true,
+      &quot;comment&quot; : true,
+      &quot;assign&quot; : true,
+      &quot;close&quot; : true,
+      &quot;change_members&quot; : true,
+      &quot;attach_file&quot; : true,
+      &quot;read_attachments&quot; : true,
+      &quot;delete_attachments&quot; : true
+    },
+    &quot;creator&quot; : {
+      &quot;id&quot; : 12345,
+      &quot;fname&quot; : &quot;...&quot;,
+      &quot;lname&quot; : &quot;...&quot;,
+      &quot;status&quot; : { },
+      &quot;email&quot; : &quot;...&quot;,
+      &quot;phone&quot; : &quot;...&quot;,
+      &quot;cell&quot; : &quot;...&quot;,
+      &quot;title&quot; : &quot;...&quot;,
+      &quot;notes&quot; : &quot;...&quot;,
+      &quot;last_login&quot; : 12345,
+      &quot;locked&quot; : true,
+      &quot;is_external&quot; : true
+    },
+    &quot;notes&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;parent_id&quot; : 12345,
+      &quot;user_id&quot; : { },
+      &quot;user_fname&quot; : &quot;...&quot;,
+      &quot;user_lname&quot; : &quot;...&quot;,
+      &quot;create_date&quot; : 12345,
+      &quot;modify_date&quot; : 12345,
+      &quot;modify_user&quot; : { },
+      &quot;text&quot; : { },
+      &quot;children&quot; : [ { }, { } ],
+      &quot;mentioned_users&quot; : [ { }, { } ],
+      &quot;comment_perms&quot; : { },
+      &quot;is_deleted&quot; : true,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;task_id&quot; : 12345,
+      &quot;task_name&quot; : &quot;...&quot;,
+      &quot;type&quot; : &quot;task&quot;,
+      &quot;inc_owner&quot; : { }
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;parent_id&quot; : 12345,
+      &quot;user_id&quot; : { },
+      &quot;user_fname&quot; : &quot;...&quot;,
+      &quot;user_lname&quot; : &quot;...&quot;,
+      &quot;create_date&quot; : 12345,
+      &quot;modify_date&quot; : 12345,
+      &quot;modify_user&quot; : { },
+      &quot;text&quot; : { },
+      &quot;children&quot; : [ { }, { } ],
+      &quot;mentioned_users&quot; : [ { }, { } ],
+      &quot;comment_perms&quot; : { },
+      &quot;is_deleted&quot; : true,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;task_id&quot; : 12345,
+      &quot;task_name&quot; : &quot;...&quot;,
+      &quot;type&quot; : &quot;incident&quot;,
+      &quot;inc_owner&quot; : { }
+    } ],
+    &quot;closed_date&quot; : 12345,
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ],
+    &quot;phase_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;category_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;notes_count&quot; : 12345,
+    &quot;attachments_count&quot; : 12345
+  },
+  &quot;artifact&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;type&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;value&quot; : &quot;...&quot;,
+    &quot;description&quot; : {
+      &quot;format&quot; : &quot;text&quot;,
+      &quot;content&quot; : &quot;...&quot;
+    },
+    &quot;creator&quot; : {
+      &quot;id&quot; : 12345,
+      &quot;fname&quot; : &quot;...&quot;,
+      &quot;lname&quot; : &quot;...&quot;,
+      &quot;status&quot; : { },
+      &quot;email&quot; : &quot;...&quot;,
+      &quot;phone&quot; : &quot;...&quot;,
+      &quot;cell&quot; : &quot;...&quot;,
+      &quot;title&quot; : &quot;...&quot;,
+      &quot;notes&quot; : &quot;...&quot;,
+      &quot;last_login&quot; : 12345,
+      &quot;locked&quot; : true,
+      &quot;is_external&quot; : true
+    },
+    &quot;hits&quot; : [ {
+      &quot;id&quot; : &quot;...&quot;,
+      &quot;value&quot; : &quot;...&quot;,
+      &quot;threat_source_id&quot; : { },
+      &quot;artifact_type_id&quot; : { },
+      &quot;active&quot; : true
+    }, {
+      &quot;id&quot; : &quot;...&quot;,
+      &quot;value&quot; : &quot;...&quot;,
+      &quot;threat_source_id&quot; : { },
+      &quot;artifact_type_id&quot; : { },
+      &quot;active&quot; : true
+    } ],
+    &quot;attachment&quot; : {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;content_type&quot; : &quot;...&quot;,
+      &quot;created&quot; : 12345,
+      &quot;creator_id&quot; : { },
+      &quot;size&quot; : 12345,
+      &quot;vers&quot; : 12345,
+      &quot;actions&quot; : [ { }, { } ],
+      &quot;inc_id&quot; : 12345,
+      &quot;inc_name&quot; : &quot;...&quot;,
+      &quot;inc_owner&quot; : { },
+      &quot;task_id&quot; : 12345,
+      &quot;task_name&quot; : &quot;...&quot;,
+      &quot;type&quot; : &quot;artifact&quot;
+    },
+    &quot;parent_id&quot; : 12345,
+    &quot;inc_id&quot; : 12345,
+    &quot;inc_name&quot; : &quot;...&quot;,
+    &quot;inc_owner&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;created&quot; : 12345,
+    &quot;pending_sources&quot; : [ { }, { } ],
+    &quot;perms&quot; : {
+      &quot;read&quot; : true,
+      &quot;write&quot; : true,
+      &quot;delete&quot; : true
+    },
+    &quot;properties&quot; : [ {
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;value&quot; : &quot;...&quot;
+    }, {
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;value&quot; : &quot;...&quot;
+    } ],
+    &quot;location&quot; : {
+      &quot;latlng&quot; : { },
+      &quot;city&quot; : &quot;...&quot;,
+      &quot;state&quot; : &quot;...&quot;,
+      &quot;country&quot; : &quot;...&quot;,
+      &quot;postalCode&quot; : &quot;...&quot;
+    },
+    &quot;whois&quot; : {
+      &quot;raw&quot; : &quot;...&quot;,
+      &quot;pending&quot; : true,
+      &quot;invalid&quot; : true
+    },
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ],
+    &quot;relating&quot; : true
+  },
+  &quot;note&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;parent_id&quot; : 12345,
+    &quot;user_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;user_fname&quot; : &quot;...&quot;,
+    &quot;user_lname&quot; : &quot;...&quot;,
+    &quot;create_date&quot; : 12345,
+    &quot;modify_date&quot; : 12345,
+    &quot;modify_user&quot; : {
+      &quot;id&quot; : { },
+      &quot;first_name&quot; : &quot;...&quot;,
+      &quot;last_name&quot; : &quot;...&quot;
+    },
+    &quot;text&quot; : {
+      &quot;format&quot; : &quot;text&quot;,
+      &quot;content&quot; : &quot;...&quot;
+    },
+    &quot;children&quot; : [ { }, { } ],
+    &quot;mentioned_users&quot; : [ { }, { } ],
+    &quot;comment_perms&quot; : {
+      &quot;update&quot; : true,
+      &quot;delete&quot; : true
+    },
+    &quot;is_deleted&quot; : true,
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ],
+    &quot;inc_id&quot; : 12345,
+    &quot;inc_name&quot; : &quot;...&quot;,
+    &quot;task_id&quot; : 12345,
+    &quot;task_name&quot; : &quot;...&quot;,
+    &quot;type&quot; : &quot;task&quot;,
+    &quot;inc_owner&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    }
+  },
+  &quot;milestone&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;title&quot; : &quot;...&quot;,
+    &quot;description&quot; : {
+      &quot;format&quot; : &quot;text&quot;,
+      &quot;content&quot; : &quot;...&quot;
+    },
+    &quot;user&quot; : {
+      &quot;id&quot; : 12345,
+      &quot;fname&quot; : &quot;...&quot;,
+      &quot;lname&quot; : &quot;...&quot;,
+      &quot;status&quot; : { },
+      &quot;email&quot; : &quot;...&quot;,
+      &quot;phone&quot; : &quot;...&quot;,
+      &quot;cell&quot; : &quot;...&quot;,
+      &quot;title&quot; : &quot;...&quot;,
+      &quot;notes&quot; : &quot;...&quot;,
+      &quot;last_login&quot; : 12345,
+      &quot;locked&quot; : true,
+      &quot;is_external&quot; : true
+    },
+    &quot;created&quot; : 12345,
+    &quot;inc_id&quot; : 12345,
+    &quot;inc_name&quot; : &quot;...&quot;,
+    &quot;inc_owner&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;perms&quot; : {
+      &quot;update&quot; : true,
+      &quot;delete&quot; : true
+    },
+    &quot;date&quot; : 12345,
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ]
+  },
+  &quot;attachment&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;,
+    &quot;content_type&quot; : &quot;...&quot;,
+    &quot;created&quot; : 12345,
+    &quot;creator_id&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;size&quot; : 12345,
+    &quot;vers&quot; : 12345,
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ],
+    &quot;inc_id&quot; : 12345,
+    &quot;inc_name&quot; : &quot;...&quot;,
+    &quot;inc_owner&quot; : {
+      &quot;id&quot; : { },
+      &quot;name&quot; : &quot;...&quot;
+    },
+    &quot;task_id&quot; : 12345,
+    &quot;task_name&quot; : &quot;...&quot;,
+    &quot;type&quot; : &quot;artifact&quot;
+  },
+  &quot;row&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;cells&quot; : {
+      &quot;property1&quot; : &quot;...&quot;,
+      &quot;property2&quot; : &quot;...&quot;
+    },
+    &quot;actions&quot; : [ {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    }, {
+      &quot;id&quot; : 12345,
+      &quot;name&quot; : &quot;...&quot;,
+      &quot;enabled&quot; : true
+    } ]
+  },
+  &quot;type_info&quot; : {
+    &quot;property1&quot; : &quot;...&quot;,
+    &quot;property2&quot; : &quot;...&quot;
+  },
+  &quot;properties&quot; : {
+    &quot;property1&quot; : &quot;...&quot;,
+    &quot;property2&quot; : &quot;...&quot;
+  },
+  &quot;user&quot; : {
+    &quot;id&quot; : 12345,
+    &quot;fname&quot; : &quot;...&quot;,
+    &quot;lname&quot; : &quot;...&quot;,
+    &quot;status&quot; : { },
+    &quot;email&quot; : &quot;...&quot;,
+    &quot;phone&quot; : &quot;...&quot;,
+    &quot;cell&quot; : &quot;...&quot;,
+    &quot;title&quot; : &quot;...&quot;,
+    &quot;notes&quot; : &quot;...&quot;,
+    &quot;last_login&quot; : 12345,
+    &quot;locked&quot; : true,
+    &quot;is_external&quot; : true
+  },
+  &quot;operation_type&quot; : &quot;modified&quot;
+}</pre>
+
+        <footer class="footer">
+          <div class="container">
+            <p class="text-muted">&copy; Copyright <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">IBM Corporation</span> <script type="text/javascript" language="javascript">d = new Date;document.write(d.getFullYear());</script>. Generated by <a href="http://enunciate.webcohesion.com">Enunciate</a>.</p>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript placed at the end of the document so the pages load faster. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+  <script>
+    $(function() {
+      $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+      });
+
+      $('[data-toggle="tooltip"]').tooltip()
+    });
+  </script>
+
+</body>
+</html>

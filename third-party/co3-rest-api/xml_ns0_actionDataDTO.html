@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <title>Resilient Systems REST API: actionDataDTO</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!--custom css for these pages-->
+  <link rel="stylesheet" href="css/style.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body data-spy="scroll" data-target="#apinav">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">Resilient Systems REST API: actionDataDTO</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="data.html">Data Types</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" id="apinav">
+        <ul class="nav nav-sidebar">
+          <li class="text-right"><a href="#top"><small>Back to Top</small></a></li>
+        </ul>
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <ol class="breadcrumb" id="top">
+          <li class="active dropdown"><a href="index.html">Home</a></li>
+          <li class="active dropdown"><a href="syntax_xml.html">XML</a></li>
+          <li class="dropdown"><a href="xml_ns0_actionDataDTO.html">actionDataDTO</a></li>
+        </ol>
+
+      <h1 class="page-header">actionDataDTO <small>Data Type</small></h1>
+
+      <p>Holds information sent to a message destination when an action fires.</p>
+
+      <dl class="dl-horizontal">
+        <dt>Namespace</dt>
+        <dd>(Default)</dd>
+      </dl>
+
+      <table class="table">
+        <caption>Properties</caption>
+        <thead>
+        <tr>
+          <th>name</th>
+          <th>data type</th>
+          <th>type</th>
+          <th>namespace</th>
+          <th>min/max occurs</th>
+          <th>description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>  <span class="property-name" id="reslink_action_id">action_id</span>
+</td>
+          <td>  <span class="datatype-reference">int
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">The ID of the action that triggered. May be null if this was triggered from a workflow.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_artifact">artifact</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_incidentArtifactDTO.html">incidentArtifactDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the artifact data.  Note that this will be null if the action does not apply to artifacts.  You can
+use the 'incident' property to get information about the artifact's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_attachment">attachment</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_attachmentDTO.html">attachmentDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the attachment data.  This will be null if the action does not apply to attachments.  You can use the 'incident' property
+to get information about the incident associated with the attachment.  You can use the 'task' property to get information about
+the task that the attachment is associated with (if the attachment applied to a task).</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_incident">incident</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_fullIncidentDataDTO.html">fullIncidentDataDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the incident data.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_milestone">milestone</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_milestoneDTO.html">milestoneDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the milestone data.  This will be null if the action does not apply to milestones.  You can use the 'incident'
+property to get information about the milestone's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_note">note</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_commentDTO.html">commentDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the note data.  This will be null if the action does not apply to notes.  You can use the 'incident' property
+to get information about the note's incident.  If the not applies to a task, you can also use the 'task' property
+to get information about the note's task.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_object_type">object_type</span>
+</td>
+          <td>  <span class="datatype-reference">int
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">The type of the object contained in the data.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_operation_type">operation_type</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_operationType.html">operationType</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the <a href="json_OperationType.html">operation</a> that was executed on the object.
+This way the action processor can determine the current status of the object.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_properties">properties</span>
+</td>
+          <td>  <span class="datatype-reference">(custom)
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the custom properties (fields) associated with this action. This is only applicable for manual actions.
+This may be null if it is the result of an automatic action or a manual action without custom properties.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_task">task</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_taskDTO.html">taskDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets the task data.  Note that this will be null if the action does not apply to tasks.  You can
+use the 'incident' property to get information about the task's incident.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_type_info">type_info</span>
+</td>
+          <td>  <span class="datatype-reference">(custom)
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">Gets information about the types.  Note that type_info only includes information relevant to this
+action data.  For example, it does NOT include field data values that are not referenced.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_user">user</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="xml_ns0_justUserDTO.html">justUserDTO</a>
+</span>
+</td>
+          <td>  <span class="property-type">element
+</span>
+</td>
+          <td>  <span class="property-namespaceInfo">
+</span>
+</td>
+          <td>  <span class="property-minMaxOccurs">0/1
+</span>
+</td>
+          <td>  <span class="property-description">The user that triggered the action</span>
+</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="lead">Example</p>
+
+      <pre class="prettyprint lang-xml example">&lt;actionDataDTO&gt;
+  &lt;action_id&gt;...&lt;/action_id&gt;
+  &lt;object_type&gt;...&lt;/object_type&gt;
+  &lt;incident&gt;
+    &lt;dtm&gt;...&lt;/dtm&gt;
+    &lt;cm&gt;
+      &lt;unassigneds/&gt;
+      &lt;total&gt;...&lt;/total&gt;
+      &lt;geo_counts&gt;...&lt;/geo_counts&gt;
+    &lt;/cm&gt;
+    &lt;regulators&gt;
+      &lt;ids/&gt;
+    &lt;/regulators&gt;
+    &lt;hipaa&gt;
+      &lt;hipaa_adverse&gt;...&lt;/hipaa_adverse&gt;
+      &lt;hipaa_misused&gt;...&lt;/hipaa_misused&gt;
+      &lt;hipaa_acquired&gt;...&lt;/hipaa_acquired&gt;
+      &lt;hipaa_additional_misuse&gt;...&lt;/hipaa_additional_misuse&gt;
+      &lt;hipaa_breach&gt;...&lt;/hipaa_breach&gt;
+      &lt;hipaa_adverse_comment&gt;...&lt;/hipaa_adverse_comment&gt;
+      &lt;hipaa_misused_comment&gt;...&lt;/hipaa_misused_comment&gt;
+      &lt;hipaa_acquired_comment&gt;...&lt;/hipaa_acquired_comment&gt;
+      &lt;hipaa_additional_misuse_comment&gt;...&lt;/hipaa_additional_misuse_comment&gt;
+      &lt;hipaa_breach_comment&gt;...&lt;/hipaa_breach_comment&gt;
+    &lt;/hipaa&gt;
+    &lt;tasks&gt;
+      &lt;inc_name&gt;...&lt;/inc_name&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;regs&gt;...&lt;/regs&gt;
+      &lt;custom&gt;...&lt;/custom&gt;
+      &lt;inc_id&gt;...&lt;/inc_id&gt;
+      &lt;inc_owner_id/&gt;
+      &lt;due_date&gt;...&lt;/due_date&gt;
+      &lt;required&gt;...&lt;/required&gt;
+      &lt;owner_id/&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;status&gt;...&lt;/status&gt;
+      &lt;inc_training&gt;...&lt;/inc_training&gt;
+      &lt;frozen&gt;...&lt;/frozen&gt;
+      &lt;owner_fname&gt;...&lt;/owner_fname&gt;
+      &lt;owner_lname&gt;...&lt;/owner_lname&gt;
+      &lt;cat_name&gt;...&lt;/cat_name&gt;
+      &lt;description&gt;...&lt;/description&gt;
+      &lt;init_date&gt;...&lt;/init_date&gt;
+      &lt;instr_text&gt;...&lt;/instr_text&gt;
+      &lt;at_id/&gt;
+      &lt;active&gt;...&lt;/active&gt;
+      &lt;members/&gt;
+      &lt;perms/&gt;
+      &lt;creator/&gt;
+      &lt;notes/&gt;
+      &lt;closed_date&gt;...&lt;/closed_date&gt;
+      &lt;actions/&gt;
+      &lt;phase_id/&gt;
+      &lt;category_id/&gt;
+      &lt;notes_count&gt;...&lt;/notes_count&gt;
+      &lt;attachments_count&gt;...&lt;/attachments_count&gt;
+    &lt;/tasks&gt;
+    &lt;artifacts&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;type/&gt;
+      &lt;value&gt;...&lt;/value&gt;
+      &lt;description/&gt;
+      &lt;creator/&gt;
+      &lt;hits/&gt;
+      &lt;attachment/&gt;
+      &lt;parent_id&gt;...&lt;/parent_id&gt;
+      &lt;inc_id&gt;...&lt;/inc_id&gt;
+      &lt;inc_name&gt;...&lt;/inc_name&gt;
+      &lt;inc_owner/&gt;
+      &lt;created&gt;...&lt;/created&gt;
+      &lt;pending_sources/&gt;
+      &lt;perms/&gt;
+      &lt;properties/&gt;
+      &lt;location/&gt;
+      &lt;whois/&gt;
+      &lt;actions/&gt;
+      &lt;relating&gt;...&lt;/relating&gt;
+    &lt;/artifacts&gt;
+    &lt;comments&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;parent_id&gt;...&lt;/parent_id&gt;
+      &lt;user_id/&gt;
+      &lt;user_fname&gt;...&lt;/user_fname&gt;
+      &lt;user_lname&gt;...&lt;/user_lname&gt;
+      &lt;create_date&gt;...&lt;/create_date&gt;
+      &lt;modify_date&gt;...&lt;/modify_date&gt;
+      &lt;modify_user/&gt;
+      &lt;text/&gt;
+      &lt;children/&gt;
+      &lt;mentioned_users/&gt;
+      &lt;comment_perms/&gt;
+      &lt;is_deleted&gt;...&lt;/is_deleted&gt;
+      &lt;actions/&gt;
+      &lt;inc_id&gt;...&lt;/inc_id&gt;
+      &lt;inc_name&gt;...&lt;/inc_name&gt;
+      &lt;task_id&gt;...&lt;/task_id&gt;
+      &lt;task_name&gt;...&lt;/task_name&gt;
+      &lt;type&gt;...&lt;/type&gt;
+      &lt;inc_owner/&gt;
+    &lt;/comments&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+    &lt;vers&gt;...&lt;/vers&gt;
+    &lt;addr&gt;...&lt;/addr&gt;
+    &lt;city&gt;...&lt;/city&gt;
+    &lt;creator_id/&gt;
+    &lt;creator/&gt;
+    &lt;crimestatus_id/&gt;
+    &lt;employee_involved&gt;...&lt;/employee_involved&gt;
+    &lt;end_date&gt;...&lt;/end_date&gt;
+    &lt;exposure_dept_id/&gt;
+    &lt;exposure_individual_name&gt;...&lt;/exposure_individual_name&gt;
+    &lt;exposure_vendor_id/&gt;
+    &lt;incident_type_ids/&gt;
+    &lt;jurisdiction_name&gt;...&lt;/jurisdiction_name&gt;
+    &lt;reporter&gt;...&lt;/reporter&gt;
+    &lt;start_date&gt;...&lt;/start_date&gt;
+    &lt;state/&gt;
+    &lt;country/&gt;
+    &lt;zip&gt;...&lt;/zip&gt;
+    &lt;exposure&gt;...&lt;/exposure&gt;
+    &lt;org_id&gt;...&lt;/org_id&gt;
+    &lt;is_scenario&gt;...&lt;/is_scenario&gt;
+    &lt;members/&gt;
+    &lt;negative_pr_likely&gt;...&lt;/negative_pr_likely&gt;
+    &lt;perms/&gt;
+    &lt;confirmed&gt;...&lt;/confirmed&gt;
+    &lt;task_changes/&gt;
+    &lt;exposure_type_id/&gt;
+    &lt;assessment&gt;...&lt;/assessment&gt;
+    &lt;data_compromised&gt;...&lt;/data_compromised&gt;
+    &lt;nist_attack_vectors/&gt;
+    &lt;properties&gt;...&lt;/properties&gt;
+    &lt;resolution_id/&gt;
+    &lt;resolution_summary/&gt;
+    &lt;pii/&gt;
+  &lt;/incident&gt;
+  &lt;task&gt;
+    &lt;inc_name&gt;...&lt;/inc_name&gt;
+    &lt;name&gt;...&lt;/name&gt;
+    &lt;regs&gt;...&lt;/regs&gt;
+    &lt;custom&gt;...&lt;/custom&gt;
+    &lt;inc_id&gt;...&lt;/inc_id&gt;
+    &lt;inc_owner_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/inc_owner_id&gt;
+    &lt;due_date&gt;...&lt;/due_date&gt;
+    &lt;required&gt;...&lt;/required&gt;
+    &lt;owner_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/owner_id&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;status&gt;...&lt;/status&gt;
+    &lt;inc_training&gt;...&lt;/inc_training&gt;
+    &lt;frozen&gt;...&lt;/frozen&gt;
+    &lt;owner_fname&gt;...&lt;/owner_fname&gt;
+    &lt;owner_lname&gt;...&lt;/owner_lname&gt;
+    &lt;cat_name&gt;...&lt;/cat_name&gt;
+    &lt;description&gt;...&lt;/description&gt;
+    &lt;init_date&gt;...&lt;/init_date&gt;
+    &lt;instr_text&gt;...&lt;/instr_text&gt;
+    &lt;at_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/at_id&gt;
+    &lt;active&gt;...&lt;/active&gt;
+    &lt;members&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/members&gt;
+    &lt;perms/&gt;
+    &lt;creator&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;fname&gt;...&lt;/fname&gt;
+      &lt;lname&gt;...&lt;/lname&gt;
+      &lt;status&gt;...&lt;/status&gt;
+      &lt;email&gt;...&lt;/email&gt;
+      &lt;phone&gt;...&lt;/phone&gt;
+      &lt;cell&gt;...&lt;/cell&gt;
+      &lt;title&gt;...&lt;/title&gt;
+      &lt;notes&gt;...&lt;/notes&gt;
+      &lt;last_login&gt;...&lt;/last_login&gt;
+      &lt;locked&gt;...&lt;/locked&gt;
+      &lt;is_external&gt;...&lt;/is_external&gt;
+    &lt;/creator&gt;
+    &lt;notes&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;parent_id&gt;...&lt;/parent_id&gt;
+      &lt;user_id/&gt;
+      &lt;user_fname&gt;...&lt;/user_fname&gt;
+      &lt;user_lname&gt;...&lt;/user_lname&gt;
+      &lt;create_date&gt;...&lt;/create_date&gt;
+      &lt;modify_date&gt;...&lt;/modify_date&gt;
+      &lt;modify_user/&gt;
+      &lt;text/&gt;
+      &lt;children/&gt;
+      &lt;mentioned_users/&gt;
+      &lt;comment_perms/&gt;
+      &lt;is_deleted&gt;...&lt;/is_deleted&gt;
+      &lt;actions/&gt;
+      &lt;inc_id&gt;...&lt;/inc_id&gt;
+      &lt;inc_name&gt;...&lt;/inc_name&gt;
+      &lt;task_id&gt;...&lt;/task_id&gt;
+      &lt;task_name&gt;...&lt;/task_name&gt;
+      &lt;type&gt;...&lt;/type&gt;
+      &lt;inc_owner/&gt;
+    &lt;/notes&gt;
+    &lt;closed_date&gt;...&lt;/closed_date&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+    &lt;phase_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/phase_id&gt;
+    &lt;category_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/category_id&gt;
+    &lt;notes_count&gt;...&lt;/notes_count&gt;
+    &lt;attachments_count&gt;...&lt;/attachments_count&gt;
+  &lt;/task&gt;
+  &lt;artifact&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;type&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/type&gt;
+    &lt;value&gt;...&lt;/value&gt;
+    &lt;description&gt;
+      &lt;format&gt;...&lt;/format&gt;
+      &lt;content&gt;...&lt;/content&gt;
+    &lt;/description&gt;
+    &lt;creator&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;fname&gt;...&lt;/fname&gt;
+      &lt;lname&gt;...&lt;/lname&gt;
+      &lt;status&gt;...&lt;/status&gt;
+      &lt;email&gt;...&lt;/email&gt;
+      &lt;phone&gt;...&lt;/phone&gt;
+      &lt;cell&gt;...&lt;/cell&gt;
+      &lt;title&gt;...&lt;/title&gt;
+      &lt;notes&gt;...&lt;/notes&gt;
+      &lt;last_login&gt;...&lt;/last_login&gt;
+      &lt;locked&gt;...&lt;/locked&gt;
+      &lt;is_external&gt;...&lt;/is_external&gt;
+    &lt;/creator&gt;
+    &lt;hits&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;value&gt;...&lt;/value&gt;
+      &lt;threat_source_id/&gt;
+      &lt;artifact_type_id/&gt;
+      &lt;active&gt;...&lt;/active&gt;
+    &lt;/hits&gt;
+    &lt;attachment&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;content_type&gt;...&lt;/content_type&gt;
+      &lt;created&gt;...&lt;/created&gt;
+      &lt;creator_id/&gt;
+      &lt;size&gt;...&lt;/size&gt;
+      &lt;vers&gt;...&lt;/vers&gt;
+      &lt;actions/&gt;
+      &lt;inc_id&gt;...&lt;/inc_id&gt;
+      &lt;inc_name&gt;...&lt;/inc_name&gt;
+      &lt;inc_owner/&gt;
+      &lt;task_id&gt;...&lt;/task_id&gt;
+      &lt;task_name&gt;...&lt;/task_name&gt;
+      &lt;type&gt;...&lt;/type&gt;
+    &lt;/attachment&gt;
+    &lt;parent_id&gt;...&lt;/parent_id&gt;
+    &lt;inc_id&gt;...&lt;/inc_id&gt;
+    &lt;inc_name&gt;...&lt;/inc_name&gt;
+    &lt;inc_owner&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/inc_owner&gt;
+    &lt;created&gt;...&lt;/created&gt;
+    &lt;pending_sources&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/pending_sources&gt;
+    &lt;perms&gt;
+      &lt;read&gt;...&lt;/read&gt;
+      &lt;write&gt;...&lt;/write&gt;
+      &lt;delete&gt;...&lt;/delete&gt;
+    &lt;/perms&gt;
+    &lt;properties&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;value&gt;...&lt;/value&gt;
+    &lt;/properties&gt;
+    &lt;location&gt;
+      &lt;latlng/&gt;
+      &lt;city&gt;...&lt;/city&gt;
+      &lt;state&gt;...&lt;/state&gt;
+      &lt;country&gt;...&lt;/country&gt;
+      &lt;postalCode&gt;...&lt;/postalCode&gt;
+    &lt;/location&gt;
+    &lt;whois&gt;
+      &lt;raw&gt;...&lt;/raw&gt;
+      &lt;pending&gt;...&lt;/pending&gt;
+      &lt;invalid&gt;...&lt;/invalid&gt;
+    &lt;/whois&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+    &lt;relating&gt;...&lt;/relating&gt;
+  &lt;/artifact&gt;
+  &lt;note&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;parent_id&gt;...&lt;/parent_id&gt;
+    &lt;user_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/user_id&gt;
+    &lt;user_fname&gt;...&lt;/user_fname&gt;
+    &lt;user_lname&gt;...&lt;/user_lname&gt;
+    &lt;create_date&gt;...&lt;/create_date&gt;
+    &lt;modify_date&gt;...&lt;/modify_date&gt;
+    &lt;modify_user&gt;
+      &lt;id/&gt;
+      &lt;first_name&gt;...&lt;/first_name&gt;
+      &lt;last_name&gt;...&lt;/last_name&gt;
+    &lt;/modify_user&gt;
+    &lt;text&gt;
+      &lt;format&gt;...&lt;/format&gt;
+      &lt;content&gt;...&lt;/content&gt;
+    &lt;/text&gt;
+    &lt;children/&gt;
+    &lt;mentioned_users&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/mentioned_users&gt;
+    &lt;comment_perms&gt;
+      &lt;update&gt;...&lt;/update&gt;
+      &lt;delete&gt;...&lt;/delete&gt;
+    &lt;/comment_perms&gt;
+    &lt;is_deleted&gt;...&lt;/is_deleted&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+    &lt;inc_id&gt;...&lt;/inc_id&gt;
+    &lt;inc_name&gt;...&lt;/inc_name&gt;
+    &lt;task_id&gt;...&lt;/task_id&gt;
+    &lt;task_name&gt;...&lt;/task_name&gt;
+    &lt;type&gt;...&lt;/type&gt;
+    &lt;inc_owner&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/inc_owner&gt;
+  &lt;/note&gt;
+  &lt;milestone&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;title&gt;...&lt;/title&gt;
+    &lt;description&gt;
+      &lt;format&gt;...&lt;/format&gt;
+      &lt;content&gt;...&lt;/content&gt;
+    &lt;/description&gt;
+    &lt;user&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;fname&gt;...&lt;/fname&gt;
+      &lt;lname&gt;...&lt;/lname&gt;
+      &lt;status&gt;...&lt;/status&gt;
+      &lt;email&gt;...&lt;/email&gt;
+      &lt;phone&gt;...&lt;/phone&gt;
+      &lt;cell&gt;...&lt;/cell&gt;
+      &lt;title&gt;...&lt;/title&gt;
+      &lt;notes&gt;...&lt;/notes&gt;
+      &lt;last_login&gt;...&lt;/last_login&gt;
+      &lt;locked&gt;...&lt;/locked&gt;
+      &lt;is_external&gt;...&lt;/is_external&gt;
+    &lt;/user&gt;
+    &lt;created&gt;...&lt;/created&gt;
+    &lt;inc_id&gt;...&lt;/inc_id&gt;
+    &lt;inc_name&gt;...&lt;/inc_name&gt;
+    &lt;inc_owner&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/inc_owner&gt;
+    &lt;perms&gt;
+      &lt;update&gt;...&lt;/update&gt;
+      &lt;delete&gt;...&lt;/delete&gt;
+    &lt;/perms&gt;
+    &lt;date&gt;...&lt;/date&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+  &lt;/milestone&gt;
+  &lt;attachment&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;name&gt;...&lt;/name&gt;
+    &lt;content_type&gt;...&lt;/content_type&gt;
+    &lt;created&gt;...&lt;/created&gt;
+    &lt;creator_id&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/creator_id&gt;
+    &lt;size&gt;...&lt;/size&gt;
+    &lt;vers&gt;...&lt;/vers&gt;
+    &lt;actions&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+      &lt;enabled&gt;...&lt;/enabled&gt;
+    &lt;/actions&gt;
+    &lt;inc_id&gt;...&lt;/inc_id&gt;
+    &lt;inc_name&gt;...&lt;/inc_name&gt;
+    &lt;inc_owner&gt;
+      &lt;id&gt;...&lt;/id&gt;
+      &lt;name&gt;...&lt;/name&gt;
+    &lt;/inc_owner&gt;
+    &lt;task_id&gt;...&lt;/task_id&gt;
+    &lt;task_name&gt;...&lt;/task_name&gt;
+    &lt;type&gt;...&lt;/type&gt;
+  &lt;/attachment&gt;
+  &lt;type_info&gt;...&lt;/type_info&gt;
+  &lt;properties&gt;...&lt;/properties&gt;
+  &lt;user&gt;
+    &lt;id&gt;...&lt;/id&gt;
+    &lt;fname&gt;...&lt;/fname&gt;
+    &lt;lname&gt;...&lt;/lname&gt;
+    &lt;status&gt;...&lt;/status&gt;
+    &lt;email&gt;...&lt;/email&gt;
+    &lt;phone&gt;...&lt;/phone&gt;
+    &lt;cell&gt;...&lt;/cell&gt;
+    &lt;title&gt;...&lt;/title&gt;
+    &lt;notes&gt;...&lt;/notes&gt;
+    &lt;last_login&gt;...&lt;/last_login&gt;
+    &lt;locked&gt;...&lt;/locked&gt;
+    &lt;is_external&gt;...&lt;/is_external&gt;
+  &lt;/user&gt;
+  &lt;operation_type&gt;...&lt;/operation_type&gt;
+&lt;/actionDataDTO&gt;
+</pre>
+
+        <footer class="footer">
+          <div class="container">
+            <p class="text-muted">&copy; Copyright <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">IBM Corporation</span> <script type="text/javascript" language="javascript">d = new Date;document.write(d.getFullYear());</script>. Generated by <a href="http://enunciate.webcohesion.com">Enunciate</a>.</p>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript placed at the end of the document so the pages load faster. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+  <script>
+    $(function() {
+      $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+      });
+
+      $('[data-toggle="tooltip"]').tooltip()
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Resilient Systems Interactive REST API</title>
+  <link rel="shortcut icon" type="image/png" href="images/favicon.ico" />
+  <link href='css/typography.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='css/reset.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='css/screen.css' media='screen' rel='stylesheet' type='text/css'/>
+  <link href='css/reset.css' media='print' rel='stylesheet' type='text/css'/>
+  <link href='css/print.css' media='print' rel='stylesheet' type='text/css'/>
+  <script src='lib/jquery-1.8.0.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.slideto.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.wiggle.min.js' type='text/javascript'></script>
+  <script src='lib/jquery.ba-bbq.min.js' type='text/javascript'></script>
+  <script src='lib/handlebars-2.0.0.js' type='text/javascript'></script>
+  <script src='lib/underscore-min.js' type='text/javascript'></script>
+  <script src='lib/backbone-min.js' type='text/javascript'></script>
+  <script src='swagger-ui.js' type='text/javascript'></script>
+  <script src='lib/highlight.7.3.pack.js' type='text/javascript'></script>
+  <script src='lib/jsoneditor.min.js' type='text/javascript'></script>
+  <script src='lib/marked.js' type='text/javascript'></script>
+  <script src='lib/swagger-oauth.js' type='text/javascript'></script>
+
+  <!-- Some basic translations -->
+  <!-- <script src='lang/translator.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/ru.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/en.js' type='text/javascript'></script> -->
+
+  <script type="text/javascript">
+    $(function () {
+      var url = window.location.search.match(/url=([^&]+)/);
+      if (url && url.length > 1) {
+        url = decodeURIComponent(url[1]);
+      }
+      else if (document.location.href.substring(0, 5) === "file:") {
+        url = "../swagger.json";
+      }
+      else {
+        var baseUrl = document.location.href;
+        //this removes the anchor at the end, if there is one
+        baseUrl = baseUrl.substring(0, (baseUrl.indexOf("#") == -1) ? baseUrl.length : baseUrl.indexOf("#"));
+        //this removes the query after the file name, if there is one
+        baseUrl = baseUrl.substring(0, (baseUrl.indexOf("?") == -1) ? baseUrl.length : baseUrl.indexOf("?"));
+        //this removes everything after the last slash in the path
+        baseUrl = baseUrl.substring(0, (baseUrl.lastIndexOf("/") == -1) ? baseUrl.length : baseUrl.lastIndexOf("/"));
+
+        url = baseUrl + "/swagger.json";
+      }
+
+      // Pre load translate...
+      if(window.SwaggerTranslator) {
+        window.SwaggerTranslator.translate();
+      }
+      window.swaggerUi = new SwaggerUi({
+        url: url,
+        dom_id: "swagger-ui-container",
+        supportedSubmitMethods: ['get', 'post', 'put', 'delete', 'patch'],
+        validatorUrl: null,
+        onComplete: function(swaggerApi, swaggerUi){
+          if(window.SwaggerTranslator) {
+            window.SwaggerTranslator.translate();
+          }
+
+          $('pre code').each(function(i, e) {
+            hljs.highlightBlock(e)
+          });
+
+          addXSRFToken();
+
+          // Because some of our descriptions reference the Enunciate docs themselves
+          // and because we put our swagger UI in a sub-directory, we need to fix
+          // up relative anchor links.
+          //
+          // Note that this could actually break existing Swagger UI if it were
+          // to include actual relative links, but it doesn't (currently).
+          //
+          $("a").each(function() {
+            var link = $(this);
+            var href = link.attr("href");
+
+            if (href &&
+                !href.startsWith("http:") &&
+                !href.startsWith("https:") &&
+                !href.startsWith("/") &&
+                !href.startsWith(".") &&
+                !href.startsWith("#")) {
+
+              var newhref = "../" + href;
+
+              link.attr("href", newhref);
+
+              if (!link.attr("target")) {
+                link.attr("target", "_blank");
+              }
+            }
+          });
+
+          // Process the hash because it might contain a useful org_id value.
+          //
+          var re = /org_id=([0-9]+)/;
+          var match = re.exec(location.hash);
+          var orgId;
+
+          if (match) {
+            orgId = match[1];
+
+            window.swagger_org_id = orgId;
+          } else {
+            orgId = window.swagger_org_id;
+          }
+
+          if (orgId) {
+            $("input.parameter[name=org_id]").val(orgId)
+          }
+        },
+        onFailure: function(data) {
+          log("Unable to Load SwaggerUI");
+        },
+        docExpansion: "none",
+        jsonEditor: false,
+        apisSorter: "alpha",
+        defaultModelRendering: 'schema',
+        showRequestHeaders: false
+      });
+
+      function addXSRFToken(){
+        var csrfTokenAuth = new SwaggerClient.ApiKeyAuthorization("X-sess-id", null, "header");
+
+        var tmpApply = csrfTokenAuth.apply;
+
+        csrfTokenAuth.apply = function(obj) {
+          this.value = localStorage.getItem("csrf_token");
+          tmpApply.call(this, obj);
+        }
+
+        window.swaggerUi.api.clientAuthorizations.add("csrf_token", csrfTokenAuth);
+      }
+
+      window.swaggerUi.load();
+
+      function log() {
+        if ('console' in window) {
+          console.log.apply(console, arguments);
+        }
+      }
+  });
+  </script>
+</head>
+
+<body class="swagger-section">
+<div id="message-bar" class="swagger-ui-wrap" data-sw-translate>&nbsp;</div>
+<div id="swagger-ui-container" class="swagger-ui-wrap"></div>
+</body>
+</html>

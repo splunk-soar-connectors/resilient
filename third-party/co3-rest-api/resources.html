@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <title>Resilient Systems REST API: Resources</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!--custom css for these pages-->
+  <link rel="stylesheet" href="css/style.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body data-spy="scroll" data-target="#apinav">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">Resilient Systems REST API: Resources</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="data.html">Data Types</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" id="apinav">
+        <ul class="nav nav-sidebar">
+          <li class="text-right"><a href="#top"><small>Back to Top</small></a></li>
+        </ul>
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <ol class="breadcrumb" id="top">
+          <li class="active dropdown"><a href="index.html">Home</a></li>
+          <li class="dropdown"><a href="resources.html">Resources</a></li>
+        </ol>
+
+  <h1 class="page-header" id="resources">Resources</h1>
+
+<!--
+  <p>
+    You may also enjoy the <a href="ui/index.html">Swagger UI</a> provided for this API.
+  </p>
+-->
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th align="center">name</th>
+      <th align="center">path</th>
+      <th align="center">methods</th>
+      <th align="center">description</th>
+    </tr>
+    </thead>
+    <tbody data-link="row" class="rowlink">
+    <tr class="clickable-row" data-href="resource_ActionREST.html">
+      <td>  <span class="resource-name">ActionREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/actions</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/actions/action_order</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/actions/{id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/actions/{id}/view</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Service for interacting with actions.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_AdminInvitationREST.html">
+      <td>  <span class="resource-name">AdminInvitationREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/invitations</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/invitations/{invite_id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing user invitations.  Only master administrators are allowed to perform these operations.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_AutomaticTaskREST.html">
+      <td>  <span class="resource-name">AutomaticTaskREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/automatic_tasks</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/automatic_tasks/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Service endpoints for managing automatic tasks.  These are "template" tasks that used by rules to instantiate
+incident tasks.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_ConfigurationsREST.html">
+      <td>  <span class="resource-name">ConfigurationsREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/exports</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/imports</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/exports/history</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/exports/{export_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/imports/history</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/imports/{import_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/configurations/imports/{import_id}/status</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">The endpoints for managing configuration import and export.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_ConstREST.html">
+      <td>  <span class="resource-name">ConstREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/const</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoint for retrieving various constant information for this server.  This information is
+useful in translating names that the user sees to IDs that other REST API endpoints accept.
+For example, the incidentDTO has a field called "crimestatus_id".  The valid values are
+stored in constDTO.crime_statuses.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_CurrentUserREST.html">
+      <td>  <span class="resource-name">CurrentUserREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/users/{user_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/users/{user_id}/password</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for getting and setting information about the current user.  Note that these methods work only with
+the currently authenticated user, even though they accept a user_id path parameter.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_DataTableDataREST.html">
+      <td>  <span class="resource-name">DataTableDataREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/table_data</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/table_data/{table_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/table_data/{table_id}/row_data</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/table_data/{table_id}/row_data/{row_id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">The endpoint for managing a data table's data for an incident. Tables can be referred to by their internal ID
+or their programmatic name. Cell data can be referred to by their internal ID or their column programmatic name.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_GroupREST.html">
+      <td>  <span class="resource-name">GroupREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/groups</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/groups/{id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/groups/{id}/has_assignments</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Implementation for the /rest/groups REST methods.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentArtifactREST.html">
+      <td>  <span class="resource-name">IncidentArtifactREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts/files</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts/{artifact_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts/{artifact_id}/contents</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts/{artifact_id}/copy</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/artifacts/{artifact_id}/whois</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing an incident's artifacts.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentAttachmentREST.html">
+      <td>  <span class="resource-name">IncidentAttachmentREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/attachments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/attachments/query</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/attachments/{attach_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/attachments/{attach_id}/contents</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Base class for all REST services that are limited by an org.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentMilestoneREST.html">
+      <td>  <span class="resource-name">IncidentMilestoneREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/milestones</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/milestones/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing an incident's milestones.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentNoteREST.html">
+      <td>  <span class="resource-name">IncidentNoteREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/comments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/comments/query</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/comments/{comment_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/comments/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Base class for all REST services that are limited by an org.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentREST.html">
+      <td>  <span class="resource-name">IncidentREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/delete</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/open</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/patch</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/query</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/query_paged</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/simulations</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{id}/patch</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/due_soon</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/history</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/members</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/newsfeed</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/related</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/related_ex</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/tasks</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PATCH</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PATCH</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Base class for all REST services that are limited by an org.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_IncidentStatisticsREST.html">
+      <td>  <span class="resource-name">IncidentStatisticsREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/stats/tasks_by_owner</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incidents/{inc_id}/stats/tasks_over_time</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Base class for all REST services that are limited by an org.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_MessageDestinationREST.html">
+      <td>  <span class="resource-name">MessageDestinationREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/message_destinations</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/message_destinations/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Service for interacting with message destinations.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_NotificationREST.html">
+      <td>  <span class="resource-name">NotificationREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/notifications</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/notifications/info</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/notifications/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Implementation for the /rest/notifications REST methods.  These services allow you to determine
+which notifications are available for a user, delete them, etc.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_OrgIncidentArtifactTypeREST.html">
+      <td>  <span class="resource-name">OrgIncidentArtifactTypeREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/artifact_types</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/artifact_types/{artifact_type_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/artifact_types/{type_id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Allows orgs to customize settings about their incident artifact types.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_OrgREST.html">
+      <td>  <span class="resource-name">OrgREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/authldapgroup</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/data_types</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/geos</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incident_types</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/industries</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/newsfeed</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/regulators</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/settings</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/timeframes</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/twofactorauth</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/incident_types/{id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/twofactorauth/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for retrieving and setting information about the organization.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_OrgStatisticsREST.html">
+      <td>  <span class="resource-name">OrgStatisticsREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/closed_incidents_by_duration</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/counts</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/incidents_by_category</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/incidents_by_severity</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/incidents_by_type_over_time</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/incidents_by_user</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/new_and_open_incidents</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/open_incidents_by_confirmed_unconfirmed</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/open_incidents_by_duration</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/open_incidents_by_phase</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/stats/open_tasks_by_owner</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for retrieving high level statistics.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_OrgUserREST.html">
+      <td>  <span class="resource-name">OrgUserREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/users</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/activateUser</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/deactivateUser</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/has_assignments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/incidents</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/reassign_assignments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/users/{id}/tasks</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for retrieving information about users in an organization.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_PhaseREST.html">
+      <td>  <span class="resource-name">PhaseREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/phases</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/phases/order</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/phases/{phaseId}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing Phases</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_ScriptREST.html">
+      <td>  <span class="resource-name">ScriptREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/scripts</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/scripts/{script_id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">The endpoint for managing the invokable scripts for an Org.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_SearchExREST.html">
+      <td>  <span class="resource-name">SearchExREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/search_ex</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoint for performing full text searches through incidents and incident child objects
+(tasks, incident comments, task comments, milestones, artifacts, incident attachments,
+task attachments, and data tables).</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_SearchREST.html">
+      <td>  <span class="resource-name">SearchREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/search</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for searching for tasks and incidents using the search index.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_SessionREST.html">
+      <td>  <span class="resource-name">SessionREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/session</span>
+</samp></li><li><samp>  <span class="resource-path">/session/twofactor</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Authentication REST service implementation.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_TaskAttachmentREST.html">
+      <td>  <span class="resource-name">TaskAttachmentREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/attachments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/attachments/query</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/attachments/{attach_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/attachments/{attach_id}/contents</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/attachments/{attach_id}/move</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing tasks notes.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_TaskNoteREST.html">
+      <td>  <span class="resource-name">TaskNoteREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/comments</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/comments/query</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/comments/{id}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing tasks notes.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_TaskREST.html">
+      <td>  <span class="resource-name">TaskREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/due_soon</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{id}/members</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/instructions</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/tasks/{task_id}/sources</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing tasks.</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_TypeREST.html">
+      <td>  <span class="resource-name">TypeREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/types</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/types/{type}</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/types/{type}/fields</span>
+</samp></li><li><samp>  <span class="resource-path">/orgs/{org_id}/types/{type}/fields/{field}</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">POST</span> 
+</samp></li><li><samp>  <span class="label label-default resource-method">DELETE</span> <span class="label label-default resource-method">GET</span> <span class="label label-default resource-method">PUT</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for viewing and editing built-in types and fields (incident, task, artifact, milestone, attachment, actioninvocation, and note),
+and CRUD operations on custom types and fields (Data Tables)</span>
+</td>
+    </tr>
+    <tr class="clickable-row" data-href="resource_WorkflowREST.html">
+      <td>  <span class="resource-name">WorkflowREST</span>
+</td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="resource-path">/orgs/{org_id}/workflows</span>
+</samp></li></ul></td>
+      <td class="text-nowrap"><ul class="list-unstyled"><li><samp>  <span class="label label-default resource-method">GET</span> 
+</samp></li></ul></td>
+      <td>  <span class="resource-description">Endpoints for managing workflows</span>
+</td>
+    </tr>
+    </tbody>
+  </table>
+
+        <footer class="footer">
+          <div class="container">
+            <p class="text-muted">&copy; Copyright <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">IBM Corporation</span> <script type="text/javascript" language="javascript">d = new Date;document.write(d.getFullYear());</script>. Generated by <a href="http://enunciate.webcohesion.com">Enunciate</a>.</p>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript placed at the end of the document so the pages load faster. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+  <script>
+    $(function() {
+      $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+      });
+
+      $('[data-toggle="tooltip"]').tooltip()
+    });
+  </script>
+
+</body>
+</html>

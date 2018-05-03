@@ -1,10 +1,19 @@
-head	1.7;
+head	1.9;
 access;
 symbols;
-locks
-	iam:1.7; strict;
+locks; strict;
 comment	@# @;
 
+
+1.9
+date	2018.05.03.19.26.09;	author jang;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	2018.05.03.19.08.11;	author jang;	state Exp;
+branches;
+next	1.7;
 
 1.7
 date	2017.10.30.00.43.04;	author iam;	state Exp;
@@ -46,9 +55,9 @@ desc
 @@
 
 
-1.7
+1.9
 log
-@*** empty log message ***
+@phresilient-14
 @
 text
 @# -----------------------------------------
@@ -59,6 +68,7 @@ text
 import phantom.app as phantom
 from phantom.base_connector import BaseConnector
 from phantom.action_result import ActionResult
+from phantom.vault import Vault
 
 # Usage of the consts file is recommended
 # from resilient_consts import *
@@ -175,7 +185,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             self.save_progress("{} successful.".format(action_id))
         except Exception as e:
@@ -192,7 +202,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents?want_closed={}".format(param['want_closed'])
 
@@ -218,7 +228,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}".format(param['incident_id'])
 
@@ -228,7 +238,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-	    retval = [ retval ]
+        retval = [ retval ]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -245,7 +255,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents?want_full_data={}&want_tasks={}".format(param['want_full_data'], param['want_tasks'])
         except Exception as e:
@@ -286,7 +296,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-	    retval = [ retval ]
+        retval = [ retval ]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -303,7 +313,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}".format(param['incident_id'])
         except Exception as e:
@@ -337,7 +347,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-	    retval = [ retval ]
+        retval = [ retval ]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -356,9 +366,11 @@ class ResilientConnector(BaseConnector):
         payload = dict()
         conditions = list()
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
-            call = "/incidents/query?return_level=full&handle_format=names"
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            call = "/incidents/query?return_level=full"
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
@@ -445,7 +457,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/artifacts".format(param['incident_id'])
 
@@ -471,7 +483,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/artifacts/{}".format(param['incident_id'], param['artifact_id'])
 
@@ -481,7 +493,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-	    retval = [ retval ]
+        retval = [ retval ]
         itemtype = "artifacts"
         for r in retval:
             action_result.add_data(r)
@@ -498,7 +510,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/artifacts".format(param['incident_id'])
         except Exception as e:
@@ -517,7 +529,7 @@ class ResilientConnector(BaseConnector):
         if 'description' not in payload:
             description = getsv(param, 'description')
             if len(description) > 0:
-            	addifkey(param, 'incident_description', payload, 'description')
+                addifkey(param, 'incident_description', payload, 'description')
                 #payload['description'] = dict()
                 #payload['description']['format'] = "text"
                 #payload['description']['content'] = getsv(param, 'description')
@@ -574,7 +586,7 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/artifacts/{}".format(param['incident_id'], param['artifact_id'])
         except Exception as e:
@@ -608,7 +620,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-	    retval = [ retval ]
+        retval = [ retval ]
         itemtype = "artifacts"
         for r in retval:
             action_result.add_data(r)
@@ -625,7 +637,10 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.headers['text_content_output_format'] = "objects_no_convert"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/comments".format(param['incident_id'])
 
@@ -651,7 +666,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/comments/{}".format(param['incident_id'], param['comment_id'])
 
@@ -678,7 +695,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/comments".format(param['incident_id'])
         except Exception as e:
@@ -728,8 +747,10 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             call = "/incidents/{}/comments/{}".format(param['incident_id'], param['comment_id'])
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
@@ -769,7 +790,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/table_data".format(param['incident_id'])
 
@@ -795,7 +818,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/table_data/{}".format(param['incident_id'], param['table_id'])
 
@@ -822,7 +847,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/table_data/{}".format(param['incident_id'], param['table_id'])
         except Exception as e:
@@ -872,7 +899,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/incidents/{}/table_data/{}/row_date/{}".format(param['incident_id'], param['table_id'], param['row_id'])
         except Exception as e:
@@ -914,6 +943,104 @@ class ResilientConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
 
+    def _handle_update_table_row_by_key(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+        # all parameters are required so all parameters are len() > 0
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.connect(config['user'], config['password'])
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        datatablerowdatadto = param.get('datatablerowdatadto', "")
+        if len(datatablerowdatadto) > 1:
+            try:
+                payload = json.loads(datatablerowdatadto)
+            except Exception as e:
+                self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is not valid json.".format(action_id))
+        else:
+            self.save_progress("{} failed. datatablerowdatadto field is empty string.".format(action_id))
+            return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is empty string.".format(action_id))
+
+        # get table first
+        try:
+            call = "/incidents/{}/table_data/{}".format(param['incident_id'], param['table_id'])
+            self.save_progress("GET {}".format(call))
+            retval = self._client.get(call)
+            self.save_progress("GET successful")
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        def find_row(table, key, value):
+            for row in table['rows']:
+                if key in row['cells']:
+                    if row['cells'][key] == value:
+                        return row['id']
+            return None
+
+        key = param['key']
+        value = param['value']
+        rowid = find_row(retval, key, value)
+
+        if rowid == None:
+            self.save_progress("{} failed. Cannot match key/value.".format(action_id, key, value))
+            return action_result.set_status(phantom.APP_ERROR, "{} failed. Cannot match key/value.".format(action_id, key, value))
+
+        try:
+            call = "/incidents/{}/table_data/{}/row_date/{}".format(param['incident_id'], param['table_id'], row_id)
+            self.save_progress("PUT {}".format(call))
+            self.save_progress("BODY {}".format(payload))
+            retval = self._client.put(call, payload)
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = [ retval ]
+        itemtype = "table row"
+        for r in retval:
+            action_result.add_data(r)
+        summary = action_result.update_summary({})
+        summary['Number of {}'.format(itemtype)] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
+    def _handle_list_tasks(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.connect(config['user'], config['password'])
+            call = "/tasks"
+
+            self.save_progress("GET {}".format(call))
+            retval = self._client.get(call)
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = retval
+        itemtype = "tasks"
+        for r in retval:
+            action_result.add_data(r)
+        summary = action_result.update_summary({})
+        summary['Number of {}'.format(itemtype)] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
     def _handle_get_task(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
@@ -922,9 +1049,11 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
-            call = "/tasks/{}".format(param['incident_id'], param['table_id'])
+            call = "/tasks/{}".format(param['task_id'])
 
             self.save_progress("GET {}".format(call))
             retval = self._client.get(call)
@@ -949,7 +1078,9 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/tasks/{}".format(param['task_id)'])
         except Exception as e:
@@ -990,26 +1121,152 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
             call = "/tasks/{}".format(param['task_id)'])
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
         try:
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            payload = retval
-            payload['status'] = "C"
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
+            #self.save_progress("GET {}".format(call))
+            #retval = self._client.get(call)
+            #payload = retval
+            #payload['status'] = "C"
+            #self.save_progress("PUT {}".format(call))
+            #self.save_progress("BODY {}".format(payload))
+            def apply(arg):
+                arg['status'] = "C"
+                return arg
+
+            retval = self.client.get_put(call, arg)
             self.save_progress("{} successful.".format(action_id))
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
         retval = [ retval ]
         itemtype = "tasks"
+        for r in retval:
+            action_result.add_data(r)
+        summary = action_result.update_summary({})
+        summary['Number of {}'.format(itemtype)] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
+    def _handle_list_attachments(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.connect(config['user'], config['password'])
+            call = "/incidents/{}/attachments".format(param['incident_id'])
+
+            self.save_progress("GET {}".format(call))
+            retval = self._client.get(call)
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = retval
+        itemtype = "attachments"
+        for r in retval:
+            action_result.add_data(r)
+        summary = action_result.update_summary({})
+        summary['Number of {}'.format(itemtype)] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
+    def _handle_get_attachment(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.connect(config['user'], config['password'])
+            call = "/incidents/{}/attachments/{}".format(param['incident_id'], param['attachment_id'])
+
+            self.save_progress("GET {}".format(call))
+            retval = self._client.get(call)
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = [ retval ]
+        itemtype = "attachments"
+        for r in retval:
+            action_result.add_data(r)
+        summary = action_result.update_summary({})
+        summary['Number of {}'.format(itemtype)] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
+    def _handle_download_attachment(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client.connect(config['user'], config['password'])
+            call = "/incidents/{}/attachments/{}".format(param['incident_id'], param['attachment_id'])
+
+            self.save_progress("GET {}".format(call))
+            retval = self._client.get(call)
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = [ retval ]
+        itemtype = "attachments"
+        for r in retval:
+            action_result.add_data("OK")
+        summary = action_result.update_summary({})
+        summary['Length of file'] = len(retval)
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+
+    def _handle_add_attachment(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        action_result = self.add_action_result(ActionResult(dict(param)))
+    
+        config = self.get_config()
+
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client.connect(config['user'], config['password'])
+            call = "/incidents/{}/attachments".format(param['incident_id'])
+
+            container_id = self.get_container_id()
+            vault_info = Vault.get_file_info(vault_id=param['vault_id'], container_id=container_id)
+            if len(vault_info) == 0:
+                self.save_progress("{} failed. {}: vault_id not valid.".format(action_id, param['vault_id']))
+                return action_result.set_status(phantom.APP_ERROR, "{} failed. {}: vault_id not valid.".format(action_id, param['vault_id']))
+            path = vault_info[0]['path']
+            name = filename=vault_info[0]['name']
+
+            retval = self._client.post_attachment(call, path, filename=name)
+            self.save_progress("POST_ATTACHMENT {} path={} name={}".format(call, path, name))
+            self.save_progress("{} successful.".format(action_id))
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        retval = [ retval ]
+        itemtype = "attachments"
         for r in retval:
             action_result.add_data(r)
         summary = action_result.update_summary({})
@@ -1080,6 +1337,12 @@ class ResilientConnector(BaseConnector):
         elif action_id == 'update_table_row':
             ret_val = self._handle_update_table_row(param)
 
+        elif action_id == "update_table_row_by_key":
+            ret_val = self._handle_update_table_row_by_key(param)
+
+        elif action_id == 'list_tasks':
+            ret_val = self._handle_list_tasks(param)
+
         elif action_id == 'get_task':
             ret_val = self._handle_get_task(param)
 
@@ -1088,6 +1351,15 @@ class ResilientConnector(BaseConnector):
 
         elif action_id == 'close_task':
             ret_val = self._handle_close_task(param)
+
+        elif action_id == 'list_attachments':
+            ret_val = self._handle_list_attachments(param)
+
+        elif action_id == 'get_attachment':
+            ret_val = self._handle_get_attachment(param)
+
+        elif action_id == 'add_attachment':
+            ret_val = self._handle_add_attachment(param)
 
         return ret_val
 
@@ -1142,6 +1414,127 @@ if __name__ == '__main__':
 
     exit(0)
 
+@
+
+
+1.8
+log
+@*** empty log message ***
+@
+text
+@d579 3
+d608 2
+d637 2
+d690 2
+@
+
+
+1.7
+log
+@*** empty log message ***
+@
+text
+@d9 1
+d126 1
+a126 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d143 1
+a143 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d169 1
+a169 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d179 1
+a179 1
+	    retval = [ retval ]
+d196 1
+a196 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d237 1
+a237 1
+	    retval = [ retval ]
+d254 1
+a254 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d288 1
+a288 1
+	    retval = [ retval ]
+d307 1
+a307 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d309 3
+a311 1
+            call = "/incidents/query?return_level=full&handle_format=names"
+d398 1
+a398 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d424 1
+a424 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d434 1
+a434 1
+	    retval = [ retval ]
+d451 1
+a451 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d470 1
+a470 1
+            	addifkey(param, 'incident_description', payload, 'description')
+d527 1
+a527 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d561 1
+a561 1
+	    retval = [ retval ]
+d578 1
+a578 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d604 1
+a604 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d631 1
+a631 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d681 1
+a681 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d722 3
+a724 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d750 3
+a752 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d779 3
+a781 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d831 3
+a833 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d875 98
+d981 3
+a983 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d985 1
+a985 1
+            call = "/tasks/{}".format(param['incident_id'], param['table_id'])
+d1010 3
+a1012 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d1053 3
+a1055 1
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=True)
+d1062 94
+a1157 5
+            payload = retval
+            payload['status'] = "C"
+            self.save_progress("PUT {}".format(call))
+            self.save_progress("BODY {}".format(payload))
+            retval = self._client.put(call, payload)
+d1163 36
+a1198 1
+        itemtype = "tasks"
+d1269 6
+d1284 9
 @
 
 

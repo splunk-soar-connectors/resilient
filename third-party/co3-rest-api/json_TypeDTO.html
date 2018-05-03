@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+  <title>Resilient Systems REST API: TypeDTO</title>
+
+  <!-- Mobile viewport optimized: j.mp/bplateviewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+
+  <!--custom css for these pages-->
+  <link rel="stylesheet" href="css/style.css">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.css" type="text/css">
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+
+<body data-spy="scroll" data-target="#apinav">
+
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="index.html">Resilient Systems REST API: TypeDTO</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-right">
+          <li><a href="resources.html">Resources</a></li>
+          <li><a href="data.html">Data Types</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 col-md-2 sidebar" id="apinav">
+        <ul class="nav nav-sidebar">
+          <li class="text-right"><a href="#top"><small>Back to Top</small></a></li>
+        </ul>
+      </div>
+
+      <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <ol class="breadcrumb" id="top">
+          <li class="active dropdown"><a href="index.html">Home</a></li>
+          <li class="active dropdown"><a href="syntax_json.html">JSON</a></li>
+          <li class="dropdown"><a href="json_TypeDTO.html">TypeDTO</a></li>
+        </ol>
+
+      <h1 class="page-header">TypeDTO <small>Data Type</small></h1>
+
+      <p>Represents a type object in the system. This includes built-in types such as "incident" and "task",
+as well as custom types (Data Table)</p>
+
+      <dl class="dl-horizontal">
+      </dl>
+
+      <table class="table">
+        <caption>Properties</caption>
+        <thead>
+        <tr>
+          <th>name</th>
+          <th>data type</th>
+          <th>description</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>  <span class="property-name" id="reslink_id">id</span>
+</td>
+          <td>  <span class="datatype-reference">number
+</span>
+</td>
+          <td>  <span class="property-description">The internal ID of the type.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_type_id">type_id</span>
+</td>
+          <td>  <span class="datatype-reference">number
+</span>
+</td>
+          <td>  <span class="property-description">The internal type id of the type.
+
+For built-in types, the type id maps to the same value as the internal ID.
+For custom types (Data Table), the type id is mapped one-to-many and have internal IDs >= 1000
+<pre>
+ 0 = INCIDENT
+ 1 = TASK
+ 2 = NOTE
+ 3 = MILESTONE
+ 4 = ARTIFACT
+ 5 = ATTACHMENT
+ 6 = ACTIONINVOCATION
+ 7 = ORGANIZATION
+ 8 = DATATABLE
+ </pre></span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_type_name">type_name</span>
+</td>
+          <td>  <span class="datatype-reference">string
+</span>
+</td>
+          <td>  <span class="property-description">The name of the type.  For example, "incident" or "task".</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_fields">fields</span>
+</td>
+          <td>  <span class="datatype-reference">object
+</span>
+</td>
+          <td>  <span class="property-description">The fields supported for the type.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_properties">properties</span>
+</td>
+          <td>  <span class="datatype-reference"><a href="json_TypePropertiesDTO.html">TypePropertiesDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">Additional properties for the type.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_parent_types">parent_types</span>
+</td>
+          <td>  <span class="datatype-reference">array of string
+</span>
+</td>
+          <td>  <span class="property-description">The list of names of parent types. For example, the parent type of "artifact" would be "incident".
+In the case of notes and attachments, the parent_types will contain both "task" and "incident".
+The parent type of a Data Table is "incident".
+
+This value is read-only except on create.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_display_name">display_name</span>
+</td>
+          <td>  <span class="datatype-reference">string
+</span>
+</td>
+          <td>  <span class="property-description">The display name for the type.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_for_notifications">for_notifications</span>
+</td>
+          <td>  <span class="datatype-reference">boolean
+</span>
+</td>
+          <td>  <span class="property-description">True if a notification can be created for this type, false otherwise.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_for_actions">for_actions</span>
+</td>
+          <td>  <span class="datatype-reference">boolean
+</span>
+</td>
+          <td>  <span class="property-description">True if an action can specify this type, false otherwise.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_for_custom_fields">for_custom_fields</span>
+</td>
+          <td>  <span class="datatype-reference">boolean
+</span>
+</td>
+          <td>  <span class="property-description">True if a custom field can be created for this type, false otherwise.</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_export_key">export_key</span>
+</td>
+          <td>  <span class="datatype-reference">string
+</span>
+</td>
+          <td>  <span class="property-description">This value is used for export/import to uniquely represent this type</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_uuid">uuid</span>
+</td>
+          <td>  <span class="datatype-reference">string
+</span>
+</td>
+          <td>  <span class="property-description">The UUID for this type</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_actions">actions</span>
+</td>
+          <td>  <span class="datatype-reference">array of <a href="json_PartialActionDTO.html">PartialActionDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">The list of <a href="json_PartialActionDTO.html">actions</a> defined for this type</span>
+</td>
+        </tr>
+        <tr>
+          <td>  <span class="property-name" id="reslink_scripts">scripts</span>
+</td>
+          <td>  <span class="datatype-reference">array of <a href="json_NamedEntityDTO.html">NamedEntityDTO</a>
+</span>
+</td>
+          <td>  <span class="property-description">The list of <a href="json_NamedEntityDTO.html">scripts</a> defined for this type</span>
+</td>
+        </tr>
+        </tbody>
+      </table>
+
+      <p class="lead">Example</p>
+
+      <pre class="prettyprint lang-js example">{
+  &quot;id&quot; : 12345,
+  &quot;type_id&quot; : 12345,
+  &quot;type_name&quot; : &quot;...&quot;,
+  &quot;fields&quot; : {
+    &quot;property1&quot; : &quot;...&quot;,
+    &quot;property2&quot; : &quot;...&quot;
+  },
+  &quot;properties&quot; : {
+    &quot;can_create&quot; : true,
+    &quot;can_destroy&quot; : true,
+    &quot;for_who&quot; : [ &quot;...&quot;, &quot;...&quot; ]
+  },
+  &quot;parent_types&quot; : [ &quot;...&quot;, &quot;...&quot; ],
+  &quot;display_name&quot; : &quot;...&quot;,
+  &quot;for_notifications&quot; : true,
+  &quot;for_actions&quot; : true,
+  &quot;for_custom_fields&quot; : true,
+  &quot;export_key&quot; : &quot;...&quot;,
+  &quot;uuid&quot; : &quot;...&quot;,
+  &quot;actions&quot; : [ {
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;,
+    &quot;type&quot; : 12345
+  }, {
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;,
+    &quot;type&quot; : 12345
+  } ],
+  &quot;scripts&quot; : [ {
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;
+  }, {
+    &quot;id&quot; : 12345,
+    &quot;name&quot; : &quot;...&quot;
+  } ]
+}</pre>
+
+        <footer class="footer">
+          <div class="container">
+            <p class="text-muted">&copy; Copyright <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">IBM Corporation</span> <script type="text/javascript" language="javascript">d = new Date;document.write(d.getFullYear());</script>. Generated by <a href="http://enunciate.webcohesion.com">Enunciate</a>.</p>
+          </div>
+        </footer>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JavaScript placed at the end of the document so the pages load faster. -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+  <!-- Bootstrap core JavaScript
+  ================================================== -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+  <!-- prettify code blocks. see http://code.google.com/p/google-code-prettify/ -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/run_prettify.js" type="text/javascript"></script>
+  <script>
+    $(function() {
+      $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+      });
+
+      $('[data-toggle="tooltip"]').tooltip()
+    });
+  </script>
+
+</body>
+</html>

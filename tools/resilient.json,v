@@ -1,10 +1,19 @@
-head	1.7;
+head	1.9;
 access;
 symbols;
-locks
-	james.ng:1.7; strict;
+locks; strict;
 comment	@# @;
 
+
+1.9
+date	2018.05.03.20.09.42;	author jang;	state Exp;
+branches;
+next	1.8;
+
+1.8
+date	2018.05.03.19.08.11;	author jang;	state Exp;
+branches;
+next	1.7;
 
 1.7
 date	2017.10.12.21.28.40;	author james.ng;	state Exp;
@@ -46,9 +55,9 @@ desc
 @@
 
 
-1.7
+1.9
 log
-@*** empty log message ***
+@phresilient-14
 @
 text
 @{
@@ -62,8 +71,8 @@ text
     "product_version_regex": ".*",
     "publisher": "Phantom",
     "license": "Copyright Phantom 2017",
-    "app_version": "1.0.17",
-    "utctime_updated": "2017-10-12T20:20:45.033699",
+    "app_version": "1.0.26",
+    "utctime_updated": "2017-10-30T03:18:27.096292",
     "package_name": "phantom_resilient",
     "main_module": "resilient_connector.pyc",
     "min_phantom_version": "3.0.251",
@@ -97,9 +106,14 @@ text
             "description": "Service Account Password",
             "data_type": "password",
             "required": true,
-            "value_list": [],
-            "default": "",
             "order": 3
+        },
+        "verify": {
+            "description": "Verify SSL certificates. You may need to set REQUESTS_CA_BUNDLE to the pem file containing your local CA root certificates.",
+            "data_type": "boolean",
+            "required": true,
+            "default": false,
+            "order": 4
         }
     },
     "actions": [
@@ -984,8 +998,8 @@ text
             "action": "create artifact",
             "identifier": "create_artifact",
             "description": "Create new artifact",
-            "type": "investigate",
-            "read_only": true,
+            "type": "generic",
+            "read_only": false,
             "parameters": {
                 "incident_id": {
                     "description": "ID of incident",
@@ -1200,6 +1214,14 @@ text
             "type": "investigate",
             "read_only": true,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 5
+                },
                 "incident_id": {
                     "description": "ID of incident",
                     "data_type": "string",
@@ -1269,6 +1291,14 @@ text
             "type": "investigate",
             "read_only": true,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 5
+                },
                 "incident_id": {
                     "description": "ID of incident",
                     "data_type": "string",
@@ -1349,6 +1379,14 @@ text
             "type": "generic",
             "read_only": false,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 5
+                },
                 "incident_id": {
                     "description": "ID of incident",
                     "data_type": "string",
@@ -1445,6 +1483,14 @@ text
             "type": "generic",
             "read_only": false,
             "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 5
+                },
                 "incident_id": {
                     "description": "ID of incident",
                     "data_type": "string",
@@ -1525,9 +1571,881 @@ text
                 "title": "Resilient Incident"
             },
             "versions": "EQ(*)"
+        },
+        {
+            "action": "list tables",
+            "identifier": "list_tables",
+            "description": "List tables",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 10,
+                    "contains": [
+                        "ticketid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get table",
+            "identifier": "get_table",
+            "description": "Get table",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "table_id": {
+                    "description": "ID of table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "ticketid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "add table row",
+            "identifier": "add_table_row",
+            "description": "Add table row",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "table_id": {
+                    "description": "ID of table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "tableid"
+                    ]
+                },
+                "datatablerowdatadto": {
+                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "default": "",
+                    "order": 40
+                },
+                "1st_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 50
+                },
+                "1st_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 60
+                },
+                "2nd_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 70
+                },
+                "2nd_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 80
+                },
+                "3rd_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 90
+                },
+                "3rd_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 100
+                },
+                "4th_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 110
+                },
+                "4th_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 120
+                },
+                "5th_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 130
+                },
+                "5th_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 140
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "update table row",
+            "identifier": "update_table_row",
+            "description": "Update table row",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "table_id": {
+                    "description": "ID of table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "tableid"
+                    ]
+                },
+                "row_id": {
+                    "description": "ID of row in table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 40,
+                    "contains": [
+                        "rowid"
+                    ]
+                },
+                "datatablerowdatadto": {
+                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "default": "",
+                    "order": 50
+                },
+                "1st_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 60
+                },
+                "1st_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 70
+                },
+                "2nd_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 80
+                },
+                "2nd_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 90
+                },
+                "3rd_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 100
+                },
+                "3rd_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 110
+                },
+                "4th_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 120
+                },
+                "4th_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 130
+                },
+                "5th_condition_cell_property": {
+                    "description": "The property name of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 140
+                },
+                "5th_condition_cell_value": {
+                    "description": "The value of the cell",
+                    "data_type": "string",
+                    "required": false,
+                    "primary": false,
+                    "default": "",
+                    "order": 150
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "update table row with key",
+            "identifier": "update_table_row_with_key",
+            "description": "Update table row with key",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "table_id": {
+                    "description": "ID of table",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "tableid"
+                    ]
+                },
+                "key": {
+                    "description": "property name in row to find",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 40,
+                    "contains": [
+                        "keyid"
+                    ]
+                },
+                "value": {
+                    "description": "property value in row to find",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "default": "",
+                    "order": 50
+                },
+                "datatablerowdatadto": {
+                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "default": "",
+                    "order": 60
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list tasks",
+            "identifier": "list_tasks",
+            "description": "List tasks for user (defined in asset configuration)",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "task_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "taskid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get task",
+            "identifier": "get_task",
+            "description": "Get task details",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "task_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "taskid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "update task",
+            "identifier": "update_task",
+            "description": "Update task",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "task_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "taskid"
+                    ]
+                },
+                "taskdto": {
+                    "description": "table row as JSON String, format is TaskDTO data type from API",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": false,
+                    "default": "",
+                    "order": 30
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "close task",
+            "identifier": "close_task",
+            "description": "Close task",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "task_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 10,
+                    "contains": [
+                        "taskid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "list attachments",
+            "identifier": "list_attachments",
+            "description": "List attachments for incident",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get attachment",
+            "identifier": "get_attachment",
+            "description": "Get attachment details from incident",
+            "type": "investigate",
+            "read_only": true,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "attachment_id": {
+                    "description": "ID of attachment",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "attachmentid"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "add attachment",
+            "identifier": "add_attachment",
+            "description": "Add attachment to incident",
+            "type": "generic",
+            "read_only": false,
+            "parameters": {
+                "handle_format_is_name": {
+                    "description": "Treat handles as name. Default is true",
+                    "data_type": "boolean",
+                    "required": false,
+                    "primary": false,
+                    "default": true,
+                    "order": 10
+                },
+                "incident_id": {
+                    "description": "ID of incident",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 20,
+                    "contains": [
+                        "ticketid"
+                    ]
+                },
+                "vault_id": {
+                    "description": "vault ID of file",
+                    "data_type": "string",
+                    "required": true,
+                    "primary": true,
+                    "default": "",
+                    "order": 30,
+                    "contains": [
+                        "pe file"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric"
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric"
+                }
+            ],
+            "render": {
+                "type": "table",
+                "title": "Resilient Incident"
+            },
+            "versions": "EQ(*)"
         }
     ]
 }
+@
+
+
+1.8
+log
+@*** empty log message ***
+@
+text
+@a46 2
+            "value_list": [],
+            "default": "",
+d1155 8
+d1232 8
+d1320 8
+d1424 8
+d2325 1
+a2325 1
+                        "vaultid"
+@
+
+
+1.7
+log
+@*** empty log message ***
+@
+text
+@d12 2
+a13 2
+    "app_version": "1.0.17",
+    "utctime_updated": "2017-10-12T20:20:45.033699",
+d50 7
+d941 2
+a942 2
+            "type": "investigate",
+            "read_only": true,
+d1482 836
 @
 
 

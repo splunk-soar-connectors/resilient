@@ -1,10 +1,14 @@
-head	1.5;
+head	1.6;
 access;
 symbols;
-locks
-	iam:1.5; strict;
+locks; strict;
 comment	@# @;
 
+
+1.6
+date	2018.05.03.20.08.05;	author jang;	state Exp;
+branches;
+next	1.5;
 
 1.5
 date	2017.10.30.00.43.42;	author iam;	state Exp;
@@ -36,9 +40,9 @@ desc
 @@
 
 
-1.5
+1.6
 log
-@*** empty log message ***
+@resilient-15
 @
 text
 @{
@@ -168,6 +172,7 @@ text
             "action": "list comments",
             "description": "list all comment for incident",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] }
             ],
             "output": "comments"
@@ -176,6 +181,7 @@ text
             "action": "get comment",
             "description": "get comment details by incident and comment id",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "comment_id", "required": true, "primary": true, "description": "ID of comment to retrieve", "contains": ["commentid"] }
             ],
@@ -185,6 +191,7 @@ text
             "action": "create comment",
             "description": "create new comment",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "parent_id", "primary": true, "description": "The ID of the initial comment if posting a reply", "contains": ["commentid"] },
                 { "name": "text", "description": "comment as text" },
@@ -197,6 +204,7 @@ text
             "action": "update comment",
             "description": "update existing comment",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "comment_id", "required": true, "primary": true, "description": "ID of comment to retrieve", "contains": ["commentid"] },
                 { "name": "IncidentCommentDTO", "required": true, "description": "comment data as JSON String, format is IncidentCommentDTO data type from API" }
@@ -226,6 +234,7 @@ text
             "action": "add table row",
             "description": "add table row",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "table_id", "required": true, "primary": true, "description": "ID of table", "contains": ["tableid"] },
                 { "name": "DataTableRowDataDTO", "required": true, "description": "table row as JSON String, format is DataTableRowDataDTO data type from API" },
@@ -247,6 +256,7 @@ text
             "action": "update table row",
             "description": "update table row",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "table_id", "required": true, "primary": true, "description": "ID of table", "contains": ["tableid"] },
                 { "name": "row_id", "required": true, "primary": true, "description": "ID of row in table", "contains": ["rowid"] },
@@ -266,22 +276,32 @@ text
             "output": "json"
         },
         {
-            "action": "update table row by key",
-            "description": "update table row by key",
+            "action": "update table row with key",
+            "description": "update table row with key",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "table_id", "required": true, "primary": true, "description": "ID of table", "contains": ["tableid"] },
-                { "name": "key", "required": true, "primary": true, "description": "ID of row in table", "contains": ["rowid"] },
-                { "name": "value", "required": true, "primary": true, "description": "ID of row in table", "contains": ["rowid"] },
+                { "name": "key", "required": true, "primary": true, "description": "property name in row to find", "contains": ["keyid"] },
+                { "name": "value", "required": true, "primary": false, "description": "property value in row to find" },
                 { "name": "DataTableRowDataDTO", "required": true, "description": "table row as JSON String, format is DataTableRowDataDTO data type from API" }
             ],
             "type": "generic",
             "output": "json"
-	},
+        },
+        {
+            "action": "list tasks",
+            "description": "list tasks for user (defined in asset configuration)",
+            "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" }
+            ],
+            "output": "json"
+        },
         {
             "action": "get task",
             "description": "get task details",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "task_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["taskid"] }
             ],
             "output": "json"
@@ -290,6 +310,7 @@ text
             "action": "update task",
             "description": "update task",
             "parameters": [
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "task_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["taskid"] },
                 { "name": "TaskDTO", "required": true, "description": "table row as JSON String, format is TaskDTO data type from API" }
             ],
@@ -309,16 +330,25 @@ text
             "action": "list attachments",
             "description": "list attachments for incident",
             "parameters": [
-                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] }
-	    ],
+        ],
             "output": "json"
         },
         {
             "action": "get attachment",
             "description": "get attachment details from incident",
             "parameters": [
-                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Treat handles as name. Default is true" },
+                { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
+                { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
+            ],
+            "output": "json"
+        },
+        {
+            "action": "download attachment",
+            "description": "download attachment from incident",
+            "parameters": [
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
                 { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
             ],
@@ -328,47 +358,46 @@ text
             "action": "add attachment",
             "description": "add attachment to incident",
             "parameters": [
-                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
                 { "name": "incident_id", "required": true, "primary": true, "description": "ID of incident", "contains": ["ticketid"] },
-                { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
+                { "name": "vault_id", "required": true, "primary": true, "description": "vault ID of file", "contains": ["vaultid"] }
             ],
             "type": "generic",
             "output": "json"
         }
     ],
-	"output": {
+    "output": {
         "default":[
-	        { "path": "id", "contains": ["ticketid"] },
-	        { "path": "name" },
-	        { "path": "create_date" },
-	        { "path": "description" },
-	        { "path": "creator.fname" },
-	        { "path": "creator.lname" },
-	        { "path": "creator.email" },
-	        { "path": "creator.phone" },
-	        { "path": "creator.cell" }
-	    ],
+            { "path": "id", "contains": ["ticketid"] },
+            { "path": "name" },
+            { "path": "create_date" },
+            { "path": "description" },
+            { "path": "creator.fname" },
+            { "path": "creator.lname" },
+            { "path": "creator.email" },
+            { "path": "creator.phone" },
+            { "path": "creator.cell" }
+        ],
         "search tickets": [
-	        { "path": "id", "contains": ["ticketid"] },
-	        { "path": "name" },
-	        { "path": "create_date" },
-	        { "path": "description" },
-	        { "path": "severity_code.name", "column_name": "severity" },
-	        { "path": "plan_status", "column_name": "status" }
+            { "path": "id", "contains": ["ticketid"] },
+            { "path": "name" },
+            { "path": "create_date" },
+            { "path": "description" },
+            { "path": "severity_code.name", "column_name": "severity" },
+            { "path": "plan_status", "column_name": "status" }
         ],
         "artifacts": [
-	        { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
-	        { "path": "id", "column_name": "artifact id", "contains": ["artifactid"] },
-	        { "path": "type" },
-	        { "path": "value" },
-	        { "path": "description" },
-	        { "path": "inc_name", "column_name": "incident name" }
+            { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
+            { "path": "id", "column_name": "artifact id", "contains": ["artifactid"] },
+            { "path": "type" },
+            { "path": "value" },
+            { "path": "description" },
+            { "path": "inc_name", "column_name": "incident name" }
         ],
         "comments": [
-	        { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
-	        { "path": "id", "column_name": "comment id", "contains": ["commentid"] },
-	        { "path": "text" },
-	        { "path": "inc_name", "column_name": "incident name" }
+            { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
+            { "path": "id", "column_name": "comment id", "contains": ["commentid"] },
+            { "path": "text" },
+            { "path": "inc_name", "column_name": "incident name" }
         ],
         "json": [
         ]
@@ -389,6 +418,85 @@ text
         { "code": 503, "success": false, "progress": "Service unavailable - usually related to LDAP not being accessible", "response": false }
     ]
 }
+@
+
+
+1.5
+log
+@*** empty log message ***
+@
+text
+@d128 1
+d137 1
+d147 1
+d160 1
+d190 1
+d212 1
+d232 2
+a233 2
+            "action": "update table row by key",
+            "description": "update table row by key",
+d235 1
+d238 2
+a239 2
+                { "name": "key", "required": true, "primary": true, "description": "ID of row in table", "contains": ["rowid"] },
+                { "name": "value", "required": true, "primary": true, "description": "ID of row in table", "contains": ["rowid"] },
+d244 9
+a252 1
+	},
+d257 1
+d266 1
+d286 1
+a286 1
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
+d288 1
+a288 1
+	    ],
+d295 10
+a304 1
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
+a313 1
+                { "name": "handle_format_is_name", "data_type": "boolean", "default": true, "description": "Also returns closed incidents. Default is true" },
+d315 1
+a315 1
+                { "name": "attachment_id", "required": true, "primary": true, "description": "ID of attachment", "contains": ["attachmentid"] }
+d321 1
+a321 1
+	"output": {
+d323 10
+a332 10
+	        { "path": "id", "contains": ["ticketid"] },
+	        { "path": "name" },
+	        { "path": "create_date" },
+	        { "path": "description" },
+	        { "path": "creator.fname" },
+	        { "path": "creator.lname" },
+	        { "path": "creator.email" },
+	        { "path": "creator.phone" },
+	        { "path": "creator.cell" }
+	    ],
+d334 6
+a339 6
+	        { "path": "id", "contains": ["ticketid"] },
+	        { "path": "name" },
+	        { "path": "create_date" },
+	        { "path": "description" },
+	        { "path": "severity_code.name", "column_name": "severity" },
+	        { "path": "plan_status", "column_name": "status" }
+d342 6
+a347 6
+	        { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
+	        { "path": "id", "column_name": "artifact id", "contains": ["artifactid"] },
+	        { "path": "type" },
+	        { "path": "value" },
+	        { "path": "description" },
+	        { "path": "inc_name", "column_name": "incident name" }
+d350 4
+a353 4
+	        { "path": "inc_id", "column_name": "incident id", "contains": ["ticketid"] },
+	        { "path": "id", "column_name": "comment id", "contains": ["commentid"] },
+	        { "path": "text" },
+	        { "path": "inc_name", "column_name": "incident name" }
 @
 
 
