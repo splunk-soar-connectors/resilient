@@ -1,0 +1,9 @@
+*.py
+*.bak
+*,v
+.*
+conf.json
+exclude_files.txt
+gen_json
+search
+docompile
