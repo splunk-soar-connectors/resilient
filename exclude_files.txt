@@ -9,3 +9,4 @@ search
 docompile
 tools
 third-party
+Icon*
