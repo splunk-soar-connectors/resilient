@@ -7,3 +7,5 @@ exclude_files.txt
 gen_json
 search
 docompile
+tools
+third-party
