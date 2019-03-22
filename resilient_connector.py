@@ -158,6 +158,15 @@ class ResilientConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
 
+    # assumes connection already setup
+    # return exception on error
+    def _get_ticket(self, param):
+        call = "/incidents/{}".format(param['incident_id'])
+        self.save_progress("GET {}".format(call))
+        retval = self._client.get(call)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
+
     def _handle_get_ticket(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
@@ -248,15 +257,7 @@ class ResilientConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(action_id))
         action_result = self.add_action_result(ActionResult(dict(param)))
     
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            call = "/incidents/{}".format(param['incident_id'])
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
+        # validate incoming json
         fullincidentdatadto = param['fullincidentdatadto']
         if len(fullincidentdatadto) > 1:
             try:
@@ -267,20 +268,46 @@ class ResilientConnector(BaseConnector):
         else:
             payload = dict()
             
-        if 'name' not in payload:
-            self.save_progress("json payload does not have 'name' key, payload should be result of get_ticket")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'name' key, payload should be result of get_ticket")
-        if 'description' not in payload:
-            self.save_progress("json payload does not have 'description' key, payload should be result of get_ticket")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'description' key, payload should be result of get_ticket")
-        if 'discovered_date' not in payload:
-            self.save_progress("json payload does not have 'discovered_date' key, payload should be result of get_ticket")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'discovered_date' key, payload should be result of get_ticket")
+        config = self.get_config()
+
+        # setup connection
+        try:
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client.connect(config['user'], config['password'])
+            call = "/incidents/{}".format(param['incident_id'])
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        # remove parameter validation code. It just gets in the way
+        #if 'name' not in payload:
+        #    self.save_progress("json payload does not have 'name' key, payload should be result of get_ticket")
+        #    return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'name' key, payload should be result of get_ticket")
+        #if 'description' not in payload:
+        #    self.save_progress("json payload does not have 'description' key, payload should be result of get_ticket")
+        #    return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'description' key, payload should be result of get_ticket")
+        #if 'discovered_date' not in payload:
+        #    self.save_progress("json payload does not have 'discovered_date' key, payload should be result of get_ticket")
+        #    return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'discovered_date' key, payload should be result of get_ticket")
+
+        # get ticket first
+        #if param.get('get_ticket_and_copy_over', False):
+        #    try:
+        #        ticket = self._get_ticket(param)
+        #    except Exception as e:
+        #        return self.__handle_exceptions(e, action_result)
+        #
+        #    newpayload = payload.copy()
+        #    newpayload.update(fullincidentdatadto)
+        #    payload = newpayload
         
         try:
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
+            def apply(arg):
+                arg.update(payload)
+                return arg
+
+            self.save_progress("GET_PUT {}".format(call))
+            self.save_progress("PAYLOAD {}".format(payload))
+            retval = self._client.get_put(call, apply)
             self.save_progress("{} successful.".format(action_id))
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
@@ -790,7 +817,7 @@ class ResilientConnector(BaseConnector):
             if param.get('handle_format', False) == True:
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
-            call = "/incidents/{}/table_data/{}".format(param['incident_id'], param['table_id'])
+            call = "/incidents/{}/table_data/{}/row_data".format(param['incident_id'], param['table_id'])
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
@@ -806,7 +833,7 @@ class ResilientConnector(BaseConnector):
             
         for col in ['1st', '2nd', '3rd', '4th', '5th']:
                 key = param.get('{}_cell_property'.format(col), "")
-                value = param.get('{}_cell_value'.format(col))
+                value = param.get('{}_cell_value'.format(col), "")
                 if len(key) > 1 and len(value) > 1:
                     payload['cells'][key] = value
                 elif len(key) > 1 or len(value) > 1:
@@ -980,6 +1007,17 @@ class ResilientConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
 
+    # assumes connection already setup
+    # return exception on error
+    def _get_task(self, param):
+        if param.get('handle_format', False) == True:
+            self._client.headers['handle_format'] = "names"
+        call = "/tasks/{}".format(param['task_id'])
+        self.save_progress("GET {}".format(call))
+        retval = self._client.get(call)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
+
     def _handle_get_task(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
@@ -1016,15 +1054,6 @@ class ResilientConnector(BaseConnector):
     
         config = self.get_config()
 
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
-            if param.get('handle_format', False) == True:
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            call = "/tasks/{}".format(param['task_id)'])
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
         taskdto = param.get('taskdto', "")
         if len(taskdto) > 1:
             try:
@@ -1036,9 +1065,33 @@ class ResilientConnector(BaseConnector):
             payload = dict()
             
         try:
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            if param.get('handle_format', False) == True:
+                self._client.headers['handle_format'] = "names"
+            self._client.connect(config['user'], config['password'])
+            call = "/tasks/{}".format(param['task_id'])
+        except Exception as e:
+            return self.__handle_exceptions(e, action_result)
+
+        # get task first
+        #if param.get('get_task_and_copy_over', False):
+        #    try:
+        #        ticket = self._get_task(param)
+        #    except Exception as e:
+        #        return self.__handle_exceptions(e, action_result)
+        #
+        #    newpayload = payload.copy()
+        #    newpayload.update(taskdto)
+        #    payload = newpayload
+
+        try:
+            def apply(arg):
+                arg.update(payload)
+                return arg
+
+            self.save_progress("GET_PUT {}".format(call))
+            self.save_progress("PAYLOAD {}".format(payload))
+            retval = self._client.get_put(call, apply)
             self.save_progress("{} successful.".format(action_id))
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
@@ -1062,7 +1115,7 @@ class ResilientConnector(BaseConnector):
         try:
             self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
             self._client.connect(config['user'], config['password'])
-            call = "/tasks/{}".format(param['task_id)'])
+            call = "/tasks/{}".format(param['task_id'])
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
@@ -1077,7 +1130,7 @@ class ResilientConnector(BaseConnector):
                 arg['status'] = "C"
                 return arg
 
-            retval = self.client.get_put(call, arg)
+            retval = self._client.get_put(call, apply)
             self.save_progress("{} successful.".format(action_id))
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
