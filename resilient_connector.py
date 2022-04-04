@@ -1,12 +1,18 @@
-# -----------------------------------------
-# Phantom sample App Connector python file
-# -----------------------------------------
 # File: resilient_connector.py
-# Copyright (c) 2020 Splunk Inc.
 #
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
+# Copyright (c) 2022 Splunk Inc.
 #
-# Phantom App imports
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
+
 import calendar
 import datetime
 # Usage of the consts file is recommended
@@ -63,7 +69,7 @@ class ResilientConnector(BaseConnector):
         action_id = self.get_action_identifier()
 
         try:
-            if not isinstance(value, basestring):
+            if not isinstance(value, basestring):  # noqa: F821
                 errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
                 self.save_progress(errmsg)
                 return action_result.set_status(phantom.APP_ERROR, errmsg)

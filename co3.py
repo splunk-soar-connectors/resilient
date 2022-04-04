@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# File: co3.py
-# Copyright (c) 2020 Splunk Inc.
-#
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
-#
+# (c) Copyright IBM Corp. 2010, 2019. All Rights Reserved.
 
 """Simple client for Resilient REST API"""
 from __future__ import print_function
@@ -187,7 +183,7 @@ def _raise_if_error(response):
 def ensure_unicode(input_value):
     """ if input_value is type str, convert to unicode with utf-8 encoding """
     if sys.version_info.major == 2:
-        if not isinstance(input_value, basestring):
+        if not isinstance(input_value, basestring):  # noqa: F821
             return input_value
     else:
         return input_value
@@ -830,7 +826,7 @@ class LoggingSimpleClient(SimpleClient):
             logfile.write(json.dumps(response.json(), indent=2))
         with open(os.path.join(self.logging_directory,
                                filename.format("HEADER")), "w+") as logfile:
-            logfile.write(json.dumps(dict(response.headers), indent=2))
+            logfile.write(json.dumps(dict(response.headers), indent=2))  # nosemgrep
 
     def _connect(self, *args, **kwargs):
         """ Connect to Resilient and log response """

@@ -21,7 +21,7 @@
         "wheel": [
             {
                 "module": "cachetools",
-                "input_file": "wheels/cachetools-3.1.1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/cachetools-3.1.1-py2.py3-none-any.whl"
             }
         ]
     },
@@ -5146,12 +5146,12 @@
                     ]
                 },
                 "value": {
-                    "description": "artifact value field",
+                    "description": "Artifact value field",
                     "data_type": "string",
                     "order": 3
                 },
                 "description": {
-                    "description": "short description of artifact",
+                    "description": "Short description of artifact",
                     "data_type": "string",
                     "order": 4
                 }
@@ -6663,12 +6663,12 @@
                     ]
                 },
                 "text": {
-                    "description": "comment as text",
+                    "description": "Comment as text",
                     "data_type": "string",
                     "order": 3
                 },
                 "incidentcommentdto": {
-                    "description": "comment data as JSON String, format is IncidentCommentDTO data type from API",
+                    "description": "Comment data as JSON String, format is IncidentCommentDTO data type from API",
                     "data_type": "string",
                     "order": 4
                 }
@@ -6982,7 +6982,7 @@
                     ]
                 },
                 "incidentcommentdto": {
-                    "description": "comment data as JSON String, format is IncidentCommentDTO data type from API",
+                    "description": "Comment data as JSON String, format is IncidentCommentDTO data type from API",
                     "data_type": "string",
                     "required": true,
                     "order": 3
@@ -7652,7 +7652,7 @@
                     ]
                 },
                 "datatablerowdatadto": {
-                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "description": "Table row as JSON String, format is DataTableRowDataDTO data type from API",
                     "data_type": "string",
                     "required": true,
                     "order": 3
@@ -8003,7 +8003,7 @@
                     ]
                 },
                 "datatablerowdatadto": {
-                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "description": "Table row as JSON String, format is DataTableRowDataDTO data type from API",
                     "data_type": "string",
                     "required": true,
                     "order": 4
@@ -8206,7 +8206,7 @@
                     ]
                 },
                 "key": {
-                    "description": "property name in row to find",
+                    "description": "Property name in row to find",
                     "data_type": "string",
                     "required": true,
                     "primary": true,
@@ -8216,13 +8216,13 @@
                     ]
                 },
                 "value": {
-                    "description": "property value in row to find",
+                    "description": "Property value in row to find",
                     "data_type": "string",
                     "required": true,
                     "order": 4
                 },
                 "datatablerowdatadto": {
-                    "description": "table row as JSON String, format is DataTableRowDataDTO data type from API",
+                    "description": "Table row as JSON String, format is DataTableRowDataDTO data type from API",
                     "data_type": "string",
                     "required": true,
                     "order": 5
@@ -8527,7 +8527,7 @@
                     "data_path": "action_result.data.*.inc.description",
                     "data_type": "string",
                     "example_values": [
-                        "Incident created for testing purpose\u6f22\u5b57&copy;&not;\u0278\u0460\u058d"
+                        "Incident created for testing purpose"
                     ],
                     "column_name": "Description",
                     "column_order": 4
@@ -9735,7 +9735,7 @@
                     ]
                 },
                 "taskdto": {
-                    "description": "table row as JSON String, format is TaskDTO data type from API",
+                    "description": "Table row as JSON String, format is TaskDTO data type from API",
                     "data_type": "string",
                     "required": true,
                     "order": 2
@@ -10238,7 +10238,7 @@
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "NOWAK1-Pawe\u0142-pass.png"
+                        "NOWAK1-pass.png"
                     ],
                     "column_name": "Attachment Name",
                     "column_order": 2
@@ -10452,7 +10452,7 @@
                     "data_path": "action_result.data.*.name",
                     "data_type": "string",
                     "example_values": [
-                        "NOWAK1-Pawe\u0142-pass.png"
+                        "NOWAK1-pass.png"
                     ],
                     "column_name": "Attachment Name",
                     "column_order": 2

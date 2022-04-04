@@ -1,10 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# File: patch.py
-# Copyright (c) 2020 Splunk Inc.
-#
-# Licensed under Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0.txt)
-#
+# (c) Copyright IBM Corp. 2010, 2017. All Rights Reserved.
 
 import collections
 
