@@ -1,0 +1,9 @@
+Splunk SOAR Resilient
+Copyright (c) 2022 Splunk Inc.
+
+Third-party Software Attributions:
+
+Library: cachetools
+Version: 3.1.1
+License: MIT
+Copyright 2014-2019 Thomas Kemmer
