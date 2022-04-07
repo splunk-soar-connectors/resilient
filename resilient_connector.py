@@ -238,6 +238,15 @@ class ResilientConnector(BaseConnector):
         self.save_progress("{} successful.".format(action_id))
         return retval
 
+    # assumes connection already setup
+    # return exception on error
+    def _get_ticket(self, param):
+        call = "/incidents/{}".format(param['incident_id'])
+        self.save_progress("GET {}".format(call))
+        retval = self._client.get(call)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
+
     def _handle_get_ticket(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
@@ -1115,6 +1124,17 @@ class ResilientConnector(BaseConnector):
     def _get_task(self, param):
         action_id = self.get_action_identifier()
         if param.get('handle_format_is_name'):
+            self._client.headers['handle_format'] = "names"
+        call = "/tasks/{}".format(param['task_id'])
+        self.save_progress("GET {}".format(call))
+        retval = self._client.get(call)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
+
+    # assumes connection already setup
+    # return exception on error
+    def _get_task(self, param):
+        if param.get('handle_format', False) == True:
             self._client.headers['handle_format'] = "names"
         call = "/tasks/{}".format(param['task_id'])
         self.save_progress("GET {}".format(call))
