@@ -13,9 +13,6 @@ class ResilientClient:
     api_key_secret: Optional[str] = None
 
     _simple_client = None
-    COMMON_CLIENT_KWARGS = {
-        "request_max_retries": 1
-    }
 
     @property
     def simple_client(self):
@@ -52,13 +49,21 @@ class ResilientClient:
 
     # https://ibmresilient.github.io/resilient-python-api/pages/resilient/resilient.html#resilient.co3.SimpleClient.get
     # https://www.ibm.com/support/pages/rest-api
+
+    def new_simple_client(self):
+        # See resilient/co3.py
+        kwargs = {
+            "request_max_retries": 1
+        }
+        return SimpleClient(org_name=self.org_name, base_url=self.base_url, **kwargs)
+
     def get_client_with_api_key(self):
-        client = SimpleClient(org_name=self.org_name, base_url=self.base_url, **self.COMMON_CLIENT_KWARGS)
+        client = self.new_simple_client()
         client.set_api_key(self.api_key_id, self.api_key_secret)
         return client
 
     def get_client_with_credentials(self):
-        client = SimpleClient(org_name=self.org_name, base_url=self.base_url, **self.COMMON_CLIENT_KWARGS)
         timeout_seconds = 10
+        client = self.new_simple_client()
         client.connect(email=self.username, password=self.password, timeout=timeout_seconds)
         return client
