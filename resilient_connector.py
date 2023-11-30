@@ -69,7 +69,7 @@ class ResilientConnector(BaseConnector):
         action_id = self.get_action_identifier()
 
         try:
-            if not isinstance(value, basestring):  # noqa: F821
+            if not isinstance(value, str):  # noqa: F821
                 errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
                 self.save_progress(errmsg)
                 return action_result.set_status(phantom.APP_ERROR, errmsg)

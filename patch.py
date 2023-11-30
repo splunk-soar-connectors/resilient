@@ -128,7 +128,7 @@ class Patch(object):
         determine if anything has changed when calling the patch conflict callback.
         :return: A new list that contains all of the 'old values' in the patch.
         """
-        return [change.old_value for field_name, change in self.changes.items()]
+        return [change.old_value for field_name, change in list(self.changes.items())]
 
     def has_changes(self):
         """
@@ -162,7 +162,7 @@ class Patch(object):
         """Converts this patch object to a dict that can be posted to the server."""
         changes = []
 
-        for field_name, change in self.changes.items():
+        for field_name, change in list(self.changes.items()):
             changes.append(change.to_dict())
 
         patch = dict(changes=changes)
