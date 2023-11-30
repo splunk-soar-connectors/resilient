@@ -20,6 +20,7 @@ import datetime
 import json
 import sys
 import time
+import traceback
 
 import dateutil.parser
 import phantom.app as phantom
@@ -28,7 +29,7 @@ from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 from phantom.vault import Vault
 
-import co3
+from resilient_client import ResilientClient
 
 
 # get string value: return "" if key not in dictionary, otherwise value
@@ -139,67 +140,96 @@ class ResilientConnector(BaseConnector):
         error_code, error_message = self._get_error_message_from_exception(e)
         try:
             if e.response is None:
-                return action_result.set_status(phantom.APP_ERROR, "Error code:{} Error message: {}".format(error_code, error_message))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "Error code:{} Error message: {}".format(error_code, error_message))
 
             if e.response.status_code == 400:
                 self.save_progress("Bad request.")
-                return action_result.set_status(phantom.APP_ERROR, "Error, {} Failed Error code:{} Error message: Bad request."
-                                                                   .format(action_id, e.response.status_code))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "Error, {} Failed Error code:{} Error message: Bad request."
+                                                .format(action_id, e.response.status_code))
 
             elif e.response.status_code == 401:
                 self.save_progress("Unauthorized - most commonly, the provided session ID is invalid.")
                 error_msg = "Error, {} Failed Error code:{} Error message: Unauthorized - most commonly, " \
-                    "the provided session ID is invalid.".format(action_id, e.response.status_code)
+                            "the provided session ID is invalid.".format(action_id, e.response.status_code)
                 return action_result.set_status(phantom.APP_ERROR, error_msg)
 
             elif e.response.status_code == 403:
                 self.save_progress("Forbidden - most commonly, user authentication failed.")
                 error_msg = "Error, {} Failed Error code:{} Error message: Forbidden - most commonly, " \
-                    "user authentication failed.".format(action_id, e.response.status_code)
+                            "user authentication failed.".format(action_id, e.response.status_code)
                 return action_result.set_status(phantom.APP_ERROR, error_msg)
 
             elif e.response.status_code == 404:
                 self.save_progress("Object not found.")
                 return action_result.set_status(phantom.APP_ERROR,
-                    "Error, {} Failed Error code:{} Error message: Object not found.".format(action_id, e.response.status_code))
+                                                "Error, {} Failed Error code:{} Error message: Object not found.".format(
+                                                    action_id, e.response.status_code))
 
             elif e.response.status_code == 409:
                 self.save_progress("Conflicting PUT operation.")
                 return action_result.set_status(phantom.APP_ERROR,
-                    "Error, {} Failed Error code:{} Error message: Conflicting PUT operation.".format(action_id, e.response.status_code))
+                                                "Error, {} Failed Error code:{} Error message: Conflicting PUT operation.".format(
+                                                    action_id, e.response.status_code))
 
             elif e.response.status_code == 500:
                 self.save_progress("Internal error.")
                 return action_result.set_status(phantom.APP_ERROR,
-                    "Error, {} Failed Error code:{} Error message: Internal error.".format(action_id, e.response.status_code))
+                                                "Error, {} Failed Error code:{} Error message: Internal error.".format(
+                                                    action_id, e.response.status_code))
 
             elif e.response.status_code == 503:
                 self.save_progress("Service unavailable - usually related to LDAP not being accessible.")
-                return action_result.set_status(phantom.APP_ERROR, "Service unavailable - usually related to LDAP not being accessible.")
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "Service unavailable - usually related to LDAP not being accessible.")
 
             else:
                 self.save_progress("Error: status code {}".format(e.response.status_code))
-                return action_result.set_status(phantom.APP_ERROR, "Error: {} failed status code {}".format(action_id, e.response.status_code))
+                return action_result.set_status(phantom.APP_ERROR, "Error: {} failed status code {}".format(action_id,
+                                                                                                            e.response.status_code))
         except:
             pass
 
         self.save_progress("Error, Action Failed: Error code:{} Error message: {}".format(error_code, error_message))
         return action_result.set_status(phantom.APP_ERROR,
-                                        "Error, Action Failed Error code:{} Error message: {}".format(error_code, error_message))
+                                        "Error, Action Failed Error code:{} Error message: {}".format(error_code,
+                                                                                                      error_message))
 
     def _handle_test_connectivity(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
+        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         config = self.get_config()
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        client_kwargs = {
+            "org_name": config['org_id'],
+            "base_url": config['base_url'],
+            "verify": config['verify']
+        }
+        if config.get('user') is not None and config.get('password') is not None:
+            client_kwargs.update({
+                "username": config['user'],
+                "password": config['password']
+            })
+            self.save_progress(f"Attempting authentication with username and password.")
+            raise NotImplementedError()
+        elif config.get('api_key_id') is not None and config.get('api_key_secret') is not None:
+            client_kwargs.update({
+                "api_key_id": config['api_key_id'],
+                "api_key_secret": config['api_key_secret']
+            })
+            self.save_progress(f"Attempting authentication with API Key.")
+        else:
+            raise ValueError("No credentials (email & password) or API Key (ID & Secret) provided.")
 
+        try:
+            ResilientClient(**client_kwargs).authenticate()
+        except (Exception, SystemExit) as e:
+            return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
+
+        self.save_progress(f"Action {action_id} successful.")
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tickets(self, param):
@@ -210,7 +240,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents?want_closed={}".format(param['want_closed'])
 
@@ -246,7 +277,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             call = "/incidents/{}".format(incident_id)
@@ -257,7 +289,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -273,7 +305,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             call = "/incidents?want_full_data={}&want_tasks={}".format(param['want_full_data'], param['want_tasks'])
         except Exception as e:
@@ -287,7 +320,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. fullincidentdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. fullincidentdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. fullincidentdatadto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -306,7 +341,8 @@ class ResilientConnector(BaseConnector):
             return action_result.set_status(phantom.APP_ERROR, "json payload does not have required 'description' key")
         if 'discovered_date' not in payload:
             self.save_progress("json payload does not have required 'discovered_date' key")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have required 'discovered_date' key")
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "json payload does not have required 'discovered_date' key")
 
         try:
             self.save_progress("POST {}".format(call))
@@ -316,7 +352,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -338,7 +374,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. fullincidentdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. fullincidentdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. fullincidentdatadto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -346,7 +384,8 @@ class ResilientConnector(BaseConnector):
 
         # setup connection
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             call = "/incidents/{}".format(incident_id)
@@ -389,7 +428,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "incidents"
         for r in retval:
             action_result.add_data(r)
@@ -407,7 +446,8 @@ class ResilientConnector(BaseConnector):
         payload = dict()
         conditions = list()
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
@@ -423,7 +463,8 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. querydto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. querydto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. querydto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
@@ -438,10 +479,12 @@ class ResilientConnector(BaseConnector):
             conditions.append({"field_name": "plan_status", "method": "equals", "value": "A"})
         if param.get('add_condition_created_in_last_24_hours') is True:
             conditions.append({"field_name": "create_date", "method": "gte",
-                "value": calendar.timegm((datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
+                               "value": calendar.timegm(
+                                   (datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
         if param.get('add_condition_closed_in_last_24_hours') is True:
             conditions.append({"field_name": "end_date", "method": "gte",
-                "value": calendar.timegm((datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
+                               "value": calendar.timegm(
+                                   (datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
 
         for con in ['1st', '2nd', '3rd', '4th', '5th']:
             try:
@@ -463,7 +506,8 @@ class ResilientConnector(BaseConnector):
                     try:
                         value = calendar.timegm(dateutil.parser.parse(value).utctimetuple()) * 1000
                     except Exception as e:
-                        self.save_progress("Warning: {} condition value is not a datetime as expected: {}, skipping".format(con, e))
+                        self.save_progress(
+                            "Warning: {} condition value is not a datetime as expected: {}, skipping".format(con, e))
                         continue
 
                 conditions.append({"field_name": name, "method": method, "value": value})
@@ -474,7 +518,7 @@ class ResilientConnector(BaseConnector):
             self.save_progress("json payload does not have 'conditions' key.")
             return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'conditions' key")
 
-        filters.append({ "conditions": conditions })
+        filters.append({"conditions": conditions})
 
         try:
             self.save_progress("POST {}".format(call))
@@ -499,7 +543,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             call = "/incidents/{}/artifacts".format(incident_id)
@@ -525,7 +570,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             artifact_id = self._handle_py_ver_compat_for_input_str(param['artifact_id'])
@@ -537,7 +583,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "artifacts"
         for r in retval:
             action_result.add_data(r)
@@ -553,7 +599,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             call = "/incidents/{}/artifacts".format(incident_id)
@@ -568,7 +615,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. incidentartifactdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. incidentartifactdto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. incidentartifactdto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -593,7 +642,9 @@ class ResilientConnector(BaseConnector):
                     type = int(type)
                 except:
                     self.save_progress("{} failed. Type is not recognized or not an integer".format(action_id))
-                    return action_result.set_status(phantom.APP_ERROR, "{} failed. Type is not recognized or not an integer".format(action_id))
+                    return action_result.set_status(phantom.APP_ERROR,
+                                                    "{} failed. Type is not recognized or not an integer".format(
+                                                        action_id))
             if type > 0:
                 payload['type'] = type
         if 'value' not in payload:
@@ -632,7 +683,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
             artifact_id = self._handle_py_ver_compat_for_input_str(param['artifact_id'])
@@ -648,7 +700,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. incidentartifactdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. incidentartifactdto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. incidentartifactdto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -663,7 +717,8 @@ class ResilientConnector(BaseConnector):
         if 'description' not in payload:
             self.save_progress("json payload does not have 'description' key, payload should be result of get_artifact")
             return action_result.set_status(
-                phantom.APP_ERROR, "json payload does not have 'description' key, payload should be result of get_artifact")
+                phantom.APP_ERROR,
+                "json payload does not have 'description' key, payload should be result of get_artifact")
 
         try:
             self.save_progress("PUT {}".format(call))
@@ -673,7 +728,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "artifacts"
         for r in retval:
             action_result.add_data(r)
@@ -689,7 +744,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.headers['text_content_output_format'] = "objects_no_convert"
@@ -718,7 +774,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -732,7 +789,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "comments"
         for r in retval:
             action_result.add_data(r)
@@ -748,7 +805,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -765,7 +823,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. incidentcommentdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. incidentcommentdto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. incidentcommentdto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -786,7 +846,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "comments"
         for r in retval:
             action_result.add_data(r)
@@ -802,7 +862,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
@@ -814,16 +875,19 @@ class ResilientConnector(BaseConnector):
 
         payload = self.get_json_parameter(param, 'incidentcommentdto', action_result)
         if not isinstance(payload, dict):
-            return action_result.set_status(phantom.APP_ERROR, "{} failed. incidentcommentdto field is not valid json.".format(action_id))
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "{} failed. incidentcommentdto field is not valid json.".format(action_id))
         if payload == phantom.APP_ERROR:
             return payload
 
         # self.debug_print("{} json is {}".format(action_id, payload))
 
         if 'text' not in payload:
-            self.save_progress("json payload does not have required 'text' key, payload should be result of get comment")
+            self.save_progress(
+                "json payload does not have required 'text' key, payload should be result of get comment")
             return action_result.set_status(
-                phantom.APP_ERROR, "json payload does not have required 'text' key, payload should be result of get comment")
+                phantom.APP_ERROR,
+                "json payload does not have required 'text' key, payload should be result of get comment")
 
         try:
             self.save_progress("PUT {}".format(call))
@@ -833,7 +897,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "comments"
         for r in retval:
             action_result.add_data(r)
@@ -849,7 +913,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -877,7 +942,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -891,7 +957,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "tables"
         for r in retval:
             action_result.add_data(r)
@@ -907,7 +973,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -925,7 +992,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. datatablerowdatadto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -946,7 +1015,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "table row"
         for r in retval:
             action_result.add_data(r)
@@ -962,7 +1031,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -981,7 +1051,9 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. datatablerowdatadto field is not valid json.".format(
+                                                    action_id))
         else:
             payload = dict()
 
@@ -1002,7 +1074,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "table row"
         for r in retval:
             action_result.add_data(r)
@@ -1019,7 +1091,8 @@ class ResilientConnector(BaseConnector):
         # all parameters are required so all parameters are len() > 0
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1034,10 +1107,13 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. datatablerowdatadto field is not valid json.".format(
+                                                    action_id))
         else:
             self.save_progress("{} failed. datatablerowdatadto field is empty string.".format(action_id))
-            return action_result.set_status(phantom.APP_ERROR, "{} failed. datatablerowdatadto field is empty string.".format(action_id))
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "{} failed. datatablerowdatadto field is empty string.".format(action_id))
 
         # get table first
         try:
@@ -1063,7 +1139,8 @@ class ResilientConnector(BaseConnector):
 
         if rowid is None:
             self.save_progress("{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
-            return action_result.set_status(phantom.APP_ERROR, "{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
+            return action_result.set_status(phantom.APP_ERROR,
+                                            "{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
 
         try:
             call = "/incidents/{}/table_data/{}/row_date/{}".format(incident_id, table_id, rowid)
@@ -1074,7 +1151,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "table row"
         for r in retval:
             action_result.add_data(r)
@@ -1090,7 +1167,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1130,7 +1208,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1143,7 +1222,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "tasks"
         for r in retval:
             action_result.add_data(r)
@@ -1166,12 +1245,14 @@ class ResilientConnector(BaseConnector):
                     raise Exception
             except Exception:
                 self.save_progress("{} failed. taskdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. taskdto field is not valid json.".format(action_id))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. taskdto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1202,7 +1283,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "tasks"
         for r in retval:
             action_result.add_data(r)
@@ -1218,7 +1299,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             self._client.connect(config['user'], config['password'])
             task_id = self._handle_py_ver_compat_for_input_str(param['task_id'])
             call = "/tasks/{}".format(task_id)
@@ -1241,7 +1323,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "tasks"
         for r in retval:
             action_result.add_data(r)
@@ -1257,7 +1339,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1285,7 +1368,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1299,7 +1383,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "attachments"
         for r in retval:
             action_result.add_data(r)
@@ -1315,7 +1399,8 @@ class ResilientConnector(BaseConnector):
         config = self.get_config()
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'], verify=config['verify'])
+            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
+                                            verify=config['verify'])
             if param.get('handle_format_is_name'):
                 self._client.headers['handle_format'] = "names"
             self._client.connect(config['user'], config['password'])
@@ -1327,7 +1412,9 @@ class ResilientConnector(BaseConnector):
             vault_info = Vault.get_file_info(vault_id=vault_id, container_id=container_id)
             if len(vault_info) == 0:
                 self.save_progress("{} failed. {}: vault_id not valid.".format(action_id, param['vault_id']))
-                return action_result.set_status(phantom.APP_ERROR, "{} failed. {}: vault_id not valid.".format(action_id, param['vault_id']))
+                return action_result.set_status(phantom.APP_ERROR,
+                                                "{} failed. {}: vault_id not valid.".format(action_id,
+                                                                                            param['vault_id']))
             path = vault_info[0]['path']
             name = vault_info[0]['name']
 
@@ -1337,7 +1424,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             return self.__handle_exceptions(e, action_result)
 
-        retval = [ retval ]
+        retval = [retval]
         itemtype = "attachments"
         for r in retval:
             action_result.add_data(r)
@@ -1346,93 +1433,93 @@ class ResilientConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def handle_action(self, param):
-
-        ret_val = phantom.APP_SUCCESS
-
-        # Get the action that we are supposed to execute for this App Run
         action_id = self.get_action_identifier()
+        self.save_progress(f"Handling action: {action_id}")
 
-        self.debug_print("action_id", action_id)
+        action_result = self.add_action_result(ActionResult(dict(param)))
 
-        if action_id == 'test_connectivity':
-            ret_val = self._handle_test_connectivity(param)
+        try:
+            if action_id == 'test_connectivity':
+                return self._handle_test_connectivity(param)
+            else:
+                raise NotImplementedError()
+        except (Exception, SystemExit) as e:
+            return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
 
-        elif action_id == 'list_tickets':
-            ret_val = self._handle_list_tickets(param)
-
-        elif action_id == 'get_ticket':
-            ret_val = self._handle_get_ticket(param)
-
-        elif action_id == 'create_ticket':
-            ret_val = self._handle_create_ticket(param)
-
-        elif action_id == 'update_ticket':
-            ret_val = self._handle_update_ticket(param)
-
-        elif action_id == 'search_tickets':
-            ret_val = self._handle_search_tickets(param)
-
-        elif action_id == 'list_artifacts':
-            ret_val = self._handle_list_artifacts(param)
-
-        elif action_id == 'get_artifact':
-            ret_val = self._handle_get_artifact(param)
-
-        elif action_id == 'create_artifact':
-            ret_val = self._handle_create_artifact(param)
-
-        elif action_id == 'update_artifact':
-            ret_val = self._handle_update_artifact(param)
-
-        elif action_id == 'list_comments':
-            ret_val = self._handle_list_comments(param)
-
-        elif action_id == 'get_comment':
-            ret_val = self._handle_get_comment(param)
-
-        elif action_id == 'create_comment':
-            ret_val = self._handle_create_comment(param)
-
-        elif action_id == 'update_comment':
-            ret_val = self._handle_update_comment(param)
-
-        elif action_id == 'list_tables':
-            ret_val = self._handle_list_tables(param)
-
-        elif action_id == 'get_table':
-            ret_val = self._handle_get_table(param)
-
-        elif action_id == 'add_table_row':
-            ret_val = self._handle_add_table_row(param)
-
-        elif action_id == 'update_table_row':
-            ret_val = self._handle_update_table_row(param)
-
-        elif action_id == "update_table_row_with_key":
-            ret_val = self._handle_update_table_row_with_key(param)
-
-        elif action_id == 'list_tasks':
-            ret_val = self._handle_list_tasks(param)
-
-        elif action_id == 'get_task':
-            ret_val = self._handle_get_task(param)
-
-        elif action_id == 'update_task':
-            ret_val = self._handle_update_task(param)
-
-        elif action_id == 'close_task':
-            ret_val = self._handle_close_task(param)
-
-        elif action_id == 'list_attachments':
-            ret_val = self._handle_list_attachments(param)
-
-        elif action_id == 'get_attachment':
-            ret_val = self._handle_get_attachment(param)
-
-        elif action_id == 'add_attachment':
-            ret_val = self._handle_add_attachment(param)
-
-        return ret_val
+        # elif action_id == 'list_tickets':
+        #     ret_val = self._handle_list_tickets(param)
+        #
+        # elif action_id == 'get_ticket':
+        #     ret_val = self._handle_get_ticket(param)
+        #
+        # elif action_id == 'create_ticket':
+        #     ret_val = self._handle_create_ticket(param)
+        #
+        # elif action_id == 'update_ticket':
+        #     ret_val = self._handle_update_ticket(param)
+        #
+        # elif action_id == 'search_tickets':
+        #     ret_val = self._handle_search_tickets(param)
+        #
+        # elif action_id == 'list_artifacts':
+        #     ret_val = self._handle_list_artifacts(param)
+        #
+        # elif action_id == 'get_artifact':
+        #     ret_val = self._handle_get_artifact(param)
+        #
+        # elif action_id == 'create_artifact':
+        #     ret_val = self._handle_create_artifact(param)
+        #
+        # elif action_id == 'update_artifact':
+        #     ret_val = self._handle_update_artifact(param)
+        #
+        # elif action_id == 'list_comments':
+        #     ret_val = self._handle_list_comments(param)
+        #
+        # elif action_id == 'get_comment':
+        #     ret_val = self._handle_get_comment(param)
+        #
+        # elif action_id == 'create_comment':
+        #     ret_val = self._handle_create_comment(param)
+        #
+        # elif action_id == 'update_comment':
+        #     ret_val = self._handle_update_comment(param)
+        #
+        # elif action_id == 'list_tables':
+        #     ret_val = self._handle_list_tables(param)
+        #
+        # elif action_id == 'get_table':
+        #     ret_val = self._handle_get_table(param)
+        #
+        # elif action_id == 'add_table_row':
+        #     ret_val = self._handle_add_table_row(param)
+        #
+        # elif action_id == 'update_table_row':
+        #     ret_val = self._handle_update_table_row(param)
+        #
+        # elif action_id == "update_table_row_with_key":
+        #     ret_val = self._handle_update_table_row_with_key(param)
+        #
+        # elif action_id == 'list_tasks':
+        #     ret_val = self._handle_list_tasks(param)
+        #
+        # elif action_id == 'get_task':
+        #     ret_val = self._handle_get_task(param)
+        #
+        # elif action_id == 'update_task':
+        #     ret_val = self._handle_update_task(param)
+        #
+        # elif action_id == 'close_task':
+        #     ret_val = self._handle_close_task(param)
+        #
+        # elif action_id == 'list_attachments':
+        #     ret_val = self._handle_list_attachments(param)
+        #
+        # elif action_id == 'get_attachment':
+        #     ret_val = self._handle_get_attachment(param)
+        #
+        # elif action_id == 'add_attachment':
+        #     ret_val = self._handle_add_attachment(param)
 
     def initialize(self):
 

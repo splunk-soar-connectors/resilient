@@ -19,11 +19,9 @@
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
     "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "cachetools",
-                "input_file": "wheels/shared/cachetools-3.1.1-py2.py3-none-any.whl"
-            }
+        "pypi": [
+            {"module": "resilient==51.0.0.0.430"},
+            {"module": "cachetools"}
         ]
     },
     "configuration": {
@@ -40,22 +38,34 @@
             "order": 1
         },
         "user": {
-            "description": "Service Account",
+            "description": "Service Account Email",
             "data_type": "string",
-            "required": true,
+            "required": false,
             "order": 2
         },
         "password": {
             "description": "Service Account Password",
             "data_type": "password",
-            "required": true,
+            "required": false,
             "order": 3
+        },
+        "api_key_id": {
+            "description": "API Key ID",
+            "data_type": "string",
+            "required": false,
+            "order": 4
+        },
+        "api_key_secret": {
+            "description": "API Key Secret",
+            "data_type": "password",
+            "required": false,
+            "order": 5
         },
         "verify": {
             "description": "Verify SSL certificates. You may need to set REQUESTS_CA_BUNDLE to the pem file containing your local CA root certificates",
             "data_type": "boolean",
             "default": false,
-            "order": 4
+            "order": 6
         }
     },
     "actions": [

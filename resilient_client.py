@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from resilient import SimpleClient
-from typing import Optional
+from typing import Optional, Union
 
 
 @dataclass
@@ -11,13 +11,14 @@ class ResilientClient:
     password: Optional[str] = None
     api_key_id: Optional[str] = None
     api_key_secret: Optional[str] = None
+    verify: Union[bool, str] = None
 
     _simple_client = None
 
     @property
     def simple_client(self):
         if self._simple_client is None:
-            self._simple_client = self.get_authenticated_client()
+            self._simple_client = self.authenticate()
         return self._simple_client
 
     def list_incidents(self):
@@ -36,7 +37,7 @@ class ResilientClient:
         assert all([k in payload for k in ["name", "description", "discovered_date"]])
         return self.simple_client.post(f"/incidents", payload=payload)
 
-    def get_authenticated_client(self):
+    def authenticate(self) -> SimpleClient:
         if self.api_key_id and self.api_key_secret:
             return self.get_client_with_api_key()
         elif self.username and self.password:
@@ -55,7 +56,7 @@ class ResilientClient:
         kwargs = {
             "request_max_retries": 1
         }
-        return SimpleClient(org_name=self.org_name, base_url=self.base_url, **kwargs)
+        return SimpleClient(org_name=self.org_name, base_url=self.base_url, verify=self.verify, **kwargs)
 
     def get_client_with_api_key(self):
         client = self.new_simple_client()
