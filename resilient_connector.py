@@ -731,62 +731,16 @@ class ResilientConnector(BaseConnector):
     def _handle_list_tables(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}/table_data".format(incident_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        itemtype = "tables"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self.get_resilient_client().list_tables_for_incident(
+            incident_id=param['incident_id'],
+            use_handle_format_names=param['handle_format_is_name']
+        )
 
     def _handle_get_table(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            table_id = self._handle_py_ver_compat_for_input_str(param['table_id'])
-            call = "/incidents/{}/table_data/{}".format(incident_id, table_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "tables"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self.get_resilient_client().get_table(incident_id=param['incident_id'], table_id=param['table_id'],
+                                                     use_handle_format_names=param['handle_format_is_name'])
 
     def _handle_add_table_row(self, param):
         action_id = self.get_action_identifier()
