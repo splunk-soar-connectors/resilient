@@ -63,6 +63,12 @@ class ResilientClient:
     def get_artifact(self, incident_id: str, artifact_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/artifacts/{artifact_id}")
 
+    def get_comment(self, incident_id: str, comment_id: str):
+        return self.simple_client.get(f"/incidents/{incident_id}/comments/{comment_id}")
+
+    def list_comments_for_incident(self, incident_id: str):
+        return self.simple_client.get(f"/incidents/{incident_id}/comments")
+
     def get_incident(self, incident_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}")
 
