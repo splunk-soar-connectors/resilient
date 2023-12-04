@@ -939,73 +939,26 @@ class ResilientConnector(BaseConnector):
     def _handle_list_tasks(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            call = "/tasks"
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = retval
-        itemtype = "tasks"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
-
-    # assumes connection already setup
-    # return exception on error
-    def _get_task(self, param):
-        action_id = self.get_action_identifier()
+        client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
-            self._client.headers['handle_format'] = "names"
-        call = "/tasks/{}".format(param['task_id'])
+            client.headers['handle_format'] = "names"
+        call = "/tasks"
         self.save_progress("GET {}".format(call))
-        retval = self._client.get(call)
+        resp = client.get(call)
         self.save_progress("{} successful.".format(action_id))
-        return retval
+        return resp
 
     def _handle_get_task(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            task_id = self._handle_py_ver_compat_for_input_str(param['task_id'])
-            call = "/tasks/{}".format(task_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "tasks"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        client = self.get_resilient_client().simple_client
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        call = f"/tasks/{param['task_id']}"
+        self.save_progress("GET {}".format(call))
+        resp = client.get(call)
+        self.save_progress("{} successful.".format(action_id))
+        return resp
 
     def _handle_update_task(self, param):
         action_id = self.get_action_identifier()
