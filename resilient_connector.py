@@ -196,12 +196,7 @@ class ResilientConnector(BaseConnector):
                                         "Error, Action Failed Error code:{} Error message: {}".format(error_code,
                                                                                                       error_message))
 
-    def _handle_test_connectivity(self, param):
-        action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
-        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
+    def get_resilient_client(self):
         config = self.get_config()
         client_kwargs = {
             "org_name": config['org_id'],
@@ -213,19 +208,27 @@ class ResilientConnector(BaseConnector):
                 "username": config['user'],
                 "password": config['password']
             })
-            self.save_progress(f"Attempting authentication with username and password.")
+            self.save_progress(f"Will authenticate with username and password.")
+            # TODO: remove this stub
             raise NotImplementedError()
         elif config.get('api_key_id') is not None and config.get('api_key_secret') is not None:
             client_kwargs.update({
                 "api_key_id": config['api_key_id'],
                 "api_key_secret": config['api_key_secret']
             })
-            self.save_progress(f"Attempting authentication with API Key.")
+            self.save_progress(f"Will authenticate with API Key.")
         else:
             raise ValueError("No credentials (email & password) or API Key (ID & Secret) provided.")
+        return ResilientClient(**client_kwargs)
+
+    def _handle_test_connectivity(self, param):
+        action_id = self.get_action_identifier()
+        self.save_progress("In action handler for: {0}".format(action_id))
+        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
+        action_result = self.add_action_result(ActionResult(dict(param)))
 
         try:
-            ResilientClient(**client_kwargs).authenticate()
+            self.get_resilient_client().authenticate()
         except (Exception, SystemExit) as e:
             return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
 
@@ -237,25 +240,15 @@ class ResilientConnector(BaseConnector):
         self.save_progress("In action handler for: {0}".format(action_id))
         action_result = self.add_action_result(ActionResult(dict(param)))
 
-        config = self.get_config()
+        resp = self.get_resilient_client().list_incidents(closed=param['want_closed'])
 
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            call = "/incidents?want_closed={}".format(param['want_closed'])
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        itemtype = "incidents"
-        for r in retval:
+        for r in resp:
             action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
+
+        action_result.update_summary({
+            "total_objects": len(resp),
+            "total_objects_successful": len(resp),
+        })
         return action_result.set_status(phantom.APP_SUCCESS)
 
     # assumes connection already setup
@@ -1439,10 +1432,11 @@ class ResilientConnector(BaseConnector):
         action_result = self.add_action_result(ActionResult(dict(param)))
 
         try:
-            if action_id == 'test_connectivity':
-                return self._handle_test_connectivity(param)
+            handler_name = f'_handle_{action_id}'
+            if hasattr(self, handler_name):
+                return getattr(self, handler_name)(param)
             else:
-                raise NotImplementedError()
+                raise RuntimeError(f"Unknown action: {action_id}")
         except (Exception, SystemExit) as e:
             return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
 

@@ -1,6 +1,11 @@
+import logging
 from dataclasses import dataclass
+from typing import Dict, Optional, Union
+from urllib.parse import urlencode
+
 from resilient import SimpleClient
-from typing import Optional, Union
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -21,8 +26,36 @@ class ResilientClient:
             self._simple_client = self.authenticate()
         return self._simple_client
 
-    def list_incidents(self):
-        return self.simple_client.get("/incidents")
+    # TODO: may not need this func
+    def get(self, path: str, query_params: Dict = None):
+        query_params = query_params or {}
+        query_string = urlencode(query_params)
+        uri = f"{path}?{query_string}"
+        logger.info(f"GET {uri}")
+        return self.simple_client.get(uri)
+
+    def list_incidents(self, closed: bool = False):
+        condition = {
+            "field_name": "properties.closed_on",
+            "method": "not_equals" if closed else "equals",
+            "value": None
+        }
+
+        return self.simple_client.post("/incidents/query", params={
+            "return_level": "normal"
+        }, payload={
+            "filters": [
+                {
+                    "conditions": [condition]
+                }
+            ],
+            "sorts": [
+                {
+                    "field_name": "create_date",
+                    "type": "desc"
+                }
+            ]
+        })
 
     def list_artifcats_for_incident(self, incident_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/artifacts")

@@ -41,11 +41,20 @@ def test_get_incident(client_from_env):
     assert resp["name"] == "INC03375277 SIEM Malware"
 
 
-def test_list_incidents(client_from_env):
-    resp = client_from_env.list_incidents()
+def test_list_incidents_closed(client_from_env):
+    resp = client_from_env.list_incidents(closed=True)
     assert len(resp) > 0
-    first_incident = resp[0]
-    assert all([k in first_incident for k in ["id", "name", "description", "create_date"]])
+    for incident in resp:
+        assert all([k in incident for k in ["id", "name", "description", "create_date"]])
+        assert incident["properties"]["closed_on"] is not None
+
+
+def test_list_incidents_not_closed(client_from_env):
+    resp = client_from_env.list_incidents(closed=False)
+    assert len(resp) > 0
+    for incident in resp:
+        assert all([k in incident for k in ["id", "name", "description", "create_date"]])
+        assert incident["properties"]["closed_on"] is None
 
 
 def test_list_artifacts(client_from_env):
