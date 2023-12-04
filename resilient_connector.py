@@ -119,6 +119,7 @@ class ResilientConnector(BaseConnector):
 
         return error_code, error_msg
 
+    # TODO: delete this. Python 2 no longer needs handling
     def _handle_py_ver_compat_for_input_str(self, input_str):
         """
         This method returns the encoded|original string based on the Python version.
@@ -225,70 +226,19 @@ class ResilientConnector(BaseConnector):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
         self.save_progress(f"Config is {self.get_config()}. Param is {param}")
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
-        try:
-            self.get_resilient_client().authenticate()
-        except (Exception, SystemExit) as e:
-            return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
-
-        self.save_progress(f"Action {action_id} successful.")
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.get_resilient_client().authenticate()
+        self.save_progress(f"Connection successful.")
 
     def _handle_list_tickets(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        resp = self.get_resilient_client().list_incidents(closed=param['want_closed'])
-
-        for r in resp:
-            action_result.add_data(r)
-
-        action_result.update_summary({
-            "total_objects": len(resp),
-            "total_objects_successful": len(resp),
-        })
-        return action_result.set_status(phantom.APP_SUCCESS)
-
-    # assumes connection already setup
-    # return exception on error
-    def _get_ticket(self, param):
-        action_id = self.get_action_identifier()
-        incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-        call = "/incidents/{}".format(incident_id)
-        self.save_progress("GET {}".format(call))
-        retval = self._client.get(call)
-        self.save_progress("{} successful.".format(action_id))
-        return retval
+        return self.get_resilient_client().list_incidents(closed=param['want_closed'])
 
     def _handle_get_ticket(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}".format(incident_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "incidents"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self.get_resilient_client().get_incident(incident_id=param['incident_id'])
 
     def _handle_create_ticket(self, param):
         action_id = self.get_action_identifier()
@@ -1430,13 +1380,28 @@ class ResilientConnector(BaseConnector):
         self.save_progress(f"Handling action: {action_id}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
-
         try:
-            handler_name = f'_handle_{action_id}'
-            if hasattr(self, handler_name):
-                return getattr(self, handler_name)(param)
+            if action_id == 'test_connectivity':
+                self._handle_test_connectivity(param)
             else:
-                raise RuntimeError(f"Unknown action: {action_id}")
+                handler_name = f'_handle_{action_id}'
+                if hasattr(self, handler_name):
+                    resp = getattr(self, handler_name)(param)
+                    num_results = 1
+                    if isinstance(resp, list):
+                        num_results = len(resp)
+                        for r in resp:
+                            action_result.add_data(r)
+                    else:
+                        action_result.add_data(resp)
+                    action_result.update_summary({
+                        "total_objects": num_results,
+                        "total_objects_successful": num_results,
+                    })
+                else:
+                    raise RuntimeError(f"Unknown action: {action_id}")
+            return action_result.set_status(phantom.APP_SUCCESS)
+
         except (Exception, SystemExit) as e:
             return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
 
