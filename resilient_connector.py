@@ -703,10 +703,7 @@ class ResilientConnector(BaseConnector):
     def _handle_update_task(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
+        client = self.get_resilient_client().simple_client
         taskdto = param.get('taskdto', "")
         if len(taskdto) > 1:
             try:
@@ -714,92 +711,38 @@ class ResilientConnector(BaseConnector):
                 if not isinstance(payload, dict):
                     raise Exception
             except Exception:
-                self.save_progress("{} failed. taskdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. taskdto field is not valid json.".format(action_id))
+                raise ValueError("{} failed. taskdto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            task_id = self._handle_py_ver_compat_for_input_str(param['task_id'])
-            call = "/tasks/{}".format(task_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        task_id = param['task_id']
+        call = "/tasks/{}".format(task_id)
 
-        # get task first
-        # if param.get('get_task_and_copy_over', False):
-        #    try:
-        #        ticket = self._get_task(param)
-        #    except Exception as e:
-        #        return self.__handle_exceptions(e, action_result)
-        #    newpayload = payload.copy()
-        #    newpayload.update(taskdto)
-        #    payload = newpayload
+        def apply(arg):
+            arg.update(payload)
+            return arg
 
-        try:
-            def apply(arg):
-                arg.update(payload)
-                return arg
-
-            self.save_progress("GET_PUT {}".format(call))
-            self.save_progress("PAYLOAD {}".format(payload))
-            retval = self._client.get_put(call, apply)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "tasks"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("GET_PUT {}".format(call))
+        self.save_progress("PAYLOAD {}".format(payload))
+        retval = client.get_put(call, apply)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
 
     def _handle_close_task(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
+        client = self.get_resilient_client().simple_client
+        task_id = param['task_id']
+        call = "/tasks/{}".format(task_id)
+        def apply(arg):
+            arg['status'] = "C"
+            return arg
 
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            task_id = self._handle_py_ver_compat_for_input_str(param['task_id'])
-            call = "/tasks/{}".format(task_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        try:
-            # self.save_progress("GET {}".format(call))
-            # retval = self._client.get(call)
-            # payload = retval
-            # payload['status'] = "C"
-            # self.save_progress("PUT {}".format(call))
-            # self.save_progress("BODY {}".format(payload))
-            def apply(arg):
-                arg['status'] = "C"
-                return arg
-
-            retval = self._client.get_put(call, apply)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "tasks"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        retval = client.get_put(call, apply)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
 
     def _handle_list_attachments(self, param):
         action_id = self.get_action_identifier()
