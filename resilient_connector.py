@@ -243,29 +243,19 @@ class ResilientConnector(BaseConnector):
     def _handle_create_ticket(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            call = "/incidents?want_full_data={}&want_tasks={}".format(param['want_full_data'], param['want_tasks'])
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        client = self.get_resilient_client().simple_client
+        call = "/incidents?want_full_data={}&want_tasks={}".format(
+            param.get('want_full_data', True),
+            param.get('want_tasks', False)
+        )
 
         fullincidentdatadto = getsv(param, 'fullincidentdatadto')
         if len(fullincidentdatadto) > 1:
-            try:
-                payload = json.loads(fullincidentdatadto)
-                if not isinstance(payload, dict):
-                    raise Exception
-            except Exception:
-                self.save_progress("{} failed. fullincidentdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. fullincidentdatadto field is not valid json.".format(
-                                                    action_id))
+            payload = json.loads(fullincidentdatadto)
+            if not isinstance(payload, dict):
+                err = "{} failed. fullincidentdatadto field is not valid json object.".format(action_id)
+                raise ValueError(err)
         else:
             payload = dict()
 
@@ -277,107 +267,43 @@ class ResilientConnector(BaseConnector):
             payload['discovered_date'] = calendar.timegm(time.gmtime()) * 1000
 
         if 'name' not in payload:
-            self.save_progress("json payload does not have required 'name' key")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have required 'name' key")
+            raise ValueError("json payload does not have required 'name' key")
         if 'description' not in payload:
-            self.save_progress("json payload does not have required 'description' key")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have required 'description' key")
+            raise ValueError("json payload does not have required 'description' key")
         if 'discovered_date' not in payload:
-            self.save_progress("json payload does not have required 'discovered_date' key")
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "json payload does not have required 'discovered_date' key")
+            raise ValueError("json payload does not have required 'discovered_date' key")
 
-        try:
-            self.save_progress("POST {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.post(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "incidents"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("POST {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        resp = client.post(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return resp
 
     def _handle_update_ticket(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
+        client = self.get_resilient_client().simple_client
 
         # validate incoming json
         fullincidentdatadto = param['fullincidentdatadto']
         if len(fullincidentdatadto) > 1:
-            try:
-                payload = json.loads(fullincidentdatadto)
-                if not isinstance(payload, dict):
-                    raise Exception
-            except Exception:
-                self.save_progress("{} failed. fullincidentdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. fullincidentdatadto field is not valid json.".format(
-                                                    action_id))
+            payload = json.loads(fullincidentdatadto)
+            if not isinstance(payload, dict):
+                raise ValueError("{} failed. fullincidentdatadto field is not valid json object.".format(action_id))
         else:
             payload = dict()
 
-        config = self.get_config()
+        call = "/incidents/{}".format(param['incident_id'])
 
-        # setup connection
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}".format(incident_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        def apply(arg):
+            arg.update(payload)
+            return arg
 
-        # remove parameter validation code. It just gets in the way
-        # if 'name' not in payload:
-        #    self.save_progress("json payload does not have 'name' key, payload should be result of get_ticket")
-        #    return action_result.set_status(phantom.APP_ERROR, "json payload does not have 'name' key, payload should be result of get_ticket")
-        # if 'description' not in payload:
-        #    self.save_progress("json payload does not have 'description' key, payload should be result of get_ticket")
-        #    return action_result.set_status(
-        #        phantom.APP_ERROR, "json payload does not have 'description' key, payload should be result of get_ticket")
-        # if 'discovered_date' not in payload:
-        #    self.save_progress("json payload does not have 'discovered_date' key, payload should be result of get_ticket")
-        #    return action_result.set_status(
-        #        phantom.APP_ERROR, "json payload does not have 'discovered_date' key, payload should be result of get_ticket")
-
-        # get ticket first
-        # if param.get('get_ticket_and_copy_over', False):
-        #    try:
-        #        ticket = self._get_ticket(param)
-        #    except Exception as e:
-        #        return self.__handle_exceptions(e, action_result)
-
-        #    newpayload = payload.copy()
-        #    newpayload.update(fullincidentdatadto)
-        #    payload = newpayload
-
-        try:
-            def apply(arg):
-                arg.update(payload)
-                return arg
-
-            self.save_progress("GET_PUT {}".format(call))
-            self.save_progress("PAYLOAD {}".format(payload))
-            retval = self._client.get_put(call, apply)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "incidents"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("GET_PUT {}".format(call))
+        self.save_progress("PAYLOAD {}".format(payload))
+        resp = client.get_put(call, apply)
+        self.save_progress("{} successful.".format(action_id))
+        return resp
 
     def _handle_search_tickets(self, param):
         action_id = self.get_action_identifier()
