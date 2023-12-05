@@ -489,32 +489,17 @@ class ResilientConnector(BaseConnector):
     def _handle_create_comment(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}/comments".format(incident_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        client = self.get_resilient_client().simple_client
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        incident_id = param['incident_id']
+        call = "/incidents/{}/comments".format(incident_id)
 
         incidentcommentdto = getsv(param, 'incidentcommentdto')
         if len(incidentcommentdto) > 1:
-            try:
-                payload = json.loads(incidentcommentdto)
-                if not isinstance(payload, dict):
-                    raise Exception
-            except Exception:
-                self.save_progress("{} failed. incidentcommentdto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. incidentcommentdto field is not valid json.".format(
-                                                    action_id))
+            payload = json.loads(incidentcommentdto)
+            if not isinstance(payload, dict):
+                raise ValueError("{} failed. incidentcommentdto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
@@ -524,75 +509,39 @@ class ResilientConnector(BaseConnector):
             addifkey(param, 'parent_id', payload, 'parent_id')
 
         if 'text' not in payload:
-            self.save_progress("json payload does not have required 'text' key")
-            return action_result.set_status(phantom.APP_ERROR, "json payload does not have required 'text' key")
+            raise ValueError("json payload does not have required 'text' key")
 
-        try:
-            self.save_progress("POST {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.post(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "comments"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("POST {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        resp = client.post(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return resp
 
     def _handle_update_comment(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
+        client = self.get_resilient_client().simple_client
 
-        config = self.get_config()
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
+        comment_id = self._handle_py_ver_compat_for_input_str(param['comment_id'])
+        call = "/incidents/{}/comments/{}".format(incident_id, comment_id)
 
         try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            self._client.connect(config['user'], config['password'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            comment_id = self._handle_py_ver_compat_for_input_str(param['comment_id'])
-            call = "/incidents/{}/comments/{}".format(incident_id, comment_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        payload = self.get_json_parameter(param, 'incidentcommentdto', action_result)
-        if not isinstance(payload, dict):
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "{} failed. incidentcommentdto field is not valid json.".format(action_id))
-        if payload == phantom.APP_ERROR:
-            return payload
-
-        # self.debug_print("{} json is {}".format(action_id, payload))
+            payload = json.loads(param['incidentcommentdto'])
+            assert isinstance(payload, dict)
+        except Exception:
+            raise ValueError("{} failed. incidentcommentdto field is not valid json.".format(action_id))
 
         if 'text' not in payload:
-            self.save_progress(
-                "json payload does not have required 'text' key, payload should be result of get comment")
-            return action_result.set_status(
-                phantom.APP_ERROR,
-                "json payload does not have required 'text' key, payload should be result of get comment")
+            raise ValueError("json payload does not have required 'text' key, payload should be result of get comment")
 
-        try:
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "comments"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("PUT {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        resp = client.put(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return resp
 
     def _handle_list_tables(self, param):
         action_id = self.get_action_identifier()
