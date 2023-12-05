@@ -27,7 +27,7 @@ import phantom.app as phantom
 from bs4 import UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
-from phantom.vault import Vault
+from phantom import vault
 
 from resilient_client import ResilientClient
 
@@ -1064,103 +1064,35 @@ class ResilientConnector(BaseConnector):
     def _handle_list_attachments(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}/attachments".format(incident_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        itemtype = "attachments"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self.get_resilient_client().list_attachments_for_incident(
+            incident_id=param['incident_id'],
+            use_handle_format_names=param['handle_format_is_name']
+        )
 
     def _handle_get_attachment(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            attachment_id = self._handle_py_ver_compat_for_input_str(param['attachment_id'])
-            call = "/incidents/{}/attachments/{}".format(incident_id, attachment_id)
-
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "attachments"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return self.get_resilient_client().get_attachment(incident_id=param['incident_id'],
+                                                          attachment_id=param['attachment_id'],
+                                                          use_handle_format_names=param['handle_format_is_name'])
 
     def _handle_add_attachment(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
 
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            call = "/incidents/{}/attachments".format(incident_id)
-
-            container_id = self.get_container_id()
-            vault_id = self._handle_py_ver_compat_for_input_str(param['vault_id'])
-            vault_info = Vault.get_file_info(vault_id=vault_id, container_id=container_id)
-            if len(vault_info) == 0:
-                self.save_progress("{} failed. {}: vault_id not valid.".format(action_id, param['vault_id']))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. {}: vault_id not valid.".format(action_id,
-                                                                                            param['vault_id']))
-            path = vault_info[0]['path']
-            name = vault_info[0]['name']
-
-            retval = self._client.post_attachment(call, path, filename=name)
-            # self.save_progress("POST_ATTACHMENT {} path={} name={}".format(call, path, name))
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "attachments"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        success, message, vault_info = vault.vault_info(
+            vault_id=param['vault_id'],
+            container_id=self.get_container_id()
+        )
+        self.save_progress(f"Vault info resp: {success} {message} {vault_info}")
+        if not success:
+            err = "{} failed. {}: vault_id not valid.".format(action_id, param['vault_id'])
+            self.save_progress(err)
+            raise ValueError(err)
+        path = vault_info[0]['path']
+        name = vault_info[0]['name']
+        return self.get_resilient_client().post_attachment(incident_id=param['incident_id'],
+                                                           filepath=path, filename=name)
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()

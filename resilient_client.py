@@ -69,6 +69,21 @@ class ResilientClient:
     def list_comments_for_incident(self, incident_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/comments")
 
+    def list_attachments_for_incident(self, incident_id: str, use_handle_format_names: bool = False):
+        if use_handle_format_names:
+            self.simple_client.headers["handle_format"] = "names"
+        return self.simple_client.get(f"/incidents/{incident_id}/attachments")
+
+    def get_attachment(self, incident_id: str, attachment_id: str, use_handle_format_names: bool = False):
+        if use_handle_format_names:
+            self.simple_client.headers["handle_format"] = "names"
+        return self.simple_client.get(f"/incidents/{incident_id}/attachments/{attachment_id}")
+
+    def post_attachment(self, incident_id: str, filepath: str, filename: str, use_handle_format_names: bool = False):
+        if use_handle_format_names:
+            self.simple_client.headers["handle_format"] = "names"
+        self.simple_client.post_attachment(f"/incidents/{incident_id}/attachments", filepath, filename=filename)
+
     def list_tables_for_incident(self, incident_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
