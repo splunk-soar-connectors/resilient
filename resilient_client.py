@@ -118,7 +118,8 @@ class ResilientClient:
     def new_simple_client(self):
         # See resilient/co3.py
         kwargs = {
-            "request_max_retries": 1
+            "request_max_retries": 1,
+            "max_connection_retries": 1,
         }
         return SimpleClient(org_name=self.org_name, base_url=self.base_url, verify=self.verify, **kwargs)
 

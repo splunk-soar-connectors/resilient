@@ -2,6 +2,7 @@ import os
 from unittest.mock import patch
 
 import pytest
+from resilient import SimpleHTTPException
 
 from resilient_client import ResilientClient
 
@@ -14,17 +15,15 @@ def client_from_env():
                           api_key_secret=os.environ["RESILIENT_API_KEY_SECRET"])
 
 
-@patch("resilient_client.SimpleClient.connect")
-def test_client_using_creds_auth(mock_connect):
+def test_client_using_creds_auth():
     username = "user@mail.com"
     password = "pass"
-    ResilientClient(base_url=os.environ["RESILIENT_API_BASE_URL"],
-                    org_name=os.environ["RESILIENT_API_ORG_NAME"],
-                    username=username,
-                    password=password).get_client_with_credentials()
-    raise NotImplementedError()
-    # TODO: get this test working if we don't get creds from customer
-    #  mock and expect call to resilient_client.connect(email, password)
+
+    with pytest.raises(SimpleHTTPException) as e:
+        ResilientClient(base_url=os.environ["RESILIENT_API_BASE_URL"],
+                        org_name=os.environ["RESILIENT_API_ORG_NAME"],
+                        username=username,
+                        password=password).get_client_with_credentials()
 
 
 def test_client_using_api_key_auth():

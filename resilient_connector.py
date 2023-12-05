@@ -210,8 +210,6 @@ class ResilientConnector(BaseConnector):
                 "password": config['password']
             })
             self.save_progress(f"Will authenticate with username and password.")
-            # TODO: remove this stub
-            raise NotImplementedError()
         elif config.get('api_key_id') is not None and config.get('api_key_secret') is not None:
             client_kwargs.update({
                 "api_key_id": config['api_key_id'],
