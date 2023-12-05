@@ -560,33 +560,20 @@ class ResilientConnector(BaseConnector):
     def _handle_add_table_row(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            table_id = self._handle_py_ver_compat_for_input_str(param['table_id'])
-            call = "/incidents/{}/table_data/{}/row_data".format(incident_id, table_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        client = self.get_resilient_client().simple_client
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        incident_id = param['incident_id']
+        table_id = param['table_id']
+        call = "/incidents/{}/table_data/{}/row_data".format(incident_id, table_id)
 
         datatablerowdatadto = param.get('datatablerowdatadto', "")
         if len(datatablerowdatadto) > 1:
             try:
                 payload = json.loads(datatablerowdatadto)
-                if not isinstance(payload, dict):
-                    raise Exception
+                assert isinstance(payload, dict)
             except Exception:
-                self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. datatablerowdatadto field is not valid json.".format(
-                                                    action_id))
+                raise ValueError("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
@@ -599,53 +586,31 @@ class ResilientConnector(BaseConnector):
                 self.save_progress("{} cell specification is not complete".format(col))
                 continue
 
-        try:
-            self.save_progress("POST {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.post(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "table row"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("POST {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        retval = client.post(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
 
     def _handle_update_table_row(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
+        client = self.get_resilient_client().simple_client
 
-        config = self.get_config()
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            table_id = self._handle_py_ver_compat_for_input_str(param['table_id'])
-            row_id = self._handle_py_ver_compat_for_input_str(param['row_id'])
-            call = "/incidents/{}/table_data/{}/row_date/{}".format(incident_id, table_id, row_id)
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
+        incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
+        table_id = self._handle_py_ver_compat_for_input_str(param['table_id'])
+        row_id = self._handle_py_ver_compat_for_input_str(param['row_id'])
+        call = "/incidents/{}/table_data/{}/row_data/{}".format(incident_id, table_id, row_id)
 
         datatablerowdatadto = param.get('datatablerowdatadto', "")
         if len(datatablerowdatadto) > 1:
             try:
                 payload = json.loads(datatablerowdatadto)
-                if not isinstance(payload, dict):
-                    raise Exception
+                assert isinstance(payload, dict)
             except Exception:
-                self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. datatablerowdatadto field is not valid json.".format(
-                                                    action_id))
+                raise ValueError("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
         else:
             payload = dict()
 
@@ -658,98 +623,58 @@ class ResilientConnector(BaseConnector):
                 self.save_progress("{} cell specification is not complete".format(col))
                 continue
 
-        try:
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
-
-        retval = [retval]
-        itemtype = "table row"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
+        self.save_progress("PUT {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        retval = client.put(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return retval
 
     def _handle_update_table_row_with_key(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        action_result = self.add_action_result(ActionResult(dict(param)))
-
-        config = self.get_config()
-        # all parameters are required so all parameters are len() > 0
-
-        try:
-            self._client = co3.SimpleClient(org_name=config['org_id'], base_url=config['base_url'],
-                                            verify=config['verify'])
-            if param.get('handle_format_is_name'):
-                self._client.headers['handle_format'] = "names"
-            self._client.connect(config['user'], config['password'])
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        client = self.get_resilient_client().simple_client
+        if param.get('handle_format_is_name'):
+            client.headers['handle_format'] = "names"
 
         datatablerowdatadto = param.get('datatablerowdatadto', "")
         if len(datatablerowdatadto) > 1:
             try:
                 payload = json.loads(datatablerowdatadto)
-                if not isinstance(payload, dict):
-                    raise Exception
+                assert isinstance(payload, dict)
             except Exception:
-                self.save_progress("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "{} failed. datatablerowdatadto field is not valid json.".format(
-                                                    action_id))
+                raise ValueError("{} failed. datatablerowdatadto field is not valid json.".format(action_id))
         else:
-            self.save_progress("{} failed. datatablerowdatadto field is empty string.".format(action_id))
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "{} failed. datatablerowdatadto field is empty string.".format(action_id))
+            raise ValueError("{} failed. datatablerowdatadto field is empty string.".format(action_id))
 
         # get table first
-        try:
-            incident_id = self._handle_py_ver_compat_for_input_str(param['incident_id'])
-            table_id = self._handle_py_ver_compat_for_input_str(param['table_id'])
-            call = "/incidents/{}/table_data/{}".format(incident_id, table_id)
-            self.save_progress("GET {}".format(call))
-            retval = self._client.get(call)
-            self.save_progress("GET successful")
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        incident_id = param['incident_id']
+        table_id = param['table_id']
+        call = "/incidents/{}/table_data/{}".format(incident_id, table_id)
+        self.save_progress("GET {}".format(call))
+        retval = client.get(call)
+        self.save_progress("GET successful")
 
         def find_row(table, key, value):
             for row in table['rows']:
                 if key in row['cells']:
-                    if row['cells'][key] == value:
+                    if str(row['cells'][key]["value"]) == str(value):
                         return row['id']
             return None
 
-        key = self._handle_py_ver_compat_for_input_str(param['key'])
-        value = self._handle_py_ver_compat_for_input_str(param['value'])
+        key = param['key']
+        value = param['value']
         rowid = find_row(retval, key, value)
 
         if rowid is None:
-            self.save_progress("{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
-            return action_result.set_status(phantom.APP_ERROR,
-                                            "{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
+            raise ValueError("{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
 
-        try:
-            call = "/incidents/{}/table_data/{}/row_date/{}".format(incident_id, table_id, rowid)
-            self.save_progress("PUT {}".format(call))
-            self.save_progress("BODY {}".format(payload))
-            retval = self._client.put(call, payload)
-            self.save_progress("{} successful.".format(action_id))
-        except Exception as e:
-            return self.__handle_exceptions(e, action_result)
+        call = "/incidents/{}/table_data/{}/row_data/{}".format(incident_id, table_id, rowid)
+        self.save_progress("PUT {}".format(call))
+        self.save_progress("BODY {}".format(payload))
+        put_resp = client.put(call, payload)
+        self.save_progress("{} successful.".format(action_id))
+        return put_resp
 
-        retval = [retval]
-        itemtype = "table row"
-        for r in retval:
-            action_result.add_data(r)
-        summary = action_result.update_summary({})
-        summary['Number of {}'.format(itemtype)] = len(retval)
-        return action_result.set_status(phantom.APP_SUCCESS)
 
     def _handle_list_tasks(self, param):
         action_id = self.get_action_identifier()
