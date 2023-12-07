@@ -18,6 +18,7 @@ import datetime
 # Usage of the consts file is recommended
 # from resilient_consts import *
 import json
+import math
 import sys
 import time
 import traceback
@@ -779,7 +780,11 @@ class ResilientConnector(BaseConnector):
         self.save_progress("In action handler for: on_poll")
         self.save_progress(f"Config is {self.get_config()}. Param is {param}")
         max_timespan_ms = 1000 * 60 * 60 # 1 hour
-        max_containers = param['container_count']
+
+        # When trigger as 'poll now', container_count is populated based on user input
+        # When scheduled/interval, container_count is set to 4294967295 (max 32-bit int)
+        # Using .get as safeguard.
+        max_containers = param.get('container_count', math.inf)
         container_label = self.get_config()["ingest"]["container_label"]
         client = self.get_resilient_client()
         use_mock = False

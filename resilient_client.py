@@ -130,8 +130,9 @@ class ResilientClient:
         return SimpleClient(org_name=self.org_name, base_url=self.base_url, verify=self.verify, **kwargs)
 
     def get_client_with_api_key(self):
+        timeout_seconds = 10
         client = self.new_simple_client()
-        client.set_api_key(self.api_key_id, self.api_key_secret)
+        client.set_api_key(self.api_key_id, self.api_key_secret, timeout=timeout_seconds)
         return client
 
     def get_client_with_credentials(self):

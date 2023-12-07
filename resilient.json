@@ -129,7 +129,7 @@
                 "artifact_count": {
                     "data_type": "numeric",
                     "order": 4,
-                    "description": "Maximum number of artifact records to query for."
+                    "description": "Parameter ignored in this app"
                 }
             },
             "output": [],
