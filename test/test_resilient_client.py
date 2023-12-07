@@ -1,5 +1,5 @@
 import os
-from unittest.mock import patch
+from unittest.mock import patch, call
 
 import pytest
 from resilient import SimpleHTTPException
@@ -74,3 +74,27 @@ def test_create_incident(client_from_env):
     resp = client_from_env.create_incident(
         {"name": "Test", "description": "Test", "discovered_date": "2021-01-01T00:00:00.000Z"})
     assert resp
+
+
+@patch("resilient_client.ResilientClient.get_incidents_in_timerange")
+def test_get_incidents_in_timerange_with_paging(mock, client_from_env):
+    client_from_env.get_incidents_in_timerange_with_paging(0, 30, 10)
+    assert mock.has_calls([
+        call(0, 10),
+        call(10, 20),
+        call(20, 30),
+    ])
+
+
+def test_get_incidents_in_timerange(client_from_env):
+    start_time = 1699987155195
+    end_time = 1701116835271  # create_date of incident id=2099
+    incidents = client_from_env.get_incidents_in_timerange(start_time, end_time)
+    incident_projection = [(x["id"], x["name"], x["create_date"]) for x in incidents]
+
+    # end_time is exclusive
+    assert incident_projection == [
+        (2097, 'INC03333777 SIEM Authentication', 1699987155195),
+        (2098, 'INC03375277 SIEM Malware', 1701116186360),
+        # (2099, 'INC03375294 SIEM Authentication', 1701116835271),
+    ]

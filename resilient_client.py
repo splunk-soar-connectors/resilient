@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 from urllib.parse import urlencode
 
 from resilient import SimpleClient
@@ -133,3 +133,60 @@ class ResilientClient:
         client = self.new_simple_client()
         client.connect(email=self.username, password=self.password, timeout=timeout_seconds)
         return client
+
+    def get_incidents_in_timerange_with_paging(self, start_epoch_timestamp_ms: int,
+                                               end_epoch_timestamp_ms: int,
+                                               max_timespan_in_ms_per_request: int) -> List:
+        start = start_epoch_timestamp_ms
+        end = start + max_timespan_in_ms_per_request
+        incidents = []
+
+        while start < end_epoch_timestamp_ms:
+            # Adjust end time if it exceeds the end_epoch_timestamp_ms
+            if end > end_epoch_timestamp_ms:
+                end = end_epoch_timestamp_ms
+
+            # Get incidents in the time range
+            incidents_in_range = self.get_incidents_in_timerange(start, end)
+            incidents.extend(incidents_in_range)
+
+            # Move to the next time range
+            start = end
+            end += max_timespan_in_ms_per_request
+
+        return incidents
+
+    def get_incidents_in_timerange(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> List:
+        """
+        Get all incidents in a given time range for create_date.
+        start_epoch_timestamp_ms is inclusive.
+        end_epoch_timestamp_ms is exclusive.
+        """
+        start_time = {
+            "field_name": "create_date",
+            "method": "gte",
+            "value": start_epoch_timestamp_ms
+        }
+        end_time = {
+            "field_name": "create_date",
+            "method": "lt",
+            "value": end_epoch_timestamp_ms
+        }
+        filters = [
+            {
+                "conditions": [start_time, end_time]
+            }
+        ]
+        sorts = [
+            {
+                "field_name": "create_date",
+                "type": "asc"
+            }
+        ]
+
+        return self.simple_client.post("/incidents/query", params={
+            "return_level": "normal"
+        }, payload={
+            "filters": filters,
+            "sorts": sorts
+        })
