@@ -775,6 +775,41 @@ class ResilientConnector(BaseConnector):
         return self.get_resilient_client().post_attachment(incident_id=param['incident_id'],
                                                            filepath=path, filename=name)
 
+    def _handle_on_poll(self, param):
+        self.save_progress("In action handler for: on_poll")
+        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
+        max_timespan_ms = 1000 * 60 * 60 # 1 hour
+        max_containers = param['container_count']
+        container_label = self.get_config()["ingest"]["container_label"]
+        client = self.get_resilient_client()
+        use_mock = False
+        container_count = 0
+        for incident in client.get_incidents_in_timerange_with_paging(start_epoch_timestamp_ms=param['start_time'],
+                                                                      end_epoch_timestamp_ms=param['end_time'],
+                                                                      max_timespan_in_ms_per_request=max_timespan_ms,
+                                                                      mock=use_mock):
+            self.save_progress(f"incident: {incident}")
+            _, _, container_id = self.save_container({
+                "name": incident["name"],
+                "description": incident["description"],
+                "label": container_label,
+                "data": incident,
+                "source_data_identifier": incident["id"]
+            })
+            container_count += 1
+            self.save_progress(f"New container: {container_id}")
+            for artifact in client.list_artifcats_for_incident(incident_id=incident["id"], mock=use_mock):
+                new_artifact = {
+                    "container_id": container_id,
+                    "source_data_identifier": artifact["id"],
+                    "data": artifact,
+                    "description": artifact["description"],
+                }
+                self.save_artifact(new_artifact)
+            if container_count >= max_containers:
+                self.save_progress(f"Max containers reached: {container_count}")
+                break
+
     def handle_action(self, param):
         action_id = self.get_action_identifier()
         self.save_progress(f"Handling action: {action_id}")

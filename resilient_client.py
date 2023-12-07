@@ -57,8 +57,14 @@ class ResilientClient:
             ]
         })
 
-    def list_artifcats_for_incident(self, incident_id: str):
-        return self.simple_client.get(f"/incidents/{incident_id}/artifacts")
+    def list_artifcats_for_incident(self, incident_id: str, mock=False):
+        if mock:
+            return [
+                {"id": 1, "description": "Something 1"},
+                {"id": 2, "description": "Something 2"},
+            ]
+        else:
+            return self.simple_client.get(f"/incidents/{incident_id}/artifacts")
 
     def get_artifact(self, incident_id: str, artifact_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/artifacts/{artifact_id}")
@@ -136,10 +142,10 @@ class ResilientClient:
 
     def get_incidents_in_timerange_with_paging(self, start_epoch_timestamp_ms: int,
                                                end_epoch_timestamp_ms: int,
-                                               max_timespan_in_ms_per_request: int) -> List:
+                                               max_timespan_in_ms_per_request: int,
+                                               mock=False):
         start = start_epoch_timestamp_ms
         end = start + max_timespan_in_ms_per_request
-        incidents = []
 
         while start < end_epoch_timestamp_ms:
             # Adjust end time if it exceeds the end_epoch_timestamp_ms
@@ -147,14 +153,31 @@ class ResilientClient:
                 end = end_epoch_timestamp_ms
 
             # Get incidents in the time range
-            incidents_in_range = self.get_incidents_in_timerange(start, end)
-            incidents.extend(incidents_in_range)
+            # TODO: remove this mock
+            if mock:
+                incidents_in_range = self.get_incidents_in_timerange_mock(start, end)
+            else:
+                incidents_in_range = self.get_incidents_in_timerange(start, end)
+            for inc in incidents_in_range:
+                yield inc
 
             # Move to the next time range
             start = end
             end += max_timespan_in_ms_per_request
 
-        return incidents
+    def get_incidents_in_timerange_mock(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> List:
+        return [
+            {
+                "id": start_epoch_timestamp_ms,
+                "name": "INC123",
+                "create_date": start_epoch_timestamp_ms
+            },
+            {
+                "id": end_epoch_timestamp_ms - 1,
+                "name": "INC456",
+                "create_date": end_epoch_timestamp_ms - 1
+            },
+        ]
 
     def get_incidents_in_timerange(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> List:
         """
