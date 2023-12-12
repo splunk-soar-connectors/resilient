@@ -224,7 +224,7 @@ class ResilientConnector(BaseConnector):
     def _handle_test_connectivity(self, param):
         action_id = self.get_action_identifier()
         self.save_progress("In action handler for: {0}".format(action_id))
-        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
+        self.save_progress(f"Param is {param}")
 
         self.get_resilient_client().authenticate()
         self.save_progress(f"Connection successful.")
@@ -778,7 +778,7 @@ class ResilientConnector(BaseConnector):
 
     def _handle_on_poll(self, param):
         self.save_progress("In action handler for: on_poll")
-        self.save_progress(f"Config is {self.get_config()}. Param is {param}")
+        self.save_progress(f"Param={param}")
         max_timespan_ms = 1000 * 60 * 60 # 1 hour
 
         # When trigger as 'poll now', container_count is populated based on user input
@@ -793,7 +793,6 @@ class ResilientConnector(BaseConnector):
                                                                       end_epoch_timestamp_ms=param['end_time'],
                                                                       max_timespan_in_ms_per_request=max_timespan_ms,
                                                                       mock=use_mock):
-            self.save_progress(f"incident: {incident}")
             _, _, container_id = self.save_container({
                 "name": incident["name"],
                 "description": incident["description"],
@@ -845,87 +844,14 @@ class ResilientConnector(BaseConnector):
         except (Exception, SystemExit) as e:
             return action_result.set_status(phantom.APP_ERROR, f"ERROR: {e} -> {traceback.format_exc()}")
 
-        # elif action_id == 'list_tickets':
-        #     ret_val = self._handle_list_tickets(param)
-        #
-        # elif action_id == 'get_ticket':
-        #     ret_val = self._handle_get_ticket(param)
-        #
-        # elif action_id == 'create_ticket':
-        #     ret_val = self._handle_create_ticket(param)
-        #
-        # elif action_id == 'update_ticket':
-        #     ret_val = self._handle_update_ticket(param)
-        #
-        # elif action_id == 'search_tickets':
-        #     ret_val = self._handle_search_tickets(param)
-        #
-        # elif action_id == 'list_artifacts':
-        #     ret_val = self._handle_list_artifacts(param)
-        #
-        # elif action_id == 'get_artifact':
-        #     ret_val = self._handle_get_artifact(param)
-        #
-        # elif action_id == 'create_artifact':
-        #     ret_val = self._handle_create_artifact(param)
-        #
-        # elif action_id == 'update_artifact':
-        #     ret_val = self._handle_update_artifact(param)
-        #
-        # elif action_id == 'list_comments':
-        #     ret_val = self._handle_list_comments(param)
-        #
-        # elif action_id == 'get_comment':
-        #     ret_val = self._handle_get_comment(param)
-        #
-        # elif action_id == 'create_comment':
-        #     ret_val = self._handle_create_comment(param)
-        #
-        # elif action_id == 'update_comment':
-        #     ret_val = self._handle_update_comment(param)
-        #
-        # elif action_id == 'list_tables':
-        #     ret_val = self._handle_list_tables(param)
-        #
-        # elif action_id == 'get_table':
-        #     ret_val = self._handle_get_table(param)
-        #
-        # elif action_id == 'add_table_row':
-        #     ret_val = self._handle_add_table_row(param)
-        #
-        # elif action_id == 'update_table_row':
-        #     ret_val = self._handle_update_table_row(param)
-        #
-        # elif action_id == "update_table_row_with_key":
-        #     ret_val = self._handle_update_table_row_with_key(param)
-        #
-        # elif action_id == 'list_tasks':
-        #     ret_val = self._handle_list_tasks(param)
-        #
-        # elif action_id == 'get_task':
-        #     ret_val = self._handle_get_task(param)
-        #
-        # elif action_id == 'update_task':
-        #     ret_val = self._handle_update_task(param)
-        #
-        # elif action_id == 'close_task':
-        #     ret_val = self._handle_close_task(param)
-        #
-        # elif action_id == 'list_attachments':
-        #     ret_val = self._handle_list_attachments(param)
-        #
-        # elif action_id == 'get_attachment':
-        #     ret_val = self._handle_get_attachment(param)
-        #
-        # elif action_id == 'add_attachment':
-        #     ret_val = self._handle_add_attachment(param)
-
     def initialize(self):
 
         # Load the state in initialize, use it to store data
         # that needs to be accessed across actions
         self._state = self.load_state()
 
+        version = self.get_app_json()["app_version"]
+        self.save_progress(f"App version: {version}")
         """
         # get the asset config
         config = self.get_config()
@@ -943,7 +869,7 @@ class ResilientConnector(BaseConnector):
 
     def finalize(self):
 
-        # Save the state, this data is saved accross actions and app upgrades
+        # Save the state, this data is saved across actions and app upgrades
         self.save_state(self._state)
         return phantom.APP_SUCCESS
 
