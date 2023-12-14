@@ -808,6 +808,7 @@ class ResilientConnector(BaseConnector):
                     "source_data_identifier": artifact["id"],
                     "data": artifact,
                     "description": artifact["description"],
+                    "cef": artifact
                 }
                 self.save_artifact(new_artifact)
             if container_count >= max_containers:
