@@ -817,7 +817,7 @@ class ResilientConnector(BaseConnector):
                 "label": container_label,
                 "data": incident,
                 "source_data_identifier": incident["id"],
-                "severity": severity
+                "severity": severity,
             })
             container_count += 1
             self.save_progress(f"New container: {container_id}")
