@@ -48,6 +48,13 @@ def addifkey(dic, key, tdic, tkey):
         tdic[tkey] = dic[key]
 
 
+RESILIENT_SEVERITY_CODE_MAPPING = {
+    4: 'low',
+    5: 'medium',
+    6: 'high'
+}
+
+
 class ResilientConnector(BaseConnector):
 
     def __init__(self):
@@ -777,19 +784,8 @@ class ResilientConnector(BaseConnector):
                                                            filepath=path, filename=name)
 
     @staticmethod
-    def parse_resilient_siem_severity(resilient_severity: str):
-        # From Resilient API: incident["properties"]["siem_severity"]
-        # resilient_severity is a nullable comma-separated list of severity values
-        # e.g. null, "low", "medium,high"
-        default_severity = "medium"
-        if resilient_severity is None:
-            return default_severity
-        else:
-            tokens = set(resilient_severity.split(","))
-            for sev in ("high", "medium", "low"):
-                if sev in tokens:
-                    return sev
-            return default_severity
+    def parse_resilient_severity(severity_code: int):
+        return RESILIENT_SEVERITY_CODE_MAPPING.get(severity_code, "medium")
 
     def _handle_on_poll(self, param):
         self.save_progress("In action handler for: on_poll")
@@ -810,7 +806,7 @@ class ResilientConnector(BaseConnector):
                                                                       mock=use_mock):
             # https://docs.splunk.com/Documentation/SOAR/current/PlatformAPI/RESTContainers
             # See POST /rest/container
-            severity = self.parse_resilient_siem_severity(incident["properties"]["siem_severity"])
+            severity = self.parse_resilient_severity(incident["severity_code"])
             _, _, container_id = self.save_container({
                 "name": incident["name"],
                 "description": incident["description"],
