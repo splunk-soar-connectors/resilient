@@ -1,6 +1,7 @@
+from datetime import datetime
 import logging
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Union
+from typing import Callable, Dict, List, Optional, Union
 from urllib.parse import urlencode
 
 from resilient import SimpleClient
@@ -64,7 +65,8 @@ class ResilientClient:
                 {"id": 2, "description": "Something 2"},
             ]
         else:
-            return self.simple_client.get(f"/incidents/{incident_id}/artifacts")
+            resp = self.simple_client.get(f"/incidents/{incident_id}/artifacts")
+            return [self.format_artifact(artifact) for artifact in resp]
 
     def get_artifact(self, incident_id: str, artifact_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/artifacts/{artifact_id}")
@@ -141,6 +143,35 @@ class ResilientClient:
         client.connect(email=self.username, password=self.password, timeout=timeout_seconds)
         return client
 
+    @staticmethod
+    def normalize_timestamp(epoch_timestamp_in_ms) -> str:
+        """ Converts epoch timestamp to human readable timestamp """
+        return datetime.utcfromtimestamp(epoch_timestamp_in_ms / 1000.0).strftime('%Y-%m-%dT%H:%M:%SZ')
+
+    def format_entry_timestamps(self, entry: Dict, key_condition:Callable[[str], bool]) -> Dict:
+        formatted_entry = {}
+        for key, value in entry.items():
+            if isinstance(key, str) and isinstance(value, int) and key_condition(key):
+                formatted_entry[key] = self.normalize_timestamp(value)
+                # formatted_incident[f"{key}_epoch"] = value
+            else:
+                formatted_entry[key] = value
+        return formatted_entry
+
+    def format_artifact(self, entry: Dict) -> Dict:
+        # only convert top-level date fields
+        def condition(key):
+            return key.endswith("_time") or key == "created"
+
+        return self.format_entry_timestamps(entry, condition)
+
+    def format_incident(self, entry: Dict) -> Dict:
+        # only convert top-level date fields
+        def condition(key):
+            return key.endswith("_date") or key == "inc_started"
+
+        return self.format_entry_timestamps(entry, condition)
+
     def get_incidents_in_timerange_with_paging(self, start_epoch_timestamp_ms: int,
                                                end_epoch_timestamp_ms: int,
                                                max_timespan_in_ms_per_request: int,
@@ -208,9 +239,10 @@ class ResilientClient:
             }
         ]
 
-        return self.simple_client.post("/incidents/query", params={
+        resp = self.simple_client.post("/incidents/query", params={
             "return_level": "normal"
         }, payload={
             "filters": filters,
             "sorts": sorts
         })
+        return [self.format_incident(inc) for inc in resp]
