@@ -776,6 +776,21 @@ class ResilientConnector(BaseConnector):
         return self.get_resilient_client().post_attachment(incident_id=param['incident_id'],
                                                            filepath=path, filename=name)
 
+    @staticmethod
+    def parse_resilient_siem_severity(resilient_severity: str):
+        # From Resilient API: incident["properties"]["siem_severity"]
+        # resilient_severity is a nullable comma-separated list of severity values
+        # e.g. null, "low", "medium,high"
+        default_severity = "medium"
+        if resilient_severity is None:
+            return default_severity
+        else:
+            tokens = set(resilient_severity.split(","))
+            for sev in ("high", "medium", "low"):
+                if sev in tokens:
+                    return sev
+            return default_severity
+
     def _handle_on_poll(self, param):
         self.save_progress("In action handler for: on_poll")
         self.save_progress(f"Param={param}")
@@ -793,12 +808,16 @@ class ResilientConnector(BaseConnector):
                                                                       end_epoch_timestamp_ms=param['end_time'],
                                                                       max_timespan_in_ms_per_request=max_timespan_ms,
                                                                       mock=use_mock):
+            # https://docs.splunk.com/Documentation/SOAR/current/PlatformAPI/RESTContainers
+            # See POST /rest/container
+            severity = self.parse_resilient_siem_severity(incident["properties"]["siem_severity"])
             _, _, container_id = self.save_container({
                 "name": incident["name"],
                 "description": incident["description"],
                 "label": container_label,
                 "data": incident,
-                "source_data_identifier": incident["id"]
+                "source_data_identifier": incident["id"],
+                "severity": severity
             })
             container_count += 1
             self.save_progress(f"New container: {container_id}")
@@ -808,7 +827,8 @@ class ResilientConnector(BaseConnector):
                     "source_data_identifier": artifact["id"],
                     "data": artifact,
                     "description": artifact["description"],
-                    "cef": artifact
+                    "cef": artifact,
+                    "severity": severity
                 }
                 self.save_artifact(new_artifact)
             if container_count >= max_containers:
