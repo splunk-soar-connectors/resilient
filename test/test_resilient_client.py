@@ -77,13 +77,25 @@ def test_create_incident(client_from_env):
 
 
 @patch("resilient_client.ResilientClient.get_incidents_in_timerange")
-def test_get_incidents_in_timerange_with_paging(mock, client_from_env):
+def test_get_incidents_in_timerange_with_paging_mocked(mock, client_from_env):
     client_from_env.get_incidents_in_timerange_with_paging(0, 30, 10)
     assert mock.has_calls([
         call(0, 10),
         call(10, 20),
         call(20, 30),
     ])
+
+
+def test_get_incidents_in_timerange_with_paging(client_from_env):
+    start_of_2023_epoch_ms = 1672531200000
+    end_of_2023_epoch_ms = 1704067199000
+    milliseconds_in_a_month = 30.44 * 24 * 60 * 60 * 1000
+    interval_ms = milliseconds_in_a_month * 3
+    resp = client_from_env.get_incidents_in_timerange_with_paging(start_of_2023_epoch_ms,
+                                                                  end_of_2023_epoch_ms,
+                                                                  interval_ms)
+    for incident in resp:
+        assert incident is not None
 
 
 def test_get_incidents_in_timerange(client_from_env):

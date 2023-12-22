@@ -77,6 +77,13 @@ class ResilientClient:
     def list_comments_for_incident(self, incident_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/comments")
 
+    def get_users(self) -> Dict:
+        resp = self.simple_client.get(f"/users")
+        output = dict()
+        for user in resp:
+            output[user["id"]] = user
+        return output
+
     def list_attachments_for_incident(self, incident_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
@@ -148,7 +155,7 @@ class ResilientClient:
         """ Converts epoch timestamp to human readable timestamp """
         return datetime.utcfromtimestamp(epoch_timestamp_in_ms / 1000.0).strftime('%Y-%m-%dT%H:%M:%SZ')
 
-    def format_entry_timestamps(self, entry: Dict, key_condition:Callable[[str], bool]) -> Dict:
+    def format_entry_timestamps(self, entry: Dict, key_condition: Callable[[str], bool]) -> Dict:
         formatted_entry = {}
         for key, value in entry.items():
             if isinstance(key, str) and isinstance(value, int) and key_condition(key):
@@ -172,6 +179,15 @@ class ResilientClient:
 
         return self.format_entry_timestamps(entry, condition)
 
+    @staticmethod
+    def enrich_incident_with_user(incident: Dict, users: Dict[int, Dict]) -> Dict:
+        """ Enriches incident with user information """
+        user_id = incident["owner_id"]
+        user_entry = users.get(user_id)
+        if user_entry:
+            incident["owner"] = user_entry["display_name"]
+        return incident
+
     def get_incidents_in_timerange_with_paging(self, start_epoch_timestamp_ms: int,
                                                end_epoch_timestamp_ms: int,
                                                max_timespan_in_ms_per_request: int,
@@ -190,8 +206,10 @@ class ResilientClient:
                 incidents_in_range = self.get_incidents_in_timerange_mock(start, end)
             else:
                 incidents_in_range = self.get_incidents_in_timerange(start, end)
+
+            users = self.get_users()
             for inc in incidents_in_range:
-                yield inc
+                yield self.enrich_incident_with_user(inc, users)
 
             # Move to the next time range
             start = end
