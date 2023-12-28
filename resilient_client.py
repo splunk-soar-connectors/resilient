@@ -160,7 +160,7 @@ class ResilientClient:
         for key, value in entry.items():
             if isinstance(key, str) and isinstance(value, int) and key_condition(key):
                 formatted_entry[key] = self.normalize_timestamp(value)
-                # formatted_incident[f"{key}_epoch"] = value
+                formatted_entry[f"{key}_original"] = value
             else:
                 formatted_entry[key] = value
         return formatted_entry

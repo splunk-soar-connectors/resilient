@@ -80,12 +80,12 @@ class ResilientConnector(BaseConnector):
         try:
             if not isinstance(value, str):  # noqa: F821
                 errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
-                self.save_progress(errmsg)
+                self.log_to_both(errmsg)
                 return action_result.set_status(phantom.APP_ERROR, errmsg)
         except:
             if not isinstance(value, str):
                 errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
-                self.save_progress(errmsg)
+                self.log_to_both(errmsg)
                 return action_result.set_status(phantom.APP_ERROR, errmsg)
 
         try:
@@ -94,7 +94,7 @@ class ResilientConnector(BaseConnector):
         except Exception as e:
             _, error_msg = self._get_error_message_from_exception(e)
             errmsg = "{} failed. {} field is not valid json, {}".format(action_id, key, error_msg)
-            self.save_progress("{0}".format(errmsg))
+            self.log_to_both("{0}".format(errmsg))
             return action_result.set_status(phantom.APP_ERROR, errmsg)
 
     def _get_error_message_from_exception(self, e):
@@ -140,7 +140,7 @@ class ResilientConnector(BaseConnector):
             if input_str and sys.version_info[0] < 3:
                 input_str = UnicodeDammit(input_str).unicode_markup.encode('utf-8')
         except:
-            self.debug_print("Error occurred while handling python 2to3 compatibility for the input string")
+            self.log_to_both("Error occurred while handling python 2to3 compatibility for the input string")
 
         return input_str
 
@@ -153,54 +153,54 @@ class ResilientConnector(BaseConnector):
                                                 "Error code:{} Error message: {}".format(error_code, error_message))
 
             if e.response.status_code == 400:
-                self.save_progress("Bad request.")
+                self.log_to_both("Bad request.")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Error, {} Failed Error code:{} Error message: Bad request."
                                                 .format(action_id, e.response.status_code))
 
             elif e.response.status_code == 401:
-                self.save_progress("Unauthorized - most commonly, the provided session ID is invalid.")
+                self.log_to_both("Unauthorized - most commonly, the provided session ID is invalid.")
                 error_msg = "Error, {} Failed Error code:{} Error message: Unauthorized - most commonly, " \
                             "the provided session ID is invalid.".format(action_id, e.response.status_code)
                 return action_result.set_status(phantom.APP_ERROR, error_msg)
 
             elif e.response.status_code == 403:
-                self.save_progress("Forbidden - most commonly, user authentication failed.")
+                self.log_to_both("Forbidden - most commonly, user authentication failed.")
                 error_msg = "Error, {} Failed Error code:{} Error message: Forbidden - most commonly, " \
                             "user authentication failed.".format(action_id, e.response.status_code)
                 return action_result.set_status(phantom.APP_ERROR, error_msg)
 
             elif e.response.status_code == 404:
-                self.save_progress("Object not found.")
+                self.log_to_both("Object not found.")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Error, {} Failed Error code:{} Error message: Object not found.".format(
                                                     action_id, e.response.status_code))
 
             elif e.response.status_code == 409:
-                self.save_progress("Conflicting PUT operation.")
+                self.log_to_both("Conflicting PUT operation.")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Error, {} Failed Error code:{} Error message: Conflicting PUT operation.".format(
                                                     action_id, e.response.status_code))
 
             elif e.response.status_code == 500:
-                self.save_progress("Internal error.")
+                self.log_to_both("Internal error.")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Error, {} Failed Error code:{} Error message: Internal error.".format(
                                                     action_id, e.response.status_code))
 
             elif e.response.status_code == 503:
-                self.save_progress("Service unavailable - usually related to LDAP not being accessible.")
+                self.log_to_both("Service unavailable - usually related to LDAP not being accessible.")
                 return action_result.set_status(phantom.APP_ERROR,
                                                 "Service unavailable - usually related to LDAP not being accessible.")
 
             else:
-                self.save_progress("Error: status code {}".format(e.response.status_code))
+                self.log_to_both("Error: status code {}".format(e.response.status_code))
                 return action_result.set_status(phantom.APP_ERROR, "Error: {} failed status code {}".format(action_id,
                                                                                                             e.response.status_code))
         except:
             pass
 
-        self.save_progress("Error, Action Failed: Error code:{} Error message: {}".format(error_code, error_message))
+        self.log_to_both("Error, Action Failed: Error code:{} Error message: {}".format(error_code, error_message))
         return action_result.set_status(phantom.APP_ERROR,
                                         "Error, Action Failed Error code:{} Error message: {}".format(error_code,
                                                                                                       error_message))
@@ -217,38 +217,38 @@ class ResilientConnector(BaseConnector):
                 "username": config['user'],
                 "password": config['password']
             })
-            self.save_progress(f"Will authenticate with username and password.")
+            self.log_to_both(f"Will authenticate with username and password.")
         elif config.get('api_key_id') is not None and config.get('api_key_secret') is not None:
             client_kwargs.update({
                 "api_key_id": config['api_key_id'],
                 "api_key_secret": config['api_key_secret']
             })
-            self.save_progress(f"Will authenticate with API Key.")
+            self.log_to_both(f"Will authenticate with API Key.")
         else:
             raise ValueError("No credentials (email & password) or API Key (ID & Secret) provided.")
         return ResilientClient(**client_kwargs)
 
     def _handle_test_connectivity(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
-        self.save_progress(f"Param is {param}")
+        self.log_to_both("In action handler for: {0}".format(action_id))
+        self.log_to_both(f"Param is {param}")
 
         self.get_resilient_client().authenticate()
-        self.save_progress(f"Connection successful.")
+        self.log_to_both(f"Connection successful.")
 
     def _handle_list_tickets(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().list_incidents(closed=param['want_closed'])
 
     def _handle_get_ticket(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().get_incident(incident_id=param['incident_id'])
 
     def _handle_create_ticket(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
 
         client = self.get_resilient_client().simple_client
         call = "/incidents?want_full_data={}&want_tasks={}".format(
@@ -279,15 +279,15 @@ class ResilientConnector(BaseConnector):
         if 'discovered_date' not in payload:
             raise ValueError("json payload does not have required 'discovered_date' key")
 
-        self.save_progress("POST {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("POST {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.post(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_update_ticket(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
 
         # validate incoming json
@@ -305,15 +305,15 @@ class ResilientConnector(BaseConnector):
             arg.update(payload)
             return arg
 
-        self.save_progress("GET_PUT {}".format(call))
-        self.save_progress("PAYLOAD {}".format(payload))
+        self.log_to_both("GET_PUT {}".format(call))
+        self.log_to_both("PAYLOAD {}".format(payload))
         resp = client.get_put(call, apply)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_search_tickets(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
 
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
@@ -358,48 +358,48 @@ class ResilientConnector(BaseConnector):
 
                 # no condition, skip
                 if (ln + lv + lm) == 0:
-                    self.save_progress("{} condition is not complete".format(con))
+                    self.log_to_both("{} condition is not complete".format(con))
                     continue
 
                 if isdate:
                     try:
                         value = calendar.timegm(dateutil.parser.parse(value).utctimetuple()) * 1000
                     except Exception as e:
-                        self.save_progress(
+                        self.log_to_both(
                             "Warning: {} condition value is not a datetime as expected: {}, skipping".format(con, e))
                         continue
 
                 conditions.append({"field_name": name, "method": method, "value": value})
             except Exception as e:
-                self.save_progress("Warning: {} condition not valid, skipping: {}.".format(con, e))
+                self.log_to_both("Warning: {} condition not valid, skipping: {}.".format(con, e))
 
         if len('conditions') == 0:
-            self.save_progress("json payload does not have 'conditions' key.")
+            self.log_to_both("json payload does not have 'conditions' key.")
             raise ValueError("json payload does not have 'conditions' key.")
 
         filters.append({"conditions": conditions})
 
         call = "/incidents/query?return_level=full"
-        self.save_progress("POST {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("POST {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.post(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_list_artifacts(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().list_artifcats_for_incident(incident_id=param['incident_id'])
 
     def _handle_get_artifact(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().get_artifact(incident_id=param['incident_id'],
                                                         artifact_id=param['artifact_id'])
 
     def _handle_create_artifact(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
 
         incident_id = param['incident_id']
@@ -446,15 +446,15 @@ class ResilientConnector(BaseConnector):
         if 'description' not in payload:
             raise ValueError("json payload does not have required 'description' key")
 
-        self.save_progress("POST {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("POST {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.post(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_update_artifact(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
 
         client = self.get_resilient_client().simple_client
         incident_id = param['incident_id']
@@ -476,25 +476,25 @@ class ResilientConnector(BaseConnector):
         if 'description' not in payload:
             raise ValueError("json payload does not have 'description' key, payload should be result of get_artifact")
 
-        self.save_progress("PUT {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("PUT {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.put(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_list_comments(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().list_comments_for_incident(incident_id=param['incident_id'])
 
     def _handle_get_comment(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().get_comment(incident_id=param['incident_id'], comment_id=param['comment_id'])
 
     def _handle_create_comment(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
             client.headers['handle_format'] = "names"
@@ -517,15 +517,15 @@ class ResilientConnector(BaseConnector):
         if 'text' not in payload:
             raise ValueError("json payload does not have required 'text' key")
 
-        self.save_progress("POST {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("POST {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.post(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_update_comment(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
 
         if param.get('handle_format_is_name'):
@@ -543,15 +543,15 @@ class ResilientConnector(BaseConnector):
         if 'text' not in payload:
             raise ValueError("json payload does not have required 'text' key, payload should be result of get comment")
 
-        self.save_progress("PUT {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("PUT {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         resp = client.put(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_list_tables(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().list_tables_for_incident(
             incident_id=param['incident_id'],
             use_handle_format_names=param['handle_format_is_name']
@@ -559,13 +559,13 @@ class ResilientConnector(BaseConnector):
 
     def _handle_get_table(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().get_table(incident_id=param['incident_id'], table_id=param['table_id'],
                                                      use_handle_format_names=param['handle_format_is_name'])
 
     def _handle_add_table_row(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
             client.headers['handle_format'] = "names"
@@ -589,18 +589,18 @@ class ResilientConnector(BaseConnector):
             if len(key) > 1 and len(value) > 1:
                 payload['cells'][key] = value
             elif len(key) > 1 or len(value) > 1:
-                self.save_progress("{} cell specification is not complete".format(col))
+                self.log_to_both("{} cell specification is not complete".format(col))
                 continue
 
-        self.save_progress("POST {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("POST {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         retval = client.post(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return retval
 
     def _handle_update_table_row(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
 
         if param.get('handle_format_is_name'):
@@ -626,18 +626,18 @@ class ResilientConnector(BaseConnector):
             if len(key) > 1 and len(value) > 1:
                 payload['cells'][key] = value
             elif len(key) > 1 or len(value) > 1:
-                self.save_progress("{} cell specification is not complete".format(col))
+                self.log_to_both("{} cell specification is not complete".format(col))
                 continue
 
-        self.save_progress("PUT {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("PUT {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         retval = client.put(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return retval
 
     def _handle_update_table_row_with_key(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
             client.headers['handle_format'] = "names"
@@ -656,9 +656,9 @@ class ResilientConnector(BaseConnector):
         incident_id = param['incident_id']
         table_id = param['table_id']
         call = "/incidents/{}/table_data/{}".format(incident_id, table_id)
-        self.save_progress("GET {}".format(call))
+        self.log_to_both("GET {}".format(call))
         retval = client.get(call)
-        self.save_progress("GET successful")
+        self.log_to_both("GET successful")
 
         def find_row(table, key, value):
             for row in table['rows']:
@@ -675,40 +675,40 @@ class ResilientConnector(BaseConnector):
             raise ValueError("{} failed. Cannot match {}/{} key/value.".format(action_id, key, value))
 
         call = "/incidents/{}/table_data/{}/row_data/{}".format(incident_id, table_id, rowid)
-        self.save_progress("PUT {}".format(call))
-        self.save_progress("BODY {}".format(payload))
+        self.log_to_both("PUT {}".format(call))
+        self.log_to_both("BODY {}".format(payload))
         put_resp = client.put(call, payload)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return put_resp
 
 
     def _handle_list_tasks(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
             client.headers['handle_format'] = "names"
         call = "/tasks"
-        self.save_progress("GET {}".format(call))
+        self.log_to_both("GET {}".format(call))
         resp = client.get(call)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_get_task(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         if param.get('handle_format_is_name'):
             client.headers['handle_format'] = "names"
         call = f"/tasks/{param['task_id']}"
-        self.save_progress("GET {}".format(call))
+        self.log_to_both("GET {}".format(call))
         resp = client.get(call)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return resp
 
     def _handle_update_task(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         taskdto = param.get('taskdto', "")
         if len(taskdto) > 1:
@@ -730,15 +730,15 @@ class ResilientConnector(BaseConnector):
             arg.update(payload)
             return arg
 
-        self.save_progress("GET_PUT {}".format(call))
-        self.save_progress("PAYLOAD {}".format(payload))
+        self.log_to_both("GET_PUT {}".format(call))
+        self.log_to_both("PAYLOAD {}".format(payload))
         retval = client.get_put(call, apply)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return retval
 
     def _handle_close_task(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         client = self.get_resilient_client().simple_client
         task_id = param['task_id']
         call = "/tasks/{}".format(task_id)
@@ -747,12 +747,12 @@ class ResilientConnector(BaseConnector):
             return arg
 
         retval = client.get_put(call, apply)
-        self.save_progress("{} successful.".format(action_id))
+        self.log_to_both("{} successful.".format(action_id))
         return retval
 
     def _handle_list_attachments(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().list_attachments_for_incident(
             incident_id=param['incident_id'],
             use_handle_format_names=param['handle_format_is_name']
@@ -760,23 +760,23 @@ class ResilientConnector(BaseConnector):
 
     def _handle_get_attachment(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
         return self.get_resilient_client().get_attachment(incident_id=param['incident_id'],
                                                           attachment_id=param['attachment_id'],
                                                           use_handle_format_names=param['handle_format_is_name'])
 
     def _handle_add_attachment(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress("In action handler for: {0}".format(action_id))
+        self.log_to_both("In action handler for: {0}".format(action_id))
 
         success, message, vault_info = vault.vault_info(
             vault_id=param['vault_id'],
             container_id=self.get_container_id()
         )
-        self.save_progress(f"Vault info resp: {success} {message} {vault_info}")
+        self.log_to_both(f"Vault info resp: {success} {message} {vault_info}")
         if not success:
             err = "{} failed. {}: vault_id not valid.".format(action_id, param['vault_id'])
-            self.save_progress(err)
+            self.log_to_both(err)
             raise ValueError(err)
         path = vault_info[0]['path']
         name = vault_info[0]['name']
@@ -787,10 +787,37 @@ class ResilientConnector(BaseConnector):
     def parse_resilient_severity(severity_code: int):
         return RESILIENT_SEVERITY_CODE_MAPPING.get(severity_code, "medium")
 
+    @staticmethod
+    def make_container(incident: dict, container_label: str, severity: str) -> dict:
+        return {
+            "name": incident["name"],
+            "description": incident["description"],
+            "label": container_label,
+            "data": incident,
+            "source_data_identifier": incident["id"],
+            "severity": severity,
+        }
+
+    @staticmethod
+    def make_artifact(container_id: int, artifact: dict, severity: str) -> dict:
+        return {
+            "container_id": container_id,
+            "source_data_identifier": artifact["id"],
+            "data": artifact,
+            "description": artifact["description"],
+            "cef": artifact,
+            "severity": severity
+
+        }
+
+    def log_to_both(self, msg):
+        self.debug_print(msg)
+        self.save_progress(msg)
+
     def _handle_on_poll(self, param):
-        self.save_progress("In action handler for: on_poll")
-        self.save_progress(f"Param={param}")
-        max_timespan_ms = 1000 * 60 * 60 # 1 hour
+        self.log_to_both("In action handler for: on_poll")
+        self.log_to_both(f"Param={param}")
+        max_timespan_ms = 1000 * 60 * 60 * 6  # 6 hours
 
         # When trigger as 'poll now', container_count is populated based on user input
         # When scheduled/interval, container_count is set to 4294967295 (max 32-bit int)
@@ -800,40 +827,45 @@ class ResilientConnector(BaseConnector):
         client = self.get_resilient_client()
         use_mock = False
         container_count = 0
-        for incident in client.get_incidents_in_timerange_with_paging(start_epoch_timestamp_ms=param['start_time'],
-                                                                      end_epoch_timestamp_ms=param['end_time'],
+
+        start_time = param['start_time']
+        if 'end_time' in self._state:
+            start_time = self._state['end_time']
+            self.log_to_both(f"Using state to set start_time.")
+        end_time = param['end_time']
+        self.log_to_both(f"start_time={start_time}, end_time={end_time}")
+
+        last_incident_create_date = start_time
+        for incident in client.get_incidents_in_timerange_with_paging(start_epoch_timestamp_ms=start_time,
+                                                                      end_epoch_timestamp_ms=end_time,
                                                                       max_timespan_in_ms_per_request=max_timespan_ms,
                                                                       mock=use_mock):
             # https://docs.splunk.com/Documentation/SOAR/current/PlatformAPI/RESTContainers
             # See POST /rest/container
             severity = self.parse_resilient_severity(incident["severity_code"])
-            _, _, container_id = self.save_container({
-                "name": incident["name"],
-                "description": incident["description"],
-                "label": container_label,
-                "data": incident,
-                "source_data_identifier": incident["id"],
-                "severity": severity,
-            })
+            _, _, container_id = self.save_container(
+                self.make_container(incident, container_label, severity)
+            )
             container_count += 1
-            self.save_progress(f"New container: {container_id}")
-            for artifact in client.list_artifcats_for_incident(incident_id=incident["id"], mock=use_mock):
-                new_artifact = {
-                    "container_id": container_id,
-                    "source_data_identifier": artifact["id"],
-                    "data": artifact,
-                    "description": artifact["description"],
-                    "cef": artifact,
-                    "severity": severity
-                }
-                self.save_artifact(new_artifact)
+            incident_id = incident["id"]
+            self.log_to_both(f"New container: {container_id}, incident_id={incident_id}, create_date={incident['create_date']}")
+            for artifact in client.list_artifcats_for_incident(incident_id=incident_id, mock=use_mock):
+                self.save_artifact(self.make_artifact(container_id=container_id, artifact=artifact, severity=severity))
+                self.log_to_both(f"Saved artifact: artifact_id={artifact['id']} for incident_id={incident_id}, container_id={container_id}")
+
+            last_incident_create_date = incident["create_date_original"]
             if container_count >= max_containers:
-                self.save_progress(f"Max containers reached: {container_count}")
+                self.log_to_both(f"Max containers reached: {container_count}")
                 break
+
+        # Resilient API client returns incidents >= create_date
+        self._state['end_time'] = last_incident_create_date + 1
+        self.save_state(self._state)
+        self.log_to_both(f"Saved state: {self.load_state()}")
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()
-        self.save_progress(f"Handling action: {action_id}")
+        self.log_to_both(f"Handling action: {action_id}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
         try:
@@ -866,9 +898,10 @@ class ResilientConnector(BaseConnector):
         # Load the state in initialize, use it to store data
         # that needs to be accessed across actions
         self._state = self.load_state()
+        self.log_to_both(f"Loaded state: {self._state}")
 
         version = self.get_app_json()["app_version"]
-        self.save_progress(f"App version: {version}")
+        self.log_to_both(f"App version: {version}")
         """
         # get the asset config
         config = self.get_config()
