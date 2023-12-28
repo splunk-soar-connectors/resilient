@@ -814,6 +814,12 @@ class ResilientConnector(BaseConnector):
         self.debug_print(msg)
         self.save_progress(msg)
 
+    def update_state_end_time(self, end_time):
+        # state end_time used for state management for polling
+        self._state['end_time'] = end_time
+        self.save_state(self._state)
+        self.log_to_both(f"Saved state: {self.load_state()}")
+
     def _handle_on_poll(self, param):
         self.log_to_both("In action handler for: on_poll")
         self.log_to_both(f"Param={param}")
@@ -835,7 +841,6 @@ class ResilientConnector(BaseConnector):
         end_time = param['end_time']
         self.log_to_both(f"start_time={start_time}, end_time={end_time}")
 
-        last_incident_create_date = start_time
         for incident in client.get_incidents_in_timerange_with_paging(start_epoch_timestamp_ms=start_time,
                                                                       end_epoch_timestamp_ms=end_time,
                                                                       max_timespan_in_ms_per_request=max_timespan_ms,
@@ -848,20 +853,16 @@ class ResilientConnector(BaseConnector):
             )
             container_count += 1
             incident_id = incident["id"]
-            self.log_to_both(f"New container: {container_id}, incident_id={incident_id}, create_date={incident['create_date']}")
+            create_date_epoch = incident['create_date_original']
+            self.log_to_both(f"New container: {container_id}, incident_id={incident_id}, create_date={create_date_epoch}")
             for artifact in client.list_artifcats_for_incident(incident_id=incident_id, mock=use_mock):
                 self.save_artifact(self.make_artifact(container_id=container_id, artifact=artifact, severity=severity))
-                self.log_to_both(f"Saved artifact: artifact_id={artifact['id']} for incident_id={incident_id}, container_id={container_id}")
+                self.log_to_both(f"New artifact: artifact_id={artifact['id']} for incident_id={incident_id}, container_id={container_id}")
 
-            last_incident_create_date = incident["create_date_original"]
+            self.update_state_end_time(end_time=create_date_epoch)
             if container_count >= max_containers:
                 self.log_to_both(f"Max containers reached: {container_count}")
                 break
-
-        # Resilient API client returns incidents >= create_date
-        self._state['end_time'] = last_incident_create_date + 1
-        self.save_state(self._state)
-        self.log_to_both(f"Saved state: {self.load_state()}")
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()
