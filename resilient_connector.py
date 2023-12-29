@@ -820,6 +820,10 @@ class ResilientConnector(BaseConnector):
         self.save_state(self._state)
         self.log_to_both(f"Saved state: {self.load_state()}")
 
+    @staticmethod
+    def now_epoch_ms():
+        return time.time_ns() // 1_000_000
+
     def _handle_on_poll(self, param):
         self.log_to_both("In action handler for: on_poll")
         self.log_to_both(f"Param={param}")
@@ -840,6 +844,8 @@ class ResilientConnector(BaseConnector):
             self.log_to_both(f"Using state to set start_time.")
         end_time = param['end_time']
         self.log_to_both(f"start_time={start_time}, end_time={end_time}")
+
+        assert end_time <= self.now_epoch_ms()
 
         for incident in client.get_incidents_in_timerange_with_paging(start_epoch_timestamp_ms=start_time,
                                                                       end_epoch_timestamp_ms=end_time,
@@ -863,6 +869,9 @@ class ResilientConnector(BaseConnector):
             if container_count >= max_containers:
                 self.log_to_both(f"Max containers reached: {container_count}")
                 break
+
+        # We have pulled all incidents up to create_date <= end_time
+        self.update_state_end_time(end_time=end_time)
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()
