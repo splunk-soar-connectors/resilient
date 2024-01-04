@@ -788,7 +788,7 @@ class ResilientConnector(BaseConnector):
         return RESILIENT_SEVERITY_CODE_MAPPING.get(severity_code, "medium")
 
     @staticmethod
-    def make_container(incident: dict, container_label: str, severity: str) -> dict:
+    def make_container(incident: dict, container_label: str, severity: str, run_automation: bool) -> dict:
         return {
             "name": incident["name"],
             "description": incident["description"],
@@ -796,6 +796,7 @@ class ResilientConnector(BaseConnector):
             "data": incident,
             "source_data_identifier": incident["id"],
             "severity": severity,
+            "run_automation" : run_automation,
         }
 
     @staticmethod
@@ -854,24 +855,35 @@ class ResilientConnector(BaseConnector):
             # https://docs.splunk.com/Documentation/SOAR/current/PlatformAPI/RESTContainers
             # See POST /rest/container
             severity = self.parse_resilient_severity(incident["severity_code"])
-            _, _, container_id = self.save_container(
-                self.make_container(incident, container_label, severity)
-            )
             container_count += 1
             incident_id = incident["id"]
+
+            artifacts = client.list_artifcats_for_incident(incident_id=incident_id, mock=use_mock)
+
+            _, _, container_id = self.save_container(
+                # Force automation to run on container creation if no artifacts.
+                self.make_container(incident, container_label, severity, run_automation=(len(artifacts) == 0))
+            )
             create_date_epoch = incident['create_date_original']
             self.log_to_both(f"New container: {container_id}, incident_id={incident_id}, create_date={create_date_epoch}")
-            for artifact in client.list_artifcats_for_incident(incident_id=incident_id, mock=use_mock):
-                self.save_artifact(self.make_artifact(container_id=container_id, artifact=artifact, severity=severity))
-                self.log_to_both(f"New artifact: artifact_id={artifact['id']} for incident_id={incident_id}, container_id={container_id}")
+            if len(artifacts) > 0:
+                # The save_container and save_artifacts APIs set the run_automation key to 'False' for all except the
+                # last artifact, so as to run the playbook once per container when all the artifacts are ingested.
+                # https://docs.splunk.com/Documentation/Phantom/4.10.7/DevelopApps/AppDevAPIRef#Active_playbooks
+                artifact_save_success, _, artifact_ids = self.save_artifacts([self.make_artifact(container_id=container_id, artifact=art, severity=severity) for art in artifacts])
+                if not artifact_save_success:
+                    raise RuntimeError(f"Failed to save artifacts: ids={artifact_ids} for incident_id={incident_id}, container_id={container_id}")
+                self.log_to_both(f"Saved artifacts: ids={artifact_ids} for incident_id={incident_id}, container_id={container_id}")
+            else:
+                self.log_to_both(f"No artifacts found for incident_id={incident_id}, container_id={container_id}")
 
             self.update_state_end_time(end_time=create_date_epoch)
             if container_count >= max_containers:
                 self.log_to_both(f"Max containers reached: {container_count}")
                 break
-
-        # We have pulled all incidents up to create_date <= end_time
-        self.update_state_end_time(end_time=end_time)
+        else:
+            # We have pulled all incidents up to create_date <= end_time
+            self.update_state_end_time(end_time=end_time)
 
     def handle_action(self, param):
         action_id = self.get_action_identifier()

@@ -95,6 +95,7 @@ def test_get_incidents_in_timerange_with_paging(client_from_env):
                                                                   end_of_2023_epoch_ms,
                                                                   interval_ms)
     for incident in resp:
+        artifacts = client_from_env.list_artifcats_for_incident(incident["id"])
         assert incident is not None
 
 
