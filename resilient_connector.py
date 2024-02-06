@@ -25,7 +25,6 @@ import traceback
 
 import dateutil.parser
 import phantom.app as phantom
-from bs4 import UnicodeDammit
 from phantom import vault
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
@@ -68,81 +67,6 @@ class ResilientConnector(BaseConnector):
         # Do note that the app json defines the asset config, so please
         # modify this as you deem fit.
         self._base_url = None
-
-    def get_json_parameter(self, dic, key, action_result):
-        if key not in dic:
-            return dict()
-
-        value = dic[key]
-
-        action_id = self.get_action_identifier()
-
-        try:
-            if not isinstance(value, str):  # noqa: F821
-                errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
-                self.log_to_both(errmsg)
-                return action_result.set_status(phantom.APP_ERROR, errmsg)
-        except:
-            if not isinstance(value, str):
-                errmsg = "{} failed. {} field is not a string (type={})".format(action_id, key, type(value))
-                self.log_to_both(errmsg)
-                return action_result.set_status(phantom.APP_ERROR, errmsg)
-
-        try:
-            payload = json.loads(value)
-            return payload
-        except Exception as e:
-            _, error_msg = self._get_error_message_from_exception(e)
-            errmsg = "{} failed. {} field is not valid json, {}".format(action_id, key, error_msg)
-            self.log_to_both("{0}".format(errmsg))
-            return action_result.set_status(phantom.APP_ERROR, errmsg)
-
-    def _get_error_message_from_exception(self, e):
-        """ This method is used to get appropriate error message from the exception.
-        :param e: Exception object
-        :return: error message
-        """
-
-        try:
-            if hasattr(e, 'args'):
-                if len(e.args) > 1:
-                    error_code = e.args[0]
-                    error_msg = e.args[1]
-                elif len(e.args) == 1:
-                    error_code = "Error code unavailable"
-                    error_msg = e.args[0]
-            else:
-                error_code = "Error code unavailable"
-                error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
-        except:
-            error_code = "Error code unavailable"
-            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
-
-        try:
-            error_msg = self._handle_py_ver_compat_for_input_str(error_msg)
-        except TypeError:
-            error_msg = "Error occurred while connecting to the server. Please check the asset configuration and|or the action parameters."
-        except:
-            error_msg = "Unknown error occurred. Please check the asset configuration and|or action parameters."
-
-        return error_code, error_msg
-
-    # TODO: delete this. Python 2 no longer needs handling
-    def _handle_py_ver_compat_for_input_str(self, input_str):
-        """
-        This method returns the encoded|original string based on the Python version.
-        :param sys.version_info[0]: Python major version
-        :param input_str: Input string to be processed
-        :return: input_str
-        """
-
-        try:
-            if input_str and sys.version_info[0] < 3:
-                input_str = UnicodeDammit(input_str).unicode_markup.encode('utf-8')
-        except:
-            self.log_to_both("Error occurred while handling python 2to3 compatibility for the input string")
-
-        return input_str
 
     def get_resilient_client(self):
         config = self.get_config()
