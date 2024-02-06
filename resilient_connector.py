@@ -144,67 +144,6 @@ class ResilientConnector(BaseConnector):
 
         return input_str
 
-    def __handle_exceptions(self, e, action_result):
-        action_id = self.get_action_identifier()
-        error_code, error_message = self._get_error_message_from_exception(e)
-        try:
-            if e.response is None:
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error code:{} Error message: {}".format(error_code, error_message))
-
-            if e.response.status_code == 400:
-                self.log_to_both("Bad request.")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error, {} Failed Error code:{} Error message: Bad request."
-                                                .format(action_id, e.response.status_code))
-
-            elif e.response.status_code == 401:
-                self.log_to_both("Unauthorized - most commonly, the provided session ID is invalid.")
-                error_msg = "Error, {} Failed Error code:{} Error message: Unauthorized - most commonly, " \
-                            "the provided session ID is invalid.".format(action_id, e.response.status_code)
-                return action_result.set_status(phantom.APP_ERROR, error_msg)
-
-            elif e.response.status_code == 403:
-                self.log_to_both("Forbidden - most commonly, user authentication failed.")
-                error_msg = "Error, {} Failed Error code:{} Error message: Forbidden - most commonly, " \
-                            "user authentication failed.".format(action_id, e.response.status_code)
-                return action_result.set_status(phantom.APP_ERROR, error_msg)
-
-            elif e.response.status_code == 404:
-                self.log_to_both("Object not found.")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error, {} Failed Error code:{} Error message: Object not found.".format(
-                                                    action_id, e.response.status_code))
-
-            elif e.response.status_code == 409:
-                self.log_to_both("Conflicting PUT operation.")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error, {} Failed Error code:{} Error message: Conflicting PUT operation.".format(
-                                                    action_id, e.response.status_code))
-
-            elif e.response.status_code == 500:
-                self.log_to_both("Internal error.")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Error, {} Failed Error code:{} Error message: Internal error.".format(
-                                                    action_id, e.response.status_code))
-
-            elif e.response.status_code == 503:
-                self.log_to_both("Service unavailable - usually related to LDAP not being accessible.")
-                return action_result.set_status(phantom.APP_ERROR,
-                                                "Service unavailable - usually related to LDAP not being accessible.")
-
-            else:
-                self.log_to_both("Error: status code {}".format(e.response.status_code))
-                return action_result.set_status(phantom.APP_ERROR, "Error: {} failed status code {}".format(action_id,
-                                                                                                            e.response.status_code))
-        except:
-            pass
-
-        self.log_to_both("Error, Action Failed: Error code:{} Error message: {}".format(error_code, error_message))
-        return action_result.set_status(phantom.APP_ERROR,
-                                        "Error, Action Failed Error code:{} Error message: {}".format(error_code,
-                                                                                                      error_message))
-
     def get_resilient_client(self):
         config = self.get_config()
         client_kwargs = {
