@@ -78,7 +78,7 @@ class ResilientClient:
         return self.simple_client.get(f"/incidents/{incident_id}/comments")
 
     def get_users(self) -> Dict:
-        resp = self.simple_client.get(f"/users")
+        resp = self.simple_client.get("/users")
         output = dict()
         for user in resp:
             output[user["id"]] = user
@@ -114,7 +114,7 @@ class ResilientClient:
 
     def create_incident(self, payload: dict):
         assert all([k in payload for k in ["name", "description", "discovered_date"]])
-        return self.simple_client.post(f"/incidents", payload=payload)
+        return self.simple_client.post("/incidents", payload=payload)
 
     def authenticate(self) -> SimpleClient:
         if self.api_key_id and self.api_key_secret:

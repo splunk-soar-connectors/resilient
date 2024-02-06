@@ -16,7 +16,7 @@ def client_from_env():
 
 
 def test_client_using_creds_auth():
-    with pytest.raises(SimpleHTTPException) as e:
+    with pytest.raises(SimpleHTTPException):
         ResilientClient(base_url=os.environ["RESILIENT_API_BASE_URL"],
                         org_name=os.environ["RESILIENT_API_ORG_NAME"],
                         username="user@mail.com",
@@ -92,7 +92,7 @@ def test_get_incidents_in_timerange_with_paging(client_from_env):
                                                                   end_of_2023_epoch_ms,
                                                                   interval_ms)
     for incident in resp:
-        artifacts = client_from_env.list_artifcats_for_incident(incident["id"])
+        # artifacts = client_from_env.list_artifcats_for_incident(incident["id"])
         assert incident is not None
 
 

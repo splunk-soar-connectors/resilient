@@ -217,13 +217,13 @@ class ResilientConnector(BaseConnector):
                 "username": config['user'],
                 "password": config['password']
             })
-            self.log_to_both(f"Will authenticate with username and password.")
+            self.log_to_both("Will authenticate with username and password.")
         elif config.get('api_key_id') is not None and config.get('api_key_secret') is not None:
             client_kwargs.update({
                 "api_key_id": config['api_key_id'],
                 "api_key_secret": config['api_key_secret']
             })
-            self.log_to_both(f"Will authenticate with API Key.")
+            self.log_to_both("Will authenticate with API Key.")
         else:
             raise ValueError("No credentials (email & password) or API Key (ID & Secret) provided.")
         return ResilientClient(**client_kwargs)
@@ -234,7 +234,7 @@ class ResilientConnector(BaseConnector):
         self.log_to_both(f"Param is {param}")
 
         self.get_resilient_client().authenticate()
-        self.log_to_both(f"Connection successful.")
+        self.log_to_both("Connection successful.")
 
     def _handle_list_tickets(self, param):
         action_id = self.get_action_identifier()
@@ -681,7 +681,6 @@ class ResilientConnector(BaseConnector):
         self.log_to_both("{} successful.".format(action_id))
         return put_resp
 
-
     def _handle_list_tasks(self, param):
         action_id = self.get_action_identifier()
         self.log_to_both("In action handler for: {0}".format(action_id))
@@ -742,6 +741,7 @@ class ResilientConnector(BaseConnector):
         client = self.get_resilient_client().simple_client
         task_id = param['task_id']
         call = "/tasks/{}".format(task_id)
+
         def apply(arg):
             arg['status'] = "C"
             return arg
@@ -796,7 +796,7 @@ class ResilientConnector(BaseConnector):
             "data": incident,
             "source_data_identifier": incident["id"],
             "severity": severity,
-            "run_automation" : run_automation,
+            "run_automation": run_automation,
         }
 
     @staticmethod
@@ -842,7 +842,7 @@ class ResilientConnector(BaseConnector):
         start_time = param['start_time']
         if 'end_time' in self._state:
             start_time = self._state['end_time']
-            self.log_to_both(f"Using state to set start_time.")
+            self.log_to_both("Using state to set start_time.")
         end_time = param['end_time']
         self.log_to_both(f"start_time={start_time}, end_time={end_time}")
 
@@ -870,9 +870,11 @@ class ResilientConnector(BaseConnector):
                 # The save_container and save_artifacts APIs set the run_automation key to 'False' for all except the
                 # last artifact, so as to run the playbook once per container when all the artifacts are ingested.
                 # https://docs.splunk.com/Documentation/Phantom/4.10.7/DevelopApps/AppDevAPIRef#Active_playbooks
-                artifact_save_success, _, artifact_ids = self.save_artifacts([self.make_artifact(container_id=container_id, artifact=art, severity=severity) for art in artifacts])
+                soar_artifacts = [self.make_artifact(container_id=container_id, artifact=art, severity=severity) for art in artifacts]
+                artifact_save_success, _, artifact_ids = self.save_artifacts(soar_artifacts)
                 if not artifact_save_success:
-                    raise RuntimeError(f"Failed to save artifacts: ids={artifact_ids} for incident_id={incident_id}, container_id={container_id}")
+                    raise RuntimeError(f"""Failed to save artifacts: ids={artifact_ids}
+                                           for incident_id={incident_id}, container_id={container_id}""")
                 self.log_to_both(f"Saved artifacts: ids={artifact_ids} for incident_id={incident_id}, container_id={container_id}")
             else:
                 self.log_to_both(f"No artifacts found for incident_id={incident_id}, container_id={container_id}")
