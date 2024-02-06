@@ -26,9 +26,9 @@ import traceback
 import dateutil.parser
 import phantom.app as phantom
 from bs4 import UnicodeDammit
+from phantom import vault
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
-from phantom import vault
 
 from resilient_client import ResilientClient
 

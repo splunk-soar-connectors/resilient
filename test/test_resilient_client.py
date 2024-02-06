@@ -1,9 +1,9 @@
 import os
-from unittest.mock import patch, call
+from unittest.mock import call, patch
 
 import pytest
-from resilient import SimpleHTTPException
 
+from resilient import SimpleHTTPException
 from resilient_client import ResilientClient
 
 
@@ -16,14 +16,11 @@ def client_from_env():
 
 
 def test_client_using_creds_auth():
-    username = "user@mail.com"
-    password = "pass"
-
     with pytest.raises(SimpleHTTPException) as e:
         ResilientClient(base_url=os.environ["RESILIENT_API_BASE_URL"],
                         org_name=os.environ["RESILIENT_API_ORG_NAME"],
-                        username=username,
-                        password=password).get_client_with_credentials()
+                        username="user@mail.com",
+                        password="pass").get_client_with_credentials()  # `pragma: allowlist secret`
 
 
 def test_client_using_api_key_auth():
