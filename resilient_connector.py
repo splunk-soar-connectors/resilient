@@ -702,11 +702,11 @@ class ResilientConnector(BaseConnector):
         use_mock = False
         container_count = 0
 
-        start_time = param['start_time']
+        start_time = param.get('start_time')
         if 'end_time' in self._state:
             start_time = self._state['end_time']
             self.log_to_both("Using state to set start_time.")
-        end_time = param['end_time']
+        end_time = param.get('end_time')
         self.log_to_both(f"start_time={start_time}, end_time={end_time}")
 
         assert end_time <= self.now_epoch_ms()

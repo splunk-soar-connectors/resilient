@@ -118,13 +118,15 @@
                     "data_type": "numeric",
                     "order": 1,
                     "description": "Start of time range, in epoch time (milliseconds)",
-                    "verbose": "If not specified, the default is past 10 days"
+                    "verbose": "If not specified, the default is past 10 days",
+                    "required" : true
                 },
                 "end_time": {
                     "data_type": "numeric",
                     "order": 2,
                     "description": "End of time range, in epoch time (milliseconds)",
-                    "verbose": "If not specified, the default is now"
+                    "verbose": "If not specified, the default is now",
+                    "required" : true
                 },
                 "container_count": {
                     "data_type": "numeric",
