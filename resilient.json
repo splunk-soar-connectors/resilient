@@ -56,7 +56,7 @@
         },
         "api_key_id": {
             "description": "API Key ID",
-            "data_type": "string",
+            "data_type": "password",
             "required": false,
             "order": 4
         },
