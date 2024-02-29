@@ -14,8 +14,8 @@
             "name": "Ben Liew"
         }
     ],
-    "license": "Copyright (c) 2022 Splunk Inc.",
-    "app_version": "1.3.25",
+    "license": "Copyright (c) 2022-2024 Splunk Inc.",
+    "app_version": "2.0.0",
     "utctime_updated": "2018-05-03T22:31:37.122043",
     "package_name": "phantom_resilient",
     "main_module": "resilient_connector.py",
@@ -105,6 +105,7 @@
             "action": "on poll",
             "description": "Callback action for the on_poll ingest functionality",
             "type": "ingest",
+            "verbose": "If start_time is not specified, the default is past 10 days and if end_time is not specified, the default is now.",
             "identifier": "on_poll",
             "read_only": true,
             "parameters": {
@@ -118,14 +119,12 @@
                     "data_type": "numeric",
                     "order": 1,
                     "description": "Start of time range, in epoch time (milliseconds)",
-                    "verbose": "If not specified, the default is past 10 days",
                     "required" : true
                 },
                 "end_time": {
                     "data_type": "numeric",
                     "order": 2,
                     "description": "End of time range, in epoch time (milliseconds)",
-                    "verbose": "If not specified, the default is now",
                     "required" : true
                 },
                 "container_count": {
@@ -881,6 +880,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -2742,6 +2744,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -4535,6 +4540,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -4870,6 +4878,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2"
+                    ],
+                    "contains": [
+                        "artifactid"
                     ]
                 },
                 {
@@ -4877,6 +4888,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -5234,6 +5248,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -5603,6 +5620,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2"
+                    ],
+                    "contains": [
+                        "artifactid"
                     ]
                 },
                 {
@@ -5610,6 +5630,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -5956,6 +5979,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -6250,6 +6276,9 @@
                     "data_type": "string",
                     "example_values": [
                         "109"
+                    ],
+                    "contains": [
+                        "ibm resilient commentid"
                     ]
                 },
                 {
@@ -6265,6 +6294,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -6752,6 +6784,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7059,6 +7094,9 @@
                     "data_type": "string",
                     "example_values": [
                         "109"
+                    ],
+                    "contains": [
+                        "ibm resilient commentid"
                     ]
                 },
                 {
@@ -7074,6 +7112,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7363,11 +7404,13 @@
                     "data_path": "action_result.parameter.incident_id",
                     "data_type": "string",
                     "example_values": [
-                        "2096",
                         "2104"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
@@ -7380,7 +7423,6 @@
                     "data_path": "action_result.summary.Number of tables",
                     "data_type": "numeric",
                     "example_values": [
-                        0,
                         1
                     ]
                 },
@@ -7388,8 +7430,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Number of tables: 0",
-                        "Number of tables: 1"
+                        "Number of tables: 0"
                     ]
                 },
                 {
@@ -7852,6 +7893,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2104"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7861,7 +7905,10 @@
                         "1000"
                     ],
                     "column_name": "Table ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "tableid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.cells.179.id",
@@ -8182,7 +8229,10 @@
                         "ibm resilient ticketid"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "2104"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.row_id",
@@ -8311,7 +8361,10 @@
                         "ibm resilient ticketid"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "2104"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.key",
@@ -9420,7 +9473,10 @@
                         "1"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.active",
@@ -9822,7 +9878,10 @@
                         "46"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.taskdto",
@@ -9921,7 +9980,10 @@
                         "46"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.message",
@@ -10024,7 +10086,10 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.content_type",
@@ -10221,7 +10286,10 @@
                         "10"
                     ],
                     "column_name": "Attachment ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient attachmentid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.handle_format_is_name",
@@ -10238,7 +10306,10 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 1
+                    "column_order": 1,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.content_type",
@@ -10441,7 +10512,10 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.vault_id",
@@ -10451,7 +10525,8 @@
                     ],
                     "contains": [
                         "sha1",
-                        "vault id"
+                        "vault id",
+                        "vaultid"
                     ]
                 },
                 {
