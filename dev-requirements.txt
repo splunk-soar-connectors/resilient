@@ -2,7 +2,6 @@ cachetools==5.3.2
 certifi==2023.11.17
 cffi==1.16.0
 charset-normalizer==3.3.2
-cryptography==41.0.7
 decorator==5.1.1
 Deprecated==1.2.14
 exceptiongroup==1.2.0
@@ -10,7 +9,6 @@ idna==3.6
 importlib-metadata==6.8.0
 iniconfig==2.0.0
 jaraco.classes==3.3.0
-jwcrypto==1.4.2
 keyring==23.13.1
 more-itertools==10.1.0
 packaging==23.2
@@ -20,7 +18,6 @@ pyOpenSSL==23.3.0
 pytest==7.4.3
 pytest-dotenv==0.5.2
 python-dotenv==1.0.0
-requests==2.31.0
 requests-mock==1.11.0
 requests-pkcs12==1.15
 requests-toolbelt==1.0.0
