@@ -1,5 +1,4 @@
 cachetools==5.3.2
-certifi==2023.11.17
 cffi==1.16.0
 charset-normalizer==3.3.2
 decorator==5.1.1
