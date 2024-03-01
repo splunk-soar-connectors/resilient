@@ -23,16 +23,7 @@
     "python_version": "3",
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
-    "pip_dependencies": {
-        "pypi": [
-            {
-                "module": "resilient==51.0.0.0.430"
-            },
-            {
-                "module": "cachetools"
-            }
-        ]
-    },
+    "pip_dependencies": {},
     "configuration": {
         "base_url": {
             "description": "Base URL",
@@ -4694,7 +4685,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash7329747ebc545testhashfec8ca33301a1416a8e0e71testtesttest"
                     ],
                     "contains": [
                         "sha256"
@@ -5223,7 +5214,11 @@
                 "value": {
                     "description": "Artifact value field",
                     "data_type": "string",
-                    "order": 3
+                    "order": 3,
+                    "primary": true,
+                    "contains": [
+                        "url"
+                    ]
                 },
                 "description": {
                     "description": "Short description of artifact",
@@ -10525,7 +10520,7 @@
                     "data_path": "action_result.parameter.vault_id",
                     "data_type": "string",
                     "example_values": [
-                        "0968a29ab97aac2ca55040e03baa647a17b4e011"
+                        "testa29ab97aatest55040e03test47a17b4test"
                     ],
                     "contains": [
                         "sha1",
