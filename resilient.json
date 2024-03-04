@@ -23,7 +23,16 @@
     "python_version": "3",
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
-    "pip_dependencies": {},
+    "pip_dependencies": {
+        "pypi": [
+            {
+                "module": "resilient==51.0.0.0.430"
+            },
+            {
+                "module": "cachetools"
+            }
+        ]
+    },
     "configuration": {
         "base_url": {
             "description": "Base URL",
@@ -5033,7 +5042,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4c2fetesthashe62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -5418,7 +5427,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4testhashb735e62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -5786,7 +5795,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4ctesthash735e62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -10675,12 +10684,108 @@
     "pip39_dependencies": {
         "wheel": [
             {
-                "module": "resilient",
-                "input_file": "wheels/py3/resilient-51.0.0.0.430-py3-none-any.whl"
+                "module": "Deprecated",
+                "input_file": "wheels/shared/Deprecated-1.2.14-py2.py3-none-any.whl"
+            },
+            {
+                "module": "SecretStorage",
+                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
             },
             {
                 "module": "cachetools",
                 "input_file": "wheels/py3/cachetools-5.3.2-py3-none-any.whl"
+            },
+            {
+                "module": "cffi",
+                "input_file": "wheels/py39/cffi-1.16.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "charset_normalizer",
+                "input_file": "wheels/py39/charset_normalizer-3.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "cryptography",
+                "input_file": "wheels/py39/cryptography-42.0.5-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "decorator",
+                "input_file": "wheels/py3/decorator-5.1.1-py3-none-any.whl"
+            },
+            {
+                "module": "idna",
+                "input_file": "wheels/py3/idna-3.6-py3-none-any.whl"
+            },
+            {
+                "module": "importlib_metadata",
+                "input_file": "wheels/py3/importlib_metadata-7.0.1-py3-none-any.whl"
+            },
+            {
+                "module": "jaraco.classes",
+                "input_file": "wheels/py3/jaraco.classes-3.3.1-py3-none-any.whl"
+            },
+            {
+                "module": "jeepney",
+                "input_file": "wheels/py3/jeepney-0.8.0-py3-none-any.whl"
+            },
+            {
+                "module": "jwcrypto",
+                "input_file": "wheels/py3/jwcrypto-1.4.2-py3-none-any.whl"
+            },
+            {
+                "module": "keyring",
+                "input_file": "wheels/py3/keyring-23.13.1-py3-none-any.whl"
+            },
+            {
+                "module": "more_itertools",
+                "input_file": "wheels/py3/more_itertools-10.2.0-py3-none-any.whl"
+            },
+            {
+                "module": "pyOpenSSL",
+                "input_file": "wheels/py3/pyOpenSSL-24.0.0-py3-none-any.whl"
+            },
+            {
+                "module": "pycparser",
+                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_pkcs12",
+                "input_file": "wheels/py3/requests_pkcs12-1.15-py3-none-any.whl"
+            },
+            {
+                "module": "requests_toolbelt",
+                "input_file": "wheels/shared/requests_toolbelt-1.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "resilient",
+                "input_file": "wheels/py3/resilient-51.0.0.0.430-py3-none-any.whl"
+            },
+            {
+                "module": "resilient_app_config_plugins",
+                "input_file": "wheels/py3/resilient_app_config_plugins-1.0.0-py3-none-any.whl"
+            },
+            {
+                "module": "retry2",
+                "input_file": "wheels/shared/retry2-0.9.5-py2.py3-none-any.whl"
+            },
+            {
+                "module": "setuptools",
+                "input_file": "wheels/py3/setuptools-65.5.1-py3-none-any.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "urllib3",
+                "input_file": "wheels/shared/urllib3-1.26.18-py2.py3-none-any.whl"
+            },
+            {
+                "module": "wrapt",
+                "input_file": "wheels/py39/wrapt-1.16.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "zipp",
+                "input_file": "wheels/py3/zipp-3.17.0-py3-none-any.whl"
             }
         ]
     }
