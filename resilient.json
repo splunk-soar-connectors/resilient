@@ -23,16 +23,7 @@
     "python_version": "3",
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
-    "pip_dependencies": {
-        "pypi": [
-            {
-                "module": "resilient==51.0.0.0.430"
-            },
-            {
-                "module": "cachetools"
-            }
-        ]
-    },
+    "pip_dependencies": {},
     "configuration": {
         "base_url": {
             "description": "Base URL",
