@@ -3504,7 +3504,6 @@
                 "1st_condition_value_is_datetime": {
                     "description": "The value is a datetime; convert to Resilient internal representation",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 7
                 },
                 "1st_condition_comparison_method": {
@@ -3525,7 +3524,6 @@
                 "2nd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 11
                 },
                 "2nd_condition_comparison_method": {
@@ -3546,7 +3544,6 @@
                 "3rd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 15
                 },
                 "3rd_condition_comparison_method": {
@@ -3567,7 +3564,6 @@
                 "4th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 19
                 },
                 "4th_condition_comparison_method": {
@@ -3588,7 +3584,6 @@
                 "5th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 23
                 },
                 "5th_condition_comparison_method": {

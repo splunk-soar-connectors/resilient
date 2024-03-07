@@ -213,7 +213,7 @@ class ResilientConnector(BaseConnector):
                 name = getsv(param, "{}_condition_field_name".format(con))
                 value = getsv(param, "{}_condition_field_value".format(con))
                 method = getsv(param, "{}_condition_comparison_method".format(con))
-                isdate = param.get("{}_condition_value_is_datetime".format(con))
+                isdate = param.get("{}_condition_value_is_datetime".format(con), False)
 
                 ln = len(name)
                 lv = len(value)
