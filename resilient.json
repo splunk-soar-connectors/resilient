@@ -23,7 +23,6 @@
     "python_version": "3",
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
-    "pip_dependencies": {},
     "configuration": {
         "base_url": {
             "description": "Base URL",
@@ -40,31 +39,26 @@
         "user": {
             "description": "Service Account Email",
             "data_type": "string",
-            "required": false,
             "order": 2
         },
         "password": {
             "description": "Service Account Password",
             "data_type": "password",
-            "required": false,
             "order": 3
         },
         "api_key_id": {
             "description": "API Key ID",
             "data_type": "password",
-            "required": false,
             "order": 4
         },
         "api_key_secret": {
             "description": "API Key Secret",
             "data_type": "password",
-            "required": false,
             "order": 5
         },
         "verify": {
             "description": "Verify SSL certificates. You may need to set REQUESTS_CA_BUNDLE to the pem file containing your local CA root certificates",
             "data_type": "boolean",
-            "default": false,
             "order": 6
         }
     },
@@ -1634,7 +1628,6 @@
                 "want_tasks": {
                     "description": "Also returns associated tasks. Default is false",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 4
                 }
             },
@@ -3486,19 +3479,16 @@
                 "add_condition_all_active_tickets": {
                     "description": "Filters for active tickets",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 2
                 },
                 "add_condition_closed_in_last_24_hours": {
                     "description": "Filters for tickets closed in last 24 hours",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 3
                 },
                 "add_condition_created_in_last_24_hours": {
                     "description": "Filters for tickets created in last 24 hours",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 4
                 },
                 "1st_condition_field_name": {
@@ -10483,7 +10473,8 @@
                     "primary": true,
                     "order": 2,
                     "contains": [
-                        "vaultid"
+                        "sha1",
+                        "vault id"
                     ]
                 }
             },
@@ -10524,8 +10515,7 @@
                     ],
                     "contains": [
                         "sha1",
-                        "vault id",
-                        "vaultid"
+                        "vault id"
                     ]
                 },
                 {
@@ -10703,10 +10693,6 @@
                 "input_file": "wheels/py3/decorator-5.1.1-py3-none-any.whl"
             },
             {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.6-py3-none-any.whl"
-            },
-            {
                 "module": "importlib_metadata",
                 "input_file": "wheels/py3/importlib_metadata-7.0.1-py3-none-any.whl"
             },
@@ -10765,10 +10751,6 @@
             {
                 "module": "six",
                 "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.18-py2.py3-none-any.whl"
             },
             {
                 "module": "wrapt",

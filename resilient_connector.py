@@ -73,7 +73,7 @@ class ResilientConnector(BaseConnector):
         client_kwargs = {
             "org_name": config['org_id'],
             "base_url": config['base_url'],
-            "verify": config['verify']
+            "verify": config.get('verify', False)
         }
         if config.get('user') is not None and config.get('password') is not None:
             client_kwargs.update({
@@ -197,13 +197,13 @@ class ResilientConnector(BaseConnector):
             payload['filters'] = filters
 
         conditions = list()
-        if param.get('add_condition_all_active_tickets') is True:
+        if param.get('add_condition_all_active_tickets', False) is True:
             conditions.append({"field_name": "plan_status", "method": "equals", "value": "A"})
-        if param.get('add_condition_created_in_last_24_hours') is True:
+        if param.get('add_condition_created_in_last_24_hours', False) is True:
             conditions.append({"field_name": "create_date", "method": "gte",
                                "value": calendar.timegm(
                                    (datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
-        if param.get('add_condition_closed_in_last_24_hours') is True:
+        if param.get('add_condition_closed_in_last_24_hours', False) is True:
             conditions.append({"field_name": "end_date", "method": "gte",
                                "value": calendar.timegm(
                                    (datetime.datetime.utcnow() - datetime.timedelta(days=1)).utctimetuple()) * 1000})
