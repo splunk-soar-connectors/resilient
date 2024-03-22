@@ -3,29 +3,26 @@
     "name": "Resilient",
     "description": "Resilient Ticket System",
     "type": "ticketing",
-    "product_vendor": "Resilient",
+    "product_vendor": "IBM",
     "logo": "logo_resilient.svg",
     "logo_dark": "logo_resilient_dark.svg",
-    "product_name": "IBM Resilient",
+    "product_name": "resilient",
     "product_version_regex": ".*",
     "publisher": "Splunk Community",
-    "license": "Copyright (c) 2022 Splunk Inc.",
-    "app_version": "1.1.0",
+    "contributors": [
+        {
+            "name": "Ben Liew"
+        }
+    ],
+    "license": "Copyright (c) 2022-2024 Splunk Inc.",
+    "app_version": "2.0.0",
     "utctime_updated": "2018-05-03T22:31:37.122043",
     "package_name": "phantom_resilient",
     "main_module": "resilient_connector.py",
-    "min_phantom_version": "5.2.0",
-    "python_version": "2.7",
+    "min_phantom_version": "6.1.1",
+    "python_version": "3",
     "fips_compliant": false,
     "app_wizard_version": "1.0.0",
-    "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "cachetools",
-                "input_file": "wheels/shared/cachetools-3.1.1-py2.py3-none-any.whl"
-            }
-        ]
-    },
     "configuration": {
         "base_url": {
             "description": "Base URL",
@@ -40,22 +37,29 @@
             "order": 1
         },
         "user": {
-            "description": "Service Account",
+            "description": "Service Account Email",
             "data_type": "string",
-            "required": true,
             "order": 2
         },
         "password": {
             "description": "Service Account Password",
             "data_type": "password",
-            "required": true,
             "order": 3
+        },
+        "api_key_id": {
+            "description": "API Key ID",
+            "data_type": "password",
+            "order": 4
+        },
+        "api_key_secret": {
+            "description": "API Key Secret",
+            "data_type": "password",
+            "order": 5
         },
         "verify": {
             "description": "Verify SSL certificates. You may need to set REQUESTS_CA_BUNDLE to the pem file containing your local CA root certificates",
             "data_type": "boolean",
-            "default": false,
-            "order": 4
+            "order": 6
         }
     },
     "actions": [
@@ -84,6 +88,46 @@
                 "type": "table",
                 "title": "Resilient Incident"
             },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "on poll",
+            "description": "Callback action for the on_poll ingest functionality",
+            "type": "ingest",
+            "verbose": "If start_time is not specified, the default is past 10 days and if end_time is not specified, the default is now.",
+            "identifier": "on_poll",
+            "read_only": true,
+            "parameters": {
+                "container_id": {
+                    "data_type": "string",
+                    "order": 0,
+                    "description": "Container IDs to limit the ingestion to",
+                    "allow_list": true
+                },
+                "start_time": {
+                    "data_type": "numeric",
+                    "order": 1,
+                    "description": "Start of time range, in epoch time (milliseconds)",
+                    "required": true
+                },
+                "end_time": {
+                    "data_type": "numeric",
+                    "order": 2,
+                    "description": "End of time range, in epoch time (milliseconds)",
+                    "required": true
+                },
+                "container_count": {
+                    "data_type": "numeric",
+                    "order": 3,
+                    "description": "Maximum number of container records to query for"
+                },
+                "artifact_count": {
+                    "data_type": "numeric",
+                    "order": 4,
+                    "description": "Parameter ignored in this app"
+                }
+            },
+            "output": [],
             "versions": "EQ(*)"
         },
         {
@@ -825,6 +869,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -1581,7 +1628,6 @@
                 "want_tasks": {
                     "description": "Also returns associated tasks. Default is false",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 4
                 }
             },
@@ -2686,6 +2732,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -3430,19 +3479,16 @@
                 "add_condition_all_active_tickets": {
                     "description": "Filters for active tickets",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 2
                 },
                 "add_condition_closed_in_last_24_hours": {
                     "description": "Filters for tickets closed in last 24 hours",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 3
                 },
                 "add_condition_created_in_last_24_hours": {
                     "description": "Filters for tickets created in last 24 hours",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 4
                 },
                 "1st_condition_field_name": {
@@ -3458,7 +3504,6 @@
                 "1st_condition_value_is_datetime": {
                     "description": "The value is a datetime; convert to Resilient internal representation",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 7
                 },
                 "1st_condition_comparison_method": {
@@ -3479,7 +3524,6 @@
                 "2nd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 11
                 },
                 "2nd_condition_comparison_method": {
@@ -3500,7 +3544,6 @@
                 "3rd_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 15
                 },
                 "3rd_condition_comparison_method": {
@@ -3521,7 +3564,6 @@
                 "4th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 19
                 },
                 "4th_condition_comparison_method": {
@@ -3542,7 +3584,6 @@
                 "5th_condition_value_is_datetime": {
                     "description": "The value is a datetime",
                     "data_type": "boolean",
-                    "default": false,
                     "order": 23
                 },
                 "5th_condition_comparison_method": {
@@ -4479,6 +4520,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -4626,7 +4670,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash7329747ebc545testhashfec8ca33301a1416a8e0e71testtesttest"
                     ],
                     "contains": [
                         "sha256"
@@ -4814,6 +4858,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2"
+                    ],
+                    "contains": [
+                        "artifactid"
                     ]
                 },
                 {
@@ -4821,6 +4868,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -4968,7 +5018,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4c2fetesthashe62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -5149,7 +5199,11 @@
                 "value": {
                     "description": "Artifact value field",
                     "data_type": "string",
-                    "order": 3
+                    "order": 3,
+                    "primary": true,
+                    "contains": [
+                        "url"
+                    ]
                 },
                 "description": {
                     "description": "Short description of artifact",
@@ -5178,6 +5232,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -5346,7 +5403,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4testhashb735e62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -5547,6 +5604,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2"
+                    ],
+                    "contains": [
+                        "artifactid"
                     ]
                 },
                 {
@@ -5554,6 +5614,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -5708,7 +5771,7 @@
                     "data_path": "action_result.data.*.hash",
                     "data_type": "string",
                     "example_values": [
-                        "1323cb661f73f3d12723ed6bb4c2fe45f4b735e62fa1ce6464c1c9701be791a0"
+                        "testhash1f73f3d12723ed6bb4ctesthash735e62fa1ce6464c1c970testhash"
                     ],
                     "contains": [
                         "sha256"
@@ -5900,6 +5963,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -6194,6 +6260,9 @@
                     "data_type": "string",
                     "example_values": [
                         "109"
+                    ],
+                    "contains": [
+                        "ibm resilient commentid"
                     ]
                 },
                 {
@@ -6209,6 +6278,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -6696,6 +6768,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7003,6 +7078,9 @@
                     "data_type": "string",
                     "example_values": [
                         "109"
+                    ],
+                    "contains": [
+                        "ibm resilient commentid"
                     ]
                 },
                 {
@@ -7018,6 +7096,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2101"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7307,11 +7388,13 @@
                     "data_path": "action_result.parameter.incident_id",
                     "data_type": "string",
                     "example_values": [
-                        "2096",
                         "2104"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data",
@@ -7324,7 +7407,6 @@
                     "data_path": "action_result.summary.Number of tables",
                     "data_type": "numeric",
                     "example_values": [
-                        0,
                         1
                     ]
                 },
@@ -7332,8 +7414,7 @@
                     "data_path": "action_result.message",
                     "data_type": "string",
                     "example_values": [
-                        "Number of tables: 0",
-                        "Number of tables: 1"
+                        "Number of tables: 0"
                     ]
                 },
                 {
@@ -7796,6 +7877,9 @@
                     "data_type": "string",
                     "example_values": [
                         "2104"
+                    ],
+                    "contains": [
+                        "ibm resilient ticketid"
                     ]
                 },
                 {
@@ -7805,7 +7889,10 @@
                         "1000"
                     ],
                     "column_name": "Table ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "tableid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.cells.179.id",
@@ -8126,7 +8213,10 @@
                         "ibm resilient ticketid"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "2104"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.row_id",
@@ -8255,7 +8345,10 @@
                         "ibm resilient ticketid"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "example_values": [
+                        "2104"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.key",
@@ -9364,7 +9457,10 @@
                         "1"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.active",
@@ -9766,7 +9862,10 @@
                         "46"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.taskdto",
@@ -9865,7 +9964,10 @@
                         "46"
                     ],
                     "column_name": "Task ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient taskid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.message",
@@ -9968,7 +10070,10 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.content_type",
@@ -10165,7 +10270,10 @@
                         "10"
                     ],
                     "column_name": "Attachment ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient attachmentid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.handle_format_is_name",
@@ -10182,7 +10290,10 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 1
+                    "column_order": 1,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.content_type",
@@ -10357,7 +10468,8 @@
                     "primary": true,
                     "order": 2,
                     "contains": [
-                        "vaultid"
+                        "sha1",
+                        "vault id"
                     ]
                 }
             },
@@ -10385,13 +10497,16 @@
                         "2101"
                     ],
                     "column_name": "Incident ID",
-                    "column_order": 0
+                    "column_order": 0,
+                    "contains": [
+                        "ibm resilient ticketid"
+                    ]
                 },
                 {
                     "data_path": "action_result.parameter.vault_id",
                     "data_type": "string",
                     "example_values": [
-                        "0968a29ab97aac2ca55040e03baa647a17b4e011"
+                        "testa29ab97aatest55040e03test47a17b4test"
                     ],
                     "contains": [
                         "sha1",
@@ -10541,5 +10656,105 @@
             },
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip39_dependencies": {
+        "wheel": [
+            {
+                "module": "Deprecated",
+                "input_file": "wheels/shared/Deprecated-1.2.14-py2.py3-none-any.whl"
+            },
+            {
+                "module": "SecretStorage",
+                "input_file": "wheels/py3/SecretStorage-3.3.3-py3-none-any.whl"
+            },
+            {
+                "module": "cachetools",
+                "input_file": "wheels/py3/cachetools-5.3.2-py3-none-any.whl"
+            },
+            {
+                "module": "cffi",
+                "input_file": "wheels/py39/cffi-1.16.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "charset_normalizer",
+                "input_file": "wheels/py39/charset_normalizer-3.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "cryptography",
+                "input_file": "wheels/py39/cryptography-42.0.5-cp39-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "decorator",
+                "input_file": "wheels/py3/decorator-5.1.1-py3-none-any.whl"
+            },
+            {
+                "module": "importlib_metadata",
+                "input_file": "wheels/py3/importlib_metadata-7.0.1-py3-none-any.whl"
+            },
+            {
+                "module": "jaraco.classes",
+                "input_file": "wheels/py3/jaraco.classes-3.3.1-py3-none-any.whl"
+            },
+            {
+                "module": "jeepney",
+                "input_file": "wheels/py3/jeepney-0.8.0-py3-none-any.whl"
+            },
+            {
+                "module": "jwcrypto",
+                "input_file": "wheels/py3/jwcrypto-1.4.2-py3-none-any.whl"
+            },
+            {
+                "module": "keyring",
+                "input_file": "wheels/py3/keyring-23.13.1-py3-none-any.whl"
+            },
+            {
+                "module": "more_itertools",
+                "input_file": "wheels/py3/more_itertools-10.2.0-py3-none-any.whl"
+            },
+            {
+                "module": "pyOpenSSL",
+                "input_file": "wheels/py3/pyOpenSSL-24.0.0-py3-none-any.whl"
+            },
+            {
+                "module": "pycparser",
+                "input_file": "wheels/shared/pycparser-2.21-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_pkcs12",
+                "input_file": "wheels/py3/requests_pkcs12-1.15-py3-none-any.whl"
+            },
+            {
+                "module": "requests_toolbelt",
+                "input_file": "wheels/shared/requests_toolbelt-1.0.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "resilient",
+                "input_file": "wheels/py3/resilient-51.0.0.0.430-py3-none-any.whl"
+            },
+            {
+                "module": "resilient_app_config_plugins",
+                "input_file": "wheels/py3/resilient_app_config_plugins-1.0.0-py3-none-any.whl"
+            },
+            {
+                "module": "retry2",
+                "input_file": "wheels/shared/retry2-0.9.5-py2.py3-none-any.whl"
+            },
+            {
+                "module": "setuptools",
+                "input_file": "wheels/py3/setuptools-65.5.1-py3-none-any.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "wrapt",
+                "input_file": "wheels/py39/wrapt-1.16.0-cp39-cp39-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+            },
+            {
+                "module": "zipp",
+                "input_file": "wheels/py3/zipp-3.17.0-py3-none-any.whl"
+            }
+        ]
+    }
 }
