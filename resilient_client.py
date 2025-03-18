@@ -1,10 +1,24 @@
+# Copyright (c) 2025 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 import logging
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Callable, Dict, List, Optional, Union
+from typing import Callable, Optional, Union
 from urllib.parse import urlencode
 
 from resilient import SimpleClient
+
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +42,7 @@ class ResilientClient:
         return self._simple_client
 
     # TODO: may not need this func
-    def get(self, path: str, query_params: Dict = None):
+    def get(self, path: str, query_params: Optional[dict] = None):
         query_params = query_params or {}
         query_string = urlencode(query_params)
         uri = f"{path}?{query_string}"
@@ -36,27 +50,13 @@ class ResilientClient:
         return self.simple_client.get(uri)
 
     def list_incidents(self, closed: bool = False):
-        condition = {
-            "field_name": "properties.closed_on",
-            "method": "not_equals" if closed else "equals",
-            "value": None
-        }
+        condition = {"field_name": "properties.closed_on", "method": "not_equals" if closed else "equals", "value": None}
 
-        return self.simple_client.post("/incidents/query", params={
-            "return_level": "normal"
-        }, payload={
-            "filters": [
-                {
-                    "conditions": [condition]
-                }
-            ],
-            "sorts": [
-                {
-                    "field_name": "create_date",
-                    "type": "desc"
-                }
-            ]
-        })
+        return self.simple_client.post(
+            "/incidents/query",
+            params={"return_level": "normal"},
+            payload={"filters": [{"conditions": [condition]}], "sorts": [{"field_name": "create_date", "type": "desc"}]},
+        )
 
     def list_artifcats_for_incident(self, incident_id: str, mock=False):
         if mock:
@@ -77,7 +77,7 @@ class ResilientClient:
     def list_comments_for_incident(self, incident_id: str):
         return self.simple_client.get(f"/incidents/{incident_id}/comments")
 
-    def get_users(self) -> Dict:
+    def get_users(self) -> dict:
         resp = self.simple_client.get("/users")
         output = dict()
         for user in resp:
@@ -152,10 +152,10 @@ class ResilientClient:
 
     @staticmethod
     def normalize_timestamp(epoch_timestamp_in_ms) -> str:
-        """ Converts epoch timestamp to human readable timestamp """
-        return datetime.utcfromtimestamp(epoch_timestamp_in_ms / 1000.0).strftime('%Y-%m-%dT%H:%M:%SZ')
+        """Converts epoch timestamp to human readable timestamp"""
+        return datetime.utcfromtimestamp(epoch_timestamp_in_ms / 1000.0).strftime("%Y-%m-%dT%H:%M:%SZ")
 
-    def format_entry_timestamps(self, entry: Dict, key_condition: Callable[[str], bool]) -> Dict:
+    def format_entry_timestamps(self, entry: dict, key_condition: Callable[[str], bool]) -> dict:
         formatted_entry = {}
         for key, value in entry.items():
             if isinstance(key, str) and isinstance(value, int) and key_condition(key):
@@ -165,14 +165,14 @@ class ResilientClient:
                 formatted_entry[key] = value
         return formatted_entry
 
-    def format_artifact(self, entry: Dict) -> Dict:
+    def format_artifact(self, entry: dict) -> dict:
         # only convert top-level date fields
         def condition(key):
             return key.endswith("_time") or key == "created"
 
         return self.format_entry_timestamps(entry, condition)
 
-    def format_incident(self, entry: Dict) -> Dict:
+    def format_incident(self, entry: dict) -> dict:
         # only convert top-level date fields
         def condition(key):
             return key.endswith("_date") or key == "inc_started"
@@ -180,18 +180,17 @@ class ResilientClient:
         return self.format_entry_timestamps(entry, condition)
 
     @staticmethod
-    def enrich_incident_with_user(incident: Dict, users: Dict[int, Dict]) -> Dict:
-        """ Enriches incident with user information """
+    def enrich_incident_with_user(incident: dict, users: dict[int, dict]) -> dict:
+        """Enriches incident with user information"""
         user_id = incident["owner_id"]
         user_entry = users.get(user_id)
         if user_entry:
             incident["owner"] = user_entry["display_name"]
         return incident
 
-    def get_incidents_in_timerange_with_paging(self, start_epoch_timestamp_ms: int,
-                                               end_epoch_timestamp_ms: int,
-                                               max_timespan_in_ms_per_request: int,
-                                               mock=False):
+    def get_incidents_in_timerange_with_paging(
+        self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int, max_timespan_in_ms_per_request: int, mock=False
+    ):
         start = start_epoch_timestamp_ms
         end = start + max_timespan_in_ms_per_request
 
@@ -215,52 +214,22 @@ class ResilientClient:
             start = end
             end += max_timespan_in_ms_per_request
 
-    def get_incidents_in_timerange_mock(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> List:
+    def get_incidents_in_timerange_mock(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> list:
         return [
-            {
-                "id": start_epoch_timestamp_ms,
-                "name": "INC123",
-                "create_date": start_epoch_timestamp_ms
-            },
-            {
-                "id": end_epoch_timestamp_ms - 1,
-                "name": "INC456",
-                "create_date": end_epoch_timestamp_ms - 1
-            },
+            {"id": start_epoch_timestamp_ms, "name": "INC123", "create_date": start_epoch_timestamp_ms},
+            {"id": end_epoch_timestamp_ms - 1, "name": "INC456", "create_date": end_epoch_timestamp_ms - 1},
         ]
 
-    def get_incidents_in_timerange(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> List:
+    def get_incidents_in_timerange(self, start_epoch_timestamp_ms: int, end_epoch_timestamp_ms: int) -> list:
         """
         Get all incidents in a given time range for create_date.
         start_epoch_timestamp_ms is inclusive.
         end_epoch_timestamp_ms is exclusive.
         """
-        start_time = {
-            "field_name": "create_date",
-            "method": "gte",
-            "value": start_epoch_timestamp_ms
-        }
-        end_time = {
-            "field_name": "create_date",
-            "method": "lt",
-            "value": end_epoch_timestamp_ms
-        }
-        filters = [
-            {
-                "conditions": [start_time, end_time]
-            }
-        ]
-        sorts = [
-            {
-                "field_name": "create_date",
-                "type": "asc"
-            }
-        ]
+        start_time = {"field_name": "create_date", "method": "gte", "value": start_epoch_timestamp_ms}
+        end_time = {"field_name": "create_date", "method": "lt", "value": end_epoch_timestamp_ms}
+        filters = [{"conditions": [start_time, end_time]}]
+        sorts = [{"field_name": "create_date", "type": "asc"}]
 
-        resp = self.simple_client.post("/incidents/query", params={
-            "return_level": "normal"
-        }, payload={
-            "filters": filters,
-            "sorts": sorts
-        })
+        resp = self.simple_client.post("/incidents/query", params={"return_level": "normal"}, payload={"filters": filters, "sorts": sorts})
         return [self.format_incident(inc) for inc in resp]
