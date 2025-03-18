@@ -36,7 +36,7 @@ def test_client_using_creds_auth():
             base_url=os.environ["RESILIENT_API_BASE_URL"],
             org_name=os.environ["RESILIENT_API_ORG_NAME"],
             username="user@mail.com",
-            password="pass", # pragma: allowlist secret
+            password="pass",  # pragma: allowlist secret
         ).get_client_with_credentials()
 
 def test_client_using_api_key_auth():
