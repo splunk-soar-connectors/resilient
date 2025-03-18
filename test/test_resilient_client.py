@@ -39,6 +39,7 @@ def test_client_using_creds_auth():
             password="pass",  # pragma: allowlist secret
         ).get_client_with_credentials()
 
+
 def test_client_using_api_key_auth():
     c = ResilientClient(
         base_url=os.environ["RESILIENT_API_BASE_URL"],
