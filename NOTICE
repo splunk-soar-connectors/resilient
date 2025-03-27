@@ -1,9 +1,144 @@
 Splunk SOAR Resilient
-Copyright (c) 2022-2024 Splunk Inc.
+Copyright (c) 2022-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: cachetools
-Version: 3.1.1
+Name: cachetools
+Version: 5.3.2
+Author: Thomas Kemmer
 License: MIT
-Copyright 2014-2019 Thomas Kemmer
+
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: cffi
+Version: 1.17.1
+Author: Armin Rigo, Maciej Fijalkowski
+License: MIT
+
+Name: charset-normalizer
+Version: 3.4.1
+Author:
+License: MIT
+
+Name: cryptography
+Version: 44.0.2
+Author: The cryptography developers <cryptography-dev@python.org>
+License: Apache-2.0 OR BSD-3-Clause
+
+Name: decorator
+Version: 5.2.1
+Author:
+License: BSD-2-Clause
+
+Name: Deprecated
+Version: 1.2.18
+Author: Laurent LAPORTE
+License: MIT
+
+Name: idna
+Version: 3.10
+Author:
+License:
+
+Name: importlib_metadata
+Version: 8.6.1
+Author:
+License:
+
+Name: jaraco.classes
+Version: 3.4.0
+Author: Jason R. Coombs
+License:
+
+Name: jeepney
+Version: 0.9.0
+Author:
+License:
+
+Name: jwcrypto
+Version: 1.4.2
+Author:
+License: LGPLv3+
+
+Name: keyring
+Version: 23.13.1
+Author: Kang Zhang
+License:
+
+Name: more-itertools
+Version: 10.6.0
+Author:
+License:
+
+Name: pycparser
+Version: 2.22
+Author: Eli Bendersky
+License: BSD-3-Clause
+
+Name: pyOpenSSL
+Version: 25.0.0
+Author: The pyOpenSSL developers
+License: Apache License, Version 2.0
+
+Name: requests
+Version: 2.32.3
+Author: Kenneth Reitz
+License: Apache-2.0
+
+Name: requests-pkcs12
+Version: 1.15
+Author: Volker Diels-Grabsch
+License: ISC
+
+Name: requests-toolbelt
+Version: 1.0.0
+Author: Ian Cordasco, Cory Benfield
+License: Apache 2.0
+
+Name: resilient
+Version: 51.0.0.0.430
+Author: IBM SOAR
+License: MIT
+
+Name: resilient-app-config-plugins
+Version: 1.0.0
+Author: IBM SOAR
+License: MIT
+
+Name: retry2
+Version: 0.9.5
+Author: Andrei Suiu | eSAMTrade
+License: Apache License 2.0
+
+Name: SecretStorage
+Version: 3.3.3
+Author: Dmitry Shachnev
+License: BSD 3-Clause License
+
+Name: six
+Version: 1.17.0
+Author: Benjamin Peterson
+License: MIT
+
+Name: typing_extensions
+Version: 4.13.0
+Author:
+License:
+
+Name: urllib3
+Version: 1.26.20
+Author: Andrey Petrov
+License: MIT
+
+Name: wrapt
+Version: 1.17.2
+Author: Graham Dumpleton
+License: BSD
+
+Name: zipp
+Version: 3.21.0
+Author:
+License:
