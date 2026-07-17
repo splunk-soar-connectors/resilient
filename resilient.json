@@ -59,6 +59,7 @@
         "verify": {
             "description": "Verify SSL certificates. You may need to set REQUESTS_CA_BUNDLE to the pem file containing your local CA root certificates",
             "data_type": "boolean",
+            "default": true,
             "order": 6
         }
     },

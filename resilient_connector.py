@@ -65,7 +65,7 @@ class ResilientConnector(BaseConnector):
 
     def get_resilient_client(self):
         config = self.get_config()
-        client_kwargs = {"org_name": config["org_id"], "base_url": config["base_url"], "verify": config.get("verify", False)}
+        client_kwargs = {"org_name": config["org_id"], "base_url": config["base_url"], "verify": config.get("verify", True)}
         if config.get("user") is not None and config.get("password") is not None:
             client_kwargs.update({"username": config["user"], "password": config["password"]})
             self.log_to_both("Will authenticate with username and password.")

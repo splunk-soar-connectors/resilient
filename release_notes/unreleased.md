@@ -1,3 +1,4 @@
 **Unreleased**
 
 * - Fixed URL path construction so caller-supplied resource identifiers cannot escape their intended path segment.
+* - Enabled TLS certificate verification by default for new and existing asset configurations that omit the setting.
