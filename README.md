@@ -1,9 +1,9 @@
 # Resilient
 
-Publisher: Splunk Community \
-Connector Version: 2.0.1 \
-Product Vendor: IBM \
-Product Name: resilient \
+Publisher: Splunk Community <br>
+Connector Version: 2.0.1 <br>
+Product Vendor: IBM <br>
+Product Name: resilient <br>
 Minimum Product Version: 6.1.1
 
 Resilient Ticket System
@@ -34,39 +34,39 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Test connectivity \
-[on poll](#action-on-poll) - Callback action for the on_poll ingest functionality \
-[list tickets](#action-list-tickets) - List all incidents \
-[get ticket](#action-get-ticket) - Get incident details by id \
-[create ticket](#action-create-ticket) - Create new incident \
-[update ticket](#action-update-ticket) - Update existing incident. This action downloads the incident and copies the provided JSON onto the download data, overwriting any existing data elements \
-[search tickets](#action-search-tickets) - Submit search query for incidents \
-[list artifacts](#action-list-artifacts) - List all artifacts for incident \
-[get artifact](#action-get-artifact) - Get artifact details by incident and artifact id \
-[create artifact](#action-create-artifact) - Create new artifact \
-[update artifact](#action-update-artifact) - Update existing artifact \
-[list comments](#action-list-comments) - List all comment for incident \
-[get comment](#action-get-comment) - Get comment details by incident and comment id \
-[create comment](#action-create-comment) - Create new comment \
-[update comment](#action-update-comment) - Update existing comment \
-[list tables](#action-list-tables) - List tables \
-[get table](#action-get-table) - Get table \
-[add table row](#action-add-table-row) - Add table row \
-[update table row](#action-update-table-row) - Update table row \
-[update table row with key](#action-update-table-row-with-key) - Update table row with key \
-[list tasks](#action-list-tasks) - List tasks for user (defined in asset configuration) \
-[get task](#action-get-task) - Get task details \
-[update task](#action-update-task) - Update task. This action downloads the task and copy the provided json onto the download data, overwriting any existing data elements \
-[close task](#action-close-task) - Close task \
-[list attachments](#action-list-attachments) - List attachments for incident \
-[get attachment](#action-get-attachment) - Get attachment details from incident \
+[test connectivity](#action-test-connectivity) - Test connectivity <br>
+[on poll](#action-on-poll) - Callback action for the on_poll ingest functionality <br>
+[list tickets](#action-list-tickets) - List all incidents <br>
+[get ticket](#action-get-ticket) - Get incident details by id <br>
+[create ticket](#action-create-ticket) - Create new incident <br>
+[update ticket](#action-update-ticket) - Update existing incident. This action downloads the incident and copies the provided JSON onto the download data, overwriting any existing data elements <br>
+[search tickets](#action-search-tickets) - Submit search query for incidents <br>
+[list artifacts](#action-list-artifacts) - List all artifacts for incident <br>
+[get artifact](#action-get-artifact) - Get artifact details by incident and artifact id <br>
+[create artifact](#action-create-artifact) - Create new artifact <br>
+[update artifact](#action-update-artifact) - Update existing artifact <br>
+[list comments](#action-list-comments) - List all comment for incident <br>
+[get comment](#action-get-comment) - Get comment details by incident and comment id <br>
+[create comment](#action-create-comment) - Create new comment <br>
+[update comment](#action-update-comment) - Update existing comment <br>
+[list tables](#action-list-tables) - List tables <br>
+[get table](#action-get-table) - Get table <br>
+[add table row](#action-add-table-row) - Add table row <br>
+[update table row](#action-update-table-row) - Update table row <br>
+[update table row with key](#action-update-table-row-with-key) - Update table row with key <br>
+[list tasks](#action-list-tasks) - List tasks for user (defined in asset configuration) <br>
+[get task](#action-get-task) - Get task details <br>
+[update task](#action-update-task) - Update task. This action downloads the task and copy the provided json onto the download data, overwriting any existing data elements <br>
+[close task](#action-close-task) - Close task <br>
+[list attachments](#action-list-attachments) - List attachments for incident <br>
+[get attachment](#action-get-attachment) - Get attachment details from incident <br>
 [add attachment](#action-add-attachment) - Add attachment to incident
 
 ## action: 'test connectivity'
 
 Test connectivity
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -85,7 +85,7 @@ summary.total_objects_successful | numeric | | |
 
 Callback action for the on_poll ingest functionality
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 If start_time is not specified, the default is past 10 days and if end_time is not specified, the default is now.
@@ -108,7 +108,7 @@ No Output
 
 List all incidents
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -235,7 +235,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get incident details by id
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -374,7 +374,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create new incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -567,7 +567,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update existing incident. This action downloads the incident and copies the provided JSON onto the download data, overwriting any existing data elements
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -708,7 +708,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Submit search query for incidents
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -899,7 +899,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all artifacts for incident
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -957,7 +957,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get artifact details by incident and artifact id
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1017,7 +1017,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create new artifact
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1084,7 +1084,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update existing artifact
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1146,7 +1146,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List all comment for incident
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1202,7 +1202,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get comment details by incident and comment id
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1286,7 +1286,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Create new comment
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1346,7 +1346,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update existing comment
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1404,7 +1404,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List tables
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1431,7 +1431,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get table
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1481,7 +1481,7 @@ action_result.summary.Number of tables | numeric | | 1 |
 
 Add table row
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1547,7 +1547,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update table row
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1600,7 +1600,7 @@ summary.total_objects_successful | numeric | | |
 
 Update table row with key
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1635,7 +1635,7 @@ summary.total_objects_successful | numeric | | |
 
 List tasks for user (defined in asset configuration)
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1810,7 +1810,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get task details
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1882,7 +1882,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Update task. This action downloads the task and copy the provided json onto the download data, overwriting any existing data elements
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1913,7 +1913,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Close task
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -1940,7 +1940,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List attachments for incident
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -1983,7 +1983,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get attachment details from incident
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -2028,7 +2028,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Add attachment to incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 #### Action Parameters
@@ -2073,7 +2073,7 @@ ______________________________________________________________________
 
 Auto-generated Splunk SOAR Connector documentation.
 
-Copyright 2025 Splunk Inc.
+Copyright 2026 Splunk Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
