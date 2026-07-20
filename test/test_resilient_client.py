@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Splunk Inc.
+# Copyright (c) 2025-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-from unittest.mock import call, patch
+from unittest.mock import MagicMock, call, patch
 
 import pytest
 from resilient import SimpleHTTPException
 
-from resilient_client import ResilientClient
+from resilient_client import ResilientClient, encode_path_segment
+
+
+def test_encode_path_segment():
+    assert encode_path_segment("../tasks/7?x=1#fragment") == "..%2Ftasks%2F7%3Fx%3D1%23fragment"
+
+
+def test_get_artifact_encodes_identifiers():
+    client = ResilientClient(base_url="https://example.test", org_name="test")
+    client._simple_client = MagicMock()
+
+    client.get_artifact("../tasks/7", "1/../../users")
+
+    client._simple_client.get.assert_called_once_with("/incidents/..%2Ftasks%2F7/artifacts/1%2F..%2F..%2Fusers")
 
 
 @pytest.fixture

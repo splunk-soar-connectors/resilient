@@ -1,6 +1,6 @@
 # File: resilient_connector.py
 #
-# Copyright (c) 2022-2025 Splunk Inc.
+# Copyright (c) 2022-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ from phantom import vault
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
 
-from resilient_client import ResilientClient
+from resilient_client import ResilientClient, encode_path_segment
 
 
 # get string value: return "" if key not in dictionary, otherwise value
@@ -65,7 +65,7 @@ class ResilientConnector(BaseConnector):
 
     def get_resilient_client(self):
         config = self.get_config()
-        client_kwargs = {"org_name": config["org_id"], "base_url": config["base_url"], "verify": config.get("verify", False)}
+        client_kwargs = {"org_name": config["org_id"], "base_url": config["base_url"], "verify": config.get("verify", True)}
         if config.get("user") is not None and config.get("password") is not None:
             client_kwargs.update({"username": config["user"], "password": config["password"]})
             self.log_to_both("Will authenticate with username and password.")
@@ -144,7 +144,7 @@ class ResilientConnector(BaseConnector):
         else:
             payload = dict()
 
-        call = "/incidents/{}".format(param["incident_id"])
+        call = f"/incidents/{encode_path_segment(param['incident_id'])}"
 
         def apply(arg):
             arg.update(payload)
@@ -253,7 +253,7 @@ class ResilientConnector(BaseConnector):
         self.log_to_both(f"In action handler for: {action_id}")
         client = self.get_resilient_client().simple_client
 
-        incident_id = param["incident_id"]
+        incident_id = encode_path_segment(param["incident_id"])
         call = f"/incidents/{incident_id}/artifacts"
 
         incidentartifactdto = getsv(param, "incidentartifactdto")
@@ -308,8 +308,8 @@ class ResilientConnector(BaseConnector):
         self.log_to_both(f"In action handler for: {action_id}")
 
         client = self.get_resilient_client().simple_client
-        incident_id = param["incident_id"]
-        artifact_id = param["artifact_id"]
+        incident_id = encode_path_segment(param["incident_id"])
+        artifact_id = encode_path_segment(param["artifact_id"])
         call = f"/incidents/{incident_id}/artifacts/{artifact_id}"
 
         incidentartifactdto = getsv(param, "incidentartifactdto")
@@ -349,7 +349,7 @@ class ResilientConnector(BaseConnector):
         client = self.get_resilient_client().simple_client
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        incident_id = param["incident_id"]
+        incident_id = encode_path_segment(param["incident_id"])
         call = f"/incidents/{incident_id}/comments"
 
         incidentcommentdto = getsv(param, "incidentcommentdto")
@@ -381,8 +381,8 @@ class ResilientConnector(BaseConnector):
 
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        incident_id = self._handle_py_ver_compat_for_input_str(param["incident_id"])
-        comment_id = self._handle_py_ver_compat_for_input_str(param["comment_id"])
+        incident_id = encode_path_segment(self._handle_py_ver_compat_for_input_str(param["incident_id"]))
+        comment_id = encode_path_segment(self._handle_py_ver_compat_for_input_str(param["comment_id"]))
         call = f"/incidents/{incident_id}/comments/{comment_id}"
 
         try:
@@ -420,8 +420,8 @@ class ResilientConnector(BaseConnector):
         client = self.get_resilient_client().simple_client
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        incident_id = param["incident_id"]
-        table_id = param["table_id"]
+        incident_id = encode_path_segment(param["incident_id"])
+        table_id = encode_path_segment(param["table_id"])
         call = f"/incidents/{incident_id}/table_data/{table_id}/row_data"
 
         datatablerowdatadto = param.get("datatablerowdatadto", "")
@@ -456,9 +456,9 @@ class ResilientConnector(BaseConnector):
 
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        incident_id = self._handle_py_ver_compat_for_input_str(param["incident_id"])
-        table_id = self._handle_py_ver_compat_for_input_str(param["table_id"])
-        row_id = self._handle_py_ver_compat_for_input_str(param["row_id"])
+        incident_id = encode_path_segment(self._handle_py_ver_compat_for_input_str(param["incident_id"]))
+        table_id = encode_path_segment(self._handle_py_ver_compat_for_input_str(param["table_id"]))
+        row_id = encode_path_segment(self._handle_py_ver_compat_for_input_str(param["row_id"]))
         call = f"/incidents/{incident_id}/table_data/{table_id}/row_data/{row_id}"
 
         datatablerowdatadto = param.get("datatablerowdatadto", "")
@@ -504,8 +504,8 @@ class ResilientConnector(BaseConnector):
             raise ValueError(f"{action_id} failed. datatablerowdatadto field is empty string.")
 
         # get table first
-        incident_id = param["incident_id"]
-        table_id = param["table_id"]
+        incident_id = encode_path_segment(param["incident_id"])
+        table_id = encode_path_segment(param["table_id"])
         call = f"/incidents/{incident_id}/table_data/{table_id}"
         self.log_to_both(f"GET {call}")
         retval = client.get(call)
@@ -525,7 +525,7 @@ class ResilientConnector(BaseConnector):
         if rowid is None:
             raise ValueError(f"{action_id} failed. Cannot match {key}/{value} key/value.")
 
-        call = f"/incidents/{incident_id}/table_data/{table_id}/row_data/{rowid}"
+        call = f"/incidents/{incident_id}/table_data/{table_id}/row_data/{encode_path_segment(rowid)}"
         self.log_to_both(f"PUT {call}")
         self.log_to_both(f"BODY {payload}")
         put_resp = client.put(call, payload)
@@ -550,7 +550,7 @@ class ResilientConnector(BaseConnector):
         client = self.get_resilient_client().simple_client
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        call = f"/tasks/{param['task_id']}"
+        call = f"/tasks/{encode_path_segment(param['task_id'])}"
         self.log_to_both(f"GET {call}")
         resp = client.get(call)
         self.log_to_both(f"{action_id} successful.")
@@ -573,7 +573,7 @@ class ResilientConnector(BaseConnector):
 
         if param.get("handle_format_is_name"):
             client.headers["handle_format"] = "names"
-        task_id = param["task_id"]
+        task_id = encode_path_segment(param["task_id"])
         call = f"/tasks/{task_id}"
 
         def apply(arg):
@@ -590,7 +590,7 @@ class ResilientConnector(BaseConnector):
         action_id = self.get_action_identifier()
         self.log_to_both(f"In action handler for: {action_id}")
         client = self.get_resilient_client().simple_client
-        task_id = param["task_id"]
+        task_id = encode_path_segment(param["task_id"])
         call = f"/tasks/{task_id}"
 
         def apply(arg):

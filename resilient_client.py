@@ -1,4 +1,4 @@
-# Copyright (c) 2025 Splunk Inc.
+# Copyright (c) 2025-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,12 +15,17 @@ import logging
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Callable, Optional, Union
-from urllib.parse import urlencode
+from urllib.parse import quote, urlencode
 
 from resilient import SimpleClient
 
 
 logger = logging.getLogger(__name__)
+
+
+def encode_path_segment(value: object) -> str:
+    """Encode a caller-controlled value as one URL path segment."""
+    return quote(str(value), safe="")
 
 
 @dataclass
@@ -65,16 +70,22 @@ class ResilientClient:
                 {"id": 2, "description": "Something 2"},
             ]
         else:
+            incident_id = encode_path_segment(incident_id)
             resp = self.simple_client.get(f"/incidents/{incident_id}/artifacts")
             return [self.format_artifact(artifact) for artifact in resp]
 
     def get_artifact(self, incident_id: str, artifact_id: str):
+        incident_id = encode_path_segment(incident_id)
+        artifact_id = encode_path_segment(artifact_id)
         return self.simple_client.get(f"/incidents/{incident_id}/artifacts/{artifact_id}")
 
     def get_comment(self, incident_id: str, comment_id: str):
+        incident_id = encode_path_segment(incident_id)
+        comment_id = encode_path_segment(comment_id)
         return self.simple_client.get(f"/incidents/{incident_id}/comments/{comment_id}")
 
     def list_comments_for_incident(self, incident_id: str):
+        incident_id = encode_path_segment(incident_id)
         return self.simple_client.get(f"/incidents/{incident_id}/comments")
 
     def get_users(self) -> dict:
@@ -87,29 +98,37 @@ class ResilientClient:
     def list_attachments_for_incident(self, incident_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
+        incident_id = encode_path_segment(incident_id)
         return self.simple_client.get(f"/incidents/{incident_id}/attachments")
 
     def get_attachment(self, incident_id: str, attachment_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
+        incident_id = encode_path_segment(incident_id)
+        attachment_id = encode_path_segment(attachment_id)
         return self.simple_client.get(f"/incidents/{incident_id}/attachments/{attachment_id}")
 
     def post_attachment(self, incident_id: str, filepath: str, filename: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
+        incident_id = encode_path_segment(incident_id)
         self.simple_client.post_attachment(f"/incidents/{incident_id}/attachments", filepath, filename=filename)
 
     def list_tables_for_incident(self, incident_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
+        incident_id = encode_path_segment(incident_id)
         return self.simple_client.get(f"/incidents/{incident_id}/table_data")
 
     def get_table(self, incident_id: str, table_id: str, use_handle_format_names: bool = False):
         if use_handle_format_names:
             self.simple_client.headers["handle_format"] = "names"
+        incident_id = encode_path_segment(incident_id)
+        table_id = encode_path_segment(table_id)
         return self.simple_client.get(f"/incidents/{incident_id}/table_data/{table_id}")
 
     def get_incident(self, incident_id: str):
+        incident_id = encode_path_segment(incident_id)
         return self.simple_client.get(f"/incidents/{incident_id}")
 
     def create_incident(self, payload: dict):
