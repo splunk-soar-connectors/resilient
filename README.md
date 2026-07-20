@@ -1,7 +1,7 @@
 # Resilient
 
 Publisher: Splunk Community <br>
-Connector Version: 2.0.1 <br>
+Connector Version: 2.0.2 <br>
 Product Vendor: IBM <br>
 Product Name: resilient <br>
 Minimum Product Version: 6.1.1
